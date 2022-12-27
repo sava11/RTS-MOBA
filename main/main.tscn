@@ -1,0 +1,86 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://main/units/unit.tscn" type="PackedScene" id=2]
+[ext_resource path="res://main/objs/building/s.tscn" type="PackedScene" id=3]
+[ext_resource path="res://main/pl_cam/pl_cam.gd" type="Script" id=4]
+[ext_resource path="res://icon.png" type="Texture" id=5]
+[ext_resource path="res://main/main.gd" type="Script" id=6]
+
+[sub_resource type="NavigationPolygon" id=1]
+vertices = PoolVector2Array( 512, -320, 512, 352, -512, 352, -512, -320 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
+outlines = [ PoolVector2Array( -512, -320, -512, 352, 512, 352, 512, -320 ) ]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource( 6 )
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="pol_ground" type="Polygon2D" parent="."]
+self_modulate = Color( 1, 0, 0, 0.0470588 )
+antialiased = true
+texture = ExtResource( 5 )
+
+[node name="ground" type="Node2D" parent="."]
+
+[node name="nav" type="Navigation2D" parent="ground"]
+cell_size = 2.0
+
+[node name="n" type="NavigationPolygonInstance" parent="ground/nav"]
+navpoly = SubResource( 1 )
+travel_cost = 0.0
+
+[node name="gr" parent="ground/nav" instance=ExtResource( 2 )]
+position = Vector2( -24, 56 )
+
+[node name="nav2" type="Navigation2D" parent="ground"]
+visible = false
+cell_size = 2.0
+
+[node name="n" type="NavigationPolygonInstance" parent="ground/nav2"]
+navpoly = SubResource( 1 )
+travel_cost = 0.0
+
+[node name="s" parent="." instance=ExtResource( 3 )]
+position = Vector2( 32, 80 )
+
+[node name="c" parent="s" index="0"]
+polygon = PoolVector2Array( -16, -16, -16, 16, 16, 16, 16, -16 )
+
+[node name="s2" parent="." instance=ExtResource( 3 )]
+position = Vector2( 64, 48 )
+
+[node name="c" parent="s2" index="0"]
+polygon = PoolVector2Array( -16, -16, -16, 16, 16, 16, 16, -16 )
+
+[node name="s3" parent="." instance=ExtResource( 3 )]
+position = Vector2( 96, 80 )
+
+[node name="c" parent="s3" index="0"]
+polygon = PoolVector2Array( -16, -16, -32, -16, -32, 32, 32, 32, 32, -32, -16, -32 )
+
+[node name="ar" type="Node2D" parent="."]
+
+[node name="cam" type="Camera2D" parent="."]
+current = true
+process_mode = 0
+limit_left = -2000
+limit_top = -2000
+limit_right = 2000
+limit_bottom = 2000
+drag_margin_left = 1.0
+drag_margin_top = 1.0
+drag_margin_right = 1.0
+drag_margin_bottom = 1.0
+script = ExtResource( 4 )
+
+[node name="campos" type="Position2D" parent="."]
+
+[node name="Icon" type="Sprite" parent="campos"]
+scale = Vector2( 0.1, 0.1 )
+texture = ExtResource( 5 )
+
+[editable path="s"]
+[editable path="s2"]
+[editable path="s3"]
