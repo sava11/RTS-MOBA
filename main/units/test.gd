@@ -19,7 +19,7 @@ func _input(event):
 		mpath=[]
 		mpath.append(get_global_mouse_position())
 		mpath_i=0
-	if Input.is_action_pressed("ctrl"):
+	if Input.is_action_pressed("ctrl") and choiced and cb_ch==true:
 		if Input.is_action_just_pressed("rbm"):
 			if pathing==false:
 				mpath=[]
@@ -47,7 +47,6 @@ func _integrate_forces(st):
 		choiced=false
 	if Input.is_action_just_released("lbm"):
 		cb_ch=true
-	print(mpath)
 	if mpath!=[]:
 		path = $nav_ag.get_nav_path()
 		mvec = mvec.move_toward(global_position.direction_to($nav_ag.get_next_location()) * SPEED,SPEED*5*step)
