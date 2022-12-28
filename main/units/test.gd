@@ -7,25 +7,38 @@ var path: Array = []
 export(int) var SPEED: int = 40
 var mvec:=Vector2.ZERO
 var cb_ch=true
+var m_path=[]
 var mpath=[]
 var mpath_i=0
 var pathing=false
+export(NodePath) var patrule_pos=null
+onready var patr_pos=null
+
+func _ready():
+	if patrule_pos!=null:
+		patr_pos=get_node(patrule_pos)
 
 func _input(event):
 	if event is InputEventMouseButton:
 		if event.pressed==true and event.button_index!=1 and event.button_index!=2 and event.button_index!=4 and event.button_index!=5:
 			choiced=false
 	if Input.is_action_just_pressed("rbm") and not(Input.is_action_pressed("ctrl")) and choiced and cb_ch==true:
-		mpath=[]
-		mpath.append(get_global_mouse_position())
+		m_path=[]
+		m_path.append(get_global_mouse_position())
 		mpath_i=0
 	if Input.is_action_pressed("ctrl") and choiced and cb_ch==true:
 		if Input.is_action_just_pressed("rbm"):
 			if pathing==false:
-				mpath=[]
+				if patr_pos!=null:
+					patr_pos.queue_free()
+				m_path=[]
+				var point=Position2D.new()
+				get_tree().current_scene.get_node("patr_zones").add_child(point)
+				point.global_position=Vector2(0,0)
+				patr_pos=point
 				mpath_i=0
-			if len(mpath)>0 and mpath[len(mpath)-1]!=get_global_mouse_position() or mpath==[]:
-				mpath.append(get_global_mouse_position())
+			if len(m_path)>0 and m_path[len(m_path)-1]!=get_global_mouse_position() or m_path==[]:
+				m_path.append(get_global_mouse_position())
 				pathing=true
 	else: pathing=false
 func _draw():
@@ -36,6 +49,13 @@ func _physics_process(delta):
 	if mpath!=[]:
 		rotation_degrees=rad2deg(-atan2(-mvec.y,mvec.x))+90
 func _integrate_forces(st):
+	mpath=[]
+	if patr_pos!=null:
+		for e in m_path:
+			mpath.append(e+patr_pos.global_position)
+	else:
+		mpath=m_path
+		mpath_i=0
 	if mpath!=[]:
 		$nav_ag.set_target_location(mpath[mpath_i])
 	if $nav_ag.is_navigation_finished():
@@ -53,6 +73,7 @@ func _integrate_forces(st):
 		if len(mpath)==1:
 			if global_position.distance_to($nav_ag.get_final_location())<10:
 				mpath=[]
+				m_path=[]
 		elif len(mpath)>1:
 			if global_position.distance_to($nav_ag.get_final_location())<10:
 				mpath_i=gl.circ(mpath_i+1,0,len(mpath)-1)
