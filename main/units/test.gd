@@ -34,11 +34,11 @@ func _input(event):
 				m_path=[]
 				var point=Position2D.new()
 				get_tree().current_scene.get_node("patr_zones").add_child(point)
-				point.global_position=Vector2(0,0)
+				point.global_position=get_global_mouse_position()
 				patr_pos=point
 				mpath_i=0
 			if len(m_path)>0 and m_path[len(m_path)-1]!=get_global_mouse_position() or m_path==[]:
-				m_path.append(get_global_mouse_position())
+				m_path.append(get_global_mouse_position()-patr_pos.global_position)
 				pathing=true
 	else: pathing=false
 func _draw():
