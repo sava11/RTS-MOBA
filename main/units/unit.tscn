@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://icon.png" type="Texture" id=1]
+[ext_resource path="res://main/img/char/0000.png" type="Texture" id=1]
 [ext_resource path="res://main/units/test.gd" type="Script" id=2]
 
 [sub_resource type="PhysicsMaterial" id=55]
@@ -24,10 +24,10 @@ can_sleep = false
 script = ExtResource( 2 )
 SPEED = 100
 
-[node name="sp" type="Sprite" parent="."]
-position = Vector2( 0, 7.15256e-07 )
-scale = Vector2( 0.15, 0.15 )
+[node name="s" type="Sprite" parent="."]
+scale = Vector2( 0.05, 0.05 )
 texture = ExtResource( 1 )
+offset = Vector2( 0, -420 )
 
 [node name="nav_ag" type="NavigationAgent2D" parent="."]
 path_max_distance = 100.0

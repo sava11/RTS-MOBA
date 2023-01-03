@@ -4,16 +4,17 @@ onready var tree=get_tree().current_scene
 onready var cam=tree.get_node("cam")
 var event_pos=Vector2.ZERO
 onready var cp=get_parent().get_node("campos")
+
 func _input(event: InputEvent) -> void:
+	var w_size=Vector2(abs(limit_left)+abs(limit_right),abs(limit_top)+abs(limit_bottom))
+	var w=ProjectSettings.get("display/window/size/width")
+	var h=ProjectSettings.get("display/window/size/height")
+	var _min=[(w_size.x/w),(w_size.y/h)].min()
 	if event is InputEventScreenDrag:
 		event_pos=event.position
 	if event is InputEventMouseButton:
 		var s=get_viewport().size
 		var m=get_viewport().get_mouse_position()
-		var w=ProjectSettings.get("display/window/size/width")
-		var h=ProjectSettings.get("display/window/size/height")
-		var w_size=Vector2(abs(limit_left)+abs(limit_right),abs(limit_top)+abs(limit_bottom))
-		var _min=[(w_size.x/w),(w_size.y/h)].min()
 		if w_size.x+1>w*cam.zoom.x and w_size.y+1>h*cam.zoom.y:
 			if event.button_index==4 :
 				cam.zoom=cam.zoom*0.9
@@ -23,6 +24,9 @@ func _input(event: InputEvent) -> void:
 		else:
 			cam.zoom.x=_min
 			cam.zoom.y=_min
+	if not(w_size.x+1>w*cam.zoom.x and w_size.y+1>h*cam.zoom.y):
+		cam.zoom.x=_min
+		cam.zoom.y=_min
 # Called when the node enters the scene tree for the first time.
 
 func _ready():

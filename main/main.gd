@@ -3,7 +3,9 @@ onready var cam=get_node("cam")
 var choised_units=[]
 onready var pol=get_tree().current_scene.get_node("pol_ground")
 var scs=[1,2]
-var l = [5,47]
+var l = [5,27]
+onready var ysort=$ground
+var polygon=[]
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pol.polygon=PoolVector2Array([Vector2(cam.limit_left,cam.limit_top),Vector2(cam.limit_right,cam.limit_top),Vector2(cam.limit_right,cam.limit_bottom),Vector2(cam.limit_left,cam.limit_bottom)])
@@ -11,12 +13,12 @@ func _ready():
 
 
 func reload_map(p,scl,list):
-	for e in $ground.get_children():
+	for e in ysort.get_children():
 		var np=NavigationPolygon.new()
 		np.add_outline(p)
 		np.make_polygons_from_outlines()
 		e.get_node("n").navpoly=np
-		var id=gl.i_search($ground.get_children(),e)
+		var id=gl.i_search(ysort.get_children(),e)
 		add_path(e.get_node("n"),scl[id],list[id])
 var zone=[]
 func add_patrol(ent):
@@ -56,7 +58,7 @@ func _merge_polygons(array:Array):
 func add_path(path_nod:NavigationPolygonInstance,sc=1,eps=0):
 	var bs=[]
 	for e in get_tree().get_nodes_in_group("ground_build"):
-		bs.append(to_glb_PV(e.get_node("c").polygon,e.global_position,sc,eps))
+		bs.append(to_glb_PV(e.polygon,e.global_position,sc,eps))
 	if len(bs)>1:
 		bs=_merge_polygons(bs)
 	else:pass
@@ -70,5 +72,4 @@ func add_path(path_nod:NavigationPolygonInstance,sc=1,eps=0):
 		navpol.add_outline(bs[e])
 		navpol.make_polygons_from_outlines()
 func clear_path(path_nod):
-	var bs=get_tree().get_nodes_in_group("ground_build")
 	path_nod.navpoly=null

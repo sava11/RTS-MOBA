@@ -15,12 +15,12 @@ export(NodePath) var patrule_pos=null
 onready var patr_pos=null
 
 func _ready():
-	if patrule_pos!=null:
+	if patrule_pos!=null and patrule_pos!="":
 		patr_pos=get_node(patrule_pos)
 
 func _input(event):
 	if event is InputEventMouseButton:
-		if event.pressed==true and event.button_index!=1 and event.button_index!=2 and event.button_index!=4 and event.button_index!=5:
+		if event.pressed==true and event.button_index!=1 and event.button_index!=3 and event.button_index!=2 and event.button_index!=4 and event.button_index!=5:
 			choiced=false
 	if Input.is_action_just_pressed("rbm") and not(Input.is_action_pressed("ctrl")) and choiced and cb_ch==true:
 		m_path=[]
@@ -46,8 +46,9 @@ func _draw():
 		var v=Vector2($c.shape.radius+1,$c.shape.radius+1)
 		draw_rect(Rect2(-v,v*2),Color(50,200,50),false,0.5,true)
 func _physics_process(delta):
-	if mpath!=[]:
-		rotation_degrees=rad2deg(-atan2(-mvec.y,mvec.x))+90
+	pass
+	#if mpath!=[]:
+		#rotation_degrees=rad2deg(-atan2(-mvec.y,mvec.x))+90
 func _integrate_forces(st):
 	mpath=[]
 	if patr_pos!=null:
