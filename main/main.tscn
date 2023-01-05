@@ -1,21 +1,15 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://main/img/output/map_45 - 4.png" type="Texture" id=1]
 [ext_resource path="res://main/units/unit.tscn" type="PackedScene" id=2]
+[ext_resource path="res://main/objs/building/main/base.tscn" type="PackedScene" id=3]
 [ext_resource path="res://main/pl_cam/pl_cam.gd" type="Script" id=4]
-[ext_resource path="res://icon.png" type="Texture" id=5]
 [ext_resource path="res://main/main.gd" type="Script" id=6]
 [ext_resource path="res://main/img/output/map_45 - 1.png" type="Texture" id=7]
 [ext_resource path="res://main/img/output/ramk.png" type="Texture" id=8]
-[ext_resource path="res://main/img/output/house.png" type="Texture" id=9]
 [ext_resource path="res://main/img/output/bcg.png" type="Texture" id=10]
 [ext_resource path="res://main/img/output/map_45 - 3.png" type="Texture" id=11]
 [ext_resource path="res://main/img/output/map_45 - 2.png" type="Texture" id=12]
-
-[sub_resource type="NavigationPolygon" id=1]
-vertices = PoolVector2Array( 512, -320, 512, 352, -512, 352, -512, -320 )
-polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
-outlines = [ PoolVector2Array( -512, -320, -512, 352, 512, 352, 512, -320 ) ]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 6 )
@@ -25,112 +19,99 @@ __meta__ = {
 	1.2.+ строения"
 }
 
-[node name="bcg" type="Node2D" parent="."]
+[node name="map" type="Node2D" parent="."]
 
-[node name="Bcg" type="Sprite" parent="bcg"]
+[node name="bcg" type="Node2D" parent="map"]
+
+[node name="Bcg" type="Sprite" parent="map/bcg"]
 texture = ExtResource( 10 )
 
-[node name="Ramk" type="Sprite" parent="bcg"]
+[node name="Ramk" type="Sprite" parent="map/bcg"]
 texture = ExtResource( 8 )
 
-[node name="ground" type="Node2D" parent="."]
+[node name="PlayGround" type="YSort" parent="map"]
 
-[node name="nav" type="Navigation2D" parent="ground"]
-cell_size = 2.0
+[node name="main" parent="map/PlayGround" instance=ExtResource( 3 )]
+position = Vector2( -436, 296 )
+c_com = Color( 1, 0, 0, 1 )
 
-[node name="n" type="NavigationPolygonInstance" parent="ground/nav"]
-travel_cost = 0.0
+[node name="main2" parent="map/PlayGround" instance=ExtResource( 3 )]
+position = Vector2( 436, -300 )
+c_com = Color( 0, 0, 1, 1 )
 
-[node name="YSort" type="YSort" parent="ground/nav"]
-
-[node name="gr2" parent="ground/nav/YSort" instance=ExtResource( 2 )]
+[node name="gr2" parent="map/PlayGround" instance=ExtResource( 2 )]
 position = Vector2( -320, 220 )
 patrule_pos = NodePath("")
 
-[node name="gr" parent="ground/nav/YSort" instance=ExtResource( 2 )]
+[node name="gr" parent="map/PlayGround" instance=ExtResource( 2 )]
 position = Vector2( 145, 75 )
 patrule_pos = NodePath("")
 
-[node name="House" type="Sprite" parent="ground/nav/YSort"]
-position = Vector2( 436, -302 )
-texture = ExtResource( 9 )
-
-[node name="House2" type="Sprite" parent="ground/nav/YSort"]
-position = Vector2( -436, 319 )
-texture = ExtResource( 9 )
-offset = Vector2( 0, -25.75 )
-
-[node name="Map45-1" type="Sprite" parent="ground/nav/YSort"]
-position = Vector2( 26, 231 )
+[node name="Map45-1" type="Sprite" parent="map/PlayGround"]
+position = Vector2( 26, 261 )
 texture = ExtResource( 7 )
-offset = Vector2( 0, -50 )
+offset = Vector2( 0, -80 )
 region_enabled = true
 region_rect = Rect2( 327, 465, 600, 255 )
 
-[node name="Map45-2" type="Sprite" parent="ground/nav/YSort"]
+[node name="Map45-2" type="Sprite" parent="map/PlayGround"]
 position = Vector2( -258, -14 )
 texture = ExtResource( 12 )
 region_enabled = true
 region_rect = Rect2( 163, 185, 355, 423 )
 
-[node name="Map45-3" type="Sprite" parent="ground/nav/YSort"]
+[node name="Map45-3" type="Sprite" parent="map/PlayGround"]
 position = Vector2( -27, -172 )
 texture = ExtResource( 11 )
 region_enabled = true
 region_rect = Rect2( 272.5, 111, 600, 255 )
 
-[node name="Map45-4" type="Sprite" parent="ground/nav/YSort"]
+[node name="Map45-4" type="Sprite" parent="map/PlayGround"]
 position = Vector2( 260, 20 )
 texture = ExtResource( 1 )
 region_enabled = true
 region_rect = Rect2( 683, 223, 355, 422 )
 
-[node name="nav2" type="Navigation2D" parent="ground"]
+[node name="ground" type="Node2D" parent="map/PlayGround"]
 visible = false
+
+[node name="nav" type="Navigation2D" parent="map/PlayGround/ground"]
 cell_size = 2.0
 
-[node name="n" type="NavigationPolygonInstance" parent="ground/nav2"]
-navpoly = SubResource( 1 )
+[node name="n" type="NavigationPolygonInstance" parent="map/PlayGround/ground/nav"]
 travel_cost = 0.0
 
-[node name="pol_ground" type="Polygon2D" parent="."]
+[node name="nav2" type="Navigation2D" parent="map/PlayGround/ground"]
+cell_size = 2.0
+
+[node name="n" type="NavigationPolygonInstance" parent="map/PlayGround/ground/nav2"]
+travel_cost = 0.0
+
+[node name="pol_ground" type="Polygon2D" parent="map"]
 self_modulate = Color( 1, 0, 0, 0.0470588 )
 
-[node name="buildings" type="Node2D" parent="."]
+[node name="borders" type="Node2D" parent="map"]
 
-[node name="c" type="CollisionPolygon2D" parent="buildings" groups=["ground_build"]]
-visible = false
+[node name="c" type="CollisionPolygon2D" parent="map/borders" groups=["ground_build"]]
 position = Vector2( -300, -20 )
 polygon = PoolVector2Array( -134, -192, -134, 216, -80, 216, 218, 11, -80, -192 )
 
-[node name="c2" type="CollisionPolygon2D" parent="buildings" groups=["ground_build"]]
-visible = false
+[node name="c2" type="CollisionPolygon2D" parent="map/borders" groups=["ground_build"]]
 position = Vector2( 0, 200 )
 polygon = PoolVector2Array( -273, 70, -273, 107, 325, 107, 325, 70, 26, -135 )
 
-[node name="c6" type="CollisionPolygon2D" parent="buildings" groups=["ground_build"]]
-visible = false
+[node name="c6" type="CollisionPolygon2D" parent="map/borders" groups=["ground_build"]]
 position = Vector2( -50, -360 )
 polygon = PoolVector2Array( -275, 110, -275, 73, 322, 73, 322, 110, 23.5, 314 )
 
-[node name="c5" type="CollisionPolygon2D" parent="buildings" groups=["ground_build"]]
-visible = false
+[node name="c5" type="CollisionPolygon2D" parent="map/borders" groups=["ground_build"]]
 position = Vector2( 315, -15 )
 polygon = PoolVector2Array( -232.5, 41, 67, 245, 120, 245, 120, -164, 67, -164 )
-
-[node name="c3" type="CollisionPolygon2D" parent="buildings" groups=["ground_build"]]
-visible = false
-position = Vector2( -434, 320 )
-polygon = PoolVector2Array( -55.5, -30, -55.5, 24.7, 51.5, 24.7, 51.5, -30 )
-
-[node name="c4" type="CollisionPolygon2D" parent="buildings" groups=["ground_build"]]
-visible = false
-position = Vector2( 438, -275 )
-polygon = PoolVector2Array( -55.5, -30, -55.5, 24.7, 51.5, 24.7, 51.5, -30 )
 
 [node name="ar" type="Node2D" parent="."]
 
 [node name="cam" type="Camera2D" parent="."]
+z_index = 100
 current = true
 process_mode = 0
 limit_left = -600
@@ -144,10 +125,6 @@ drag_margin_right = 1.0
 drag_margin_bottom = 1.0
 script = ExtResource( 4 )
 
-[node name="campos" type="Position2D" parent="."]
-
-[node name="Icon" type="Sprite" parent="campos"]
-scale = Vector2( 0.1, 0.1 )
-texture = ExtResource( 5 )
-
 [node name="patr_zones" type="Node2D" parent="."]
+
+[node name="cl" type="CanvasLayer" parent="."]

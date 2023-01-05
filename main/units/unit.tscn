@@ -30,9 +30,11 @@ texture = ExtResource( 1 )
 offset = Vector2( 0, -420 )
 
 [node name="nav_ag" type="NavigationAgent2D" parent="."]
-path_max_distance = 100.0
+target_desired_distance = 25.25
 
 [node name="c" type="CollisionShape2D" parent="."]
 shape = SubResource( 56 )
 
 [connection signal="input_event" from="." to="." method="_on_KinematicBody2D_input_event"]
+[connection signal="mouse_entered" from="." to="." method="_on_gr_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_gr_mouse_exited"]

@@ -25,7 +25,10 @@ func to_glb_PV(pv:PoolVector2Array,pos:Vector2,_scale=1,loc_pos=0):
 
 func target(to,from):
 	return rad2deg(angle(to-from))+180
-
+func _get_nav_path(t):
+	match t:
+		0:
+			return get_tree().current_scene.get_node("map/PlayGround/ground/nav")
 func bac_his():
 	if len(menu_history)>1:
 		menu_history.remove(len(menu_history)-1)
@@ -34,8 +37,12 @@ func bac_his_g():
 		game_history.remove(len(game_history)-1)
 func get_hero():
 	return get_tree().current_scene.get_node("player")
+func get_camera():
+	return get_tree().current_scene.get_node("cam")
 func get_prkt_win():
 	return Vector2(ProjectSettings.get("display/window/size/width"),ProjectSettings.get("display/window/size/height"))
+func get_prkt_twin():
+	return Vector2(ProjectSettings.get("display/window/size/test_width"),ProjectSettings.get("display/window/size/test_height"))
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pause_mode=Node.PAUSE_MODE_PROCESS

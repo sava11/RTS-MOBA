@@ -1,32 +1,31 @@
 extends RigidBody2D
 enum types{space,sky,ground,water,underwater}
-var unit_type=null
 export(int)var comand=0
+export(int)var type=0
 var choiced = false
 var path: Array = []
 export(int) var SPEED: int = 40
 var mvec:=Vector2.ZERO
-var cb_ch=true
 var m_path=[]
 var mpath=[]
 var mpath_i=0
 var pathing=false
 export(NodePath) var patrule_pos=null
 onready var patr_pos=null
-
 func _ready():
+	$nav_ag.set_navigation(gl._get_nav_path(type))
+	#-ПЕРЕДЕЛАТЬ ПОД ЭТО
 	if patrule_pos!=null and patrule_pos!="":
 		patr_pos=get_node(patrule_pos)
-
 func _input(event):
 	if event is InputEventMouseButton:
-		if event.pressed==true and event.button_index!=1 and event.button_index!=3 and event.button_index!=2 and event.button_index!=4 and event.button_index!=5:
+		if event.pressed==true and in_==false and event.button_index!=3 and event.button_index!=2 and event.button_index!=4 and event.button_index!=5:
 			choiced=false
-	if Input.is_action_just_pressed("rbm") and not(Input.is_action_pressed("ctrl")) and choiced and cb_ch==true:
+	if Input.is_action_just_pressed("rbm") and not(Input.is_action_pressed("ctrl")) and choiced:
 		m_path=[]
 		m_path.append(get_global_mouse_position())
 		mpath_i=0
-	if Input.is_action_pressed("ctrl") and choiced and cb_ch==true:
+	if Input.is_action_pressed("ctrl") and choiced:
 		if Input.is_action_just_pressed("rbm"):
 			if pathing==false:
 				if patr_pos!=null:
@@ -50,6 +49,8 @@ func _physics_process(delta):
 	#if mpath!=[]:
 		#rotation_degrees=rad2deg(-atan2(-mvec.y,mvec.x))+90
 func _integrate_forces(st):
+	mvec=st.get_linear_velocity()
+	var step=st.get_step()
 	mpath=[]
 	if patr_pos!=null:
 		for e in m_path:
@@ -60,14 +61,10 @@ func _integrate_forces(st):
 	if mpath!=[]:
 		$nav_ag.set_target_location(mpath[mpath_i])
 	if $nav_ag.is_navigation_finished():
+		mvec=mvec.move_toward(Vector2(0,0),SPEED*10*step)
+		mpath=[]
+		m_path=[]
 		return
-	mvec=st.get_linear_velocity()
-	var step=st.get_step()
-		#choiced=false
-	if Input.is_action_just_pressed("lbm") and cb_ch==true and not(Input.is_action_pressed("shif")):
-		choiced=false
-	if Input.is_action_just_released("lbm"):
-		cb_ch=true
 	if mpath!=[]:
 		path = $nav_ag.get_nav_path()
 		mvec = mvec.move_toward(global_position.direction_to($nav_ag.get_next_location()) * SPEED,SPEED*5*step)
@@ -83,16 +80,12 @@ func _integrate_forces(st):
 				
 	update()
 	st.set_linear_velocity(mvec)
-
-
-
-
-
 func _on_KinematicBody2D_input_event(viewport, event, shape_idx):
-	if Input.is_action_just_pressed("lbm")==true and choiced==true:
-		choiced=false
-		get_tree().current_scene.choised_units.remove(get_tree().current_scene.choised_units.find(self))
-	elif Input.is_action_just_pressed("lbm")==true and choiced==false:
-		choiced=true
-		get_tree().current_scene.choised_units.append(self)
-	
+	if Input.is_action_just_pressed("lbm"):
+		if choiced==false:
+			choiced=true
+		else:
+			choiced=false
+var in_=false
+func _on_gr_mouse_entered():in_=true
+func _on_gr_mouse_exited():in_=false

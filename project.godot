@@ -17,6 +17,7 @@ config/icon="res://icon.png"
 [autoload]
 
 gl="*res://gl.gd"
+gm="*res://main/game.gd"
 
 [display]
 

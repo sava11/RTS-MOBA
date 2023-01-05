@@ -3,7 +3,6 @@ export(int)var command=0
 onready var tree=get_tree().current_scene
 onready var cam=tree.get_node("cam")
 var event_pos=Vector2.ZERO
-onready var cp=get_parent().get_node("campos")
 
 func _input(event: InputEvent) -> void:
 	var w_size=Vector2(abs(limit_left)+abs(limit_right),abs(limit_top)+abs(limit_bottom))
@@ -30,6 +29,13 @@ func _input(event: InputEvent) -> void:
 # Called when the node enters the scene tree for the first time.
 
 func _ready():
+	var w_size=Vector2(abs(limit_left)+abs(limit_right),abs(limit_top)+abs(limit_bottom))
+	var w=ProjectSettings.get("display/window/size/width")
+	var h=ProjectSettings.get("display/window/size/height")
+	var _min=[(w_size.x/w),(w_size.y/h)].min()
+	if not(w_size.x+1>w*cam.zoom.x and w_size.y+1>h*cam.zoom.y):
+		cam.zoom.x=_min
+		cam.zoom.y=_min
 	pass # Replace with function body.
 var choise_rect_pos=Vector2.ZERO
 var can_take_pos=Vector2.ZERO
@@ -53,7 +59,7 @@ func _process(delta):
 		position=-a*s1+v
 	position.x=clamp(position.x,limit_left+w/2*cam.zoom.x,limit_right-w/2*cam.zoom.x)
 	position.y=clamp(position.y,limit_top+h/2*cam.zoom.y,limit_bottom-h/2*cam.zoom.y)
-	cp.global_position=get_global_mouse_position()
+
 	#print((to_global(get_local_mouse_position())-global_position)+get_local_mouse_position())
 	#offset=(get_global_mouse_position()-global_position)*tree.get_node("cam").zoom
 func _draw():

@@ -1,10 +1,9 @@
 extends Node2D
 onready var cam=get_node("cam")
-var choised_units=[]
-onready var pol=get_tree().current_scene.get_node("pol_ground")
+onready var pol=get_tree().current_scene.get_node("map/pol_ground")
 var scs=[1,2]
 var l = [5,27]
-onready var ysort=$ground
+onready var ysort=$map/PlayGround/ground
 var polygon=[]
 # Called when the node enters the scene tree for the first time.
 func _ready():
