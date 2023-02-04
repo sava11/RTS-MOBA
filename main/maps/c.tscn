@@ -1,0 +1,3 @@
+[gd_scene format=2]
+
+[node name="c" type="CollisionPolygon2D" groups=["ground_build"]]

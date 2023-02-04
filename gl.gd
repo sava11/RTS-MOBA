@@ -1,4 +1,5 @@
 extends Node
+var command=1
 const mres="user://"
 const paths=["Saves","Options"]
 var fname=".a"
@@ -39,6 +40,8 @@ func get_hero():
 	return get_tree().current_scene.get_node("player")
 func get_camera():
 	return get_tree().current_scene.get_node("cam")
+func get_view_win():
+	return get_viewport().get_visible_rect().size
 func get_prkt_win():
 	return Vector2(ProjectSettings.get("display/window/size/width"),ProjectSettings.get("display/window/size/height"))
 func get_prkt_twin():
@@ -115,14 +118,25 @@ func Gcreate_path(res,path,excut="",incut=""):
 		return path
 func Gdel_path(res,path,excut="",incut=""):
 	pass
-
+func get_ang_move(angle:float,ex:float):
+	var ang1=abs(ex)
+	var le=int(360/ang1)
+	var ang=int(abs(angle)+180+ang1/2)%360
+	if ang>=0:
+		for e in range(0,le):
+			if ang>=e*ang1 and ang<(e+1)*ang1:
+				return e
 func jos(a,b):
 	if b!=0:
 		return b*round(a/b)
 	else:return 0
-
 func circ(a,mn,mx):
 	return mn+(a-mn) % (abs(mx+1)+abs(mn))
+func circ1(a,mn,mx):
+	#print("output ",a," ",mn," ",mx)
+	var res=abs(a)%(mn+mx)+mn
+	#print("output ",res)
+	return res
 
 func i_search(a,i):
 	var inte=0

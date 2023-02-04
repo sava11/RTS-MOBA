@@ -6,8 +6,8 @@ var event_pos=Vector2.ZERO
 
 func _input(event: InputEvent) -> void:
 	var w_size=Vector2(abs(limit_left)+abs(limit_right),abs(limit_top)+abs(limit_bottom))
-	var w=ProjectSettings.get("display/window/size/width")
-	var h=ProjectSettings.get("display/window/size/height")
+	var w=gl.get_view_win().x#ProjectSettings.get("display/window/size/width")
+	var h=gl.get_view_win().y#ProjectSettings.get("display/window/size/height")
 	var _min=[(w_size.x/w),(w_size.y/h)].min()
 	if event is InputEventScreenDrag:
 		event_pos=event.position
@@ -26,12 +26,11 @@ func _input(event: InputEvent) -> void:
 	if not(w_size.x+1>w*cam.zoom.x and w_size.y+1>h*cam.zoom.y):
 		cam.zoom.x=_min
 		cam.zoom.y=_min
-# Called when the node enters the scene tree for the first time.
 
 func _ready():
 	var w_size=Vector2(abs(limit_left)+abs(limit_right),abs(limit_top)+abs(limit_bottom))
-	var w=ProjectSettings.get("display/window/size/width")
-	var h=ProjectSettings.get("display/window/size/height")
+	var w=OS.window_size.x*cam.zoom.y#ProjectSettings.get("display/window/size/width")
+	var h=OS.window_size.y*cam.zoom.y#ProjectSettings.get("display/window/size/height")
 	var _min=[(w_size.x/w),(w_size.y/h)].min()
 	if not(w_size.x+1>w*cam.zoom.x and w_size.y+1>h*cam.zoom.y):
 		cam.zoom.x=_min
@@ -81,6 +80,8 @@ func _draw():
 		if tree.get_node("ar").get_child_count()>0:
 			var c=tree.get_node("ar/ar/col")
 			var a=tree.get_node("ar/ar")
+			c.get_parent().collision_layer=8
+			c.get_parent().collision_mask=8
 			a.global_position=(get_global_mouse_position()-choise_rect_pos)/2+choise_rect_pos
 			c.shape.extents=(get_global_mouse_position()-choise_rect_pos)/2
 			draw_rect(Rect2(get_local_mouse_position()-c.shape.extents*2,c.shape.extents*2),Color(50,200,50), false, 0.1,true)

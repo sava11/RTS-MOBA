@@ -76,16 +76,11 @@ ctrl={
 
 [layer_names]
 
-2d_render/layer_1="under_water"
-2d_render/layer_2="water"
-2d_render/layer_3="ground"
-2d_render/layer_4="air"
-2d_render/layer_5="space"
-2d_render/layer_6="mouse"
-2d_physics/layer_1="player_buildings"
-2d_physics/layer_2="enemy_buildings"
-2d_physics/layer_3="player_units"
-2d_physics/layer_4="enemy_units"
+2d_physics/layer_1="colision"
+2d_physics/layer_2="hurt"
+2d_physics/layer_3="hitbox"
+2d_physics/layer_4="my"
+2d_physics/layer_5="enemy"
 
 [physics]
 

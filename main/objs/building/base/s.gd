@@ -1,5 +1,6 @@
 extends StaticBody2D
 var choiced=false
+var command=-1
 var sc=1
 func _draw():
 	if choiced:
@@ -12,7 +13,7 @@ func _ready():pass
 func _physics_process(delta):
 	update()
 func _on_s_input_event(viewport, event, shape_idx):
-	if Input.is_action_just_pressed("lbm"):
+	if Input.is_action_just_pressed("lbm") and command==gl.command:
 		if choiced==false:
 			choiced=true
 		else:
