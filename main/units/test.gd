@@ -18,12 +18,12 @@ onready var patr_pos=null
 onready var status=$stats
 onready var hib= $att_pos
 onready var hub= $hurt_box
-var tarcgets=[]
-func vision(t:bool):
-	$spr.visible=t
+#var tarcgets=[]
+# тип для выбора управления
+func get_init():
+	return [self,filename]
 
 func _ready():
-	vision(false)
 	if gl.command==command:
 		hib.collision_layer=0
 		hib.collision_mask=4
@@ -31,6 +31,8 @@ func _ready():
 		hub.collision_mask=0
 		collision_layer=9
 		collision_mask=collision_layer
+		$front.collision_layer=16
+		$front.collision_mask=$front.collision_layer
 		#$rc.collision_mask=16
 	else:
 		hib.collision_layer=0
@@ -39,9 +41,10 @@ func _ready():
 		hub.collision_mask=0
 		collision_layer=17
 		collision_mask=collision_layer
+		$front.collision_layer=8
+		$front.collision_mask=$front.collision_layer
 		#$rc.collision_mask=8
 	$nav_ag.set_navigation(gl._get_nav_path(type))
-	#-ПЕРЕДЕЛАТЬ ПОД ЭТО
 	if patrule_pos!=null and patrule_pos!="":
 		patr_pos=get_node(patrule_pos)
 func _input(event):
@@ -132,13 +135,14 @@ func _integrate_forces(st):
 		$front.rotation_degrees=rad2deg(gl.angle(ent.global_position-global_position))-90
 		if len_l.min()==gl._sqrt(self.global_position-ent.global_position):
 			nearst=ent
-			if gl.i_search($front.bs,nearst)!=-1:
-				attk(nearst.global_position)
-			#mpath.append(ent.global_position)
-			if attacked==true and nearst!=null and is_instance_valid(nearst) and m_path==[]:
-				m_path=[nearst.global_position]
-				mpath_i=0
+	if gl.i_search($front.bs,nearst)!=-1:
+		attk(nearst.global_position)
+	#mpath.append(ent.global_position)
+	if attacked==true and nearst!=null and is_instance_valid(nearst) and m_path==[]:
+		m_path=[nearst.global_position]
+		mpath_i=0
 	update()
+	if bs==[]:nearst=null
 	st.set_linear_velocity(mvec)
 var nearst=null
 func _on_input_event(viewport, event, shape_idx):
@@ -153,12 +157,11 @@ func _on_gr_mouse_exited():in_=false
 
 var bs=[]
 func _on_watchout_body_entered(b):
-	if b!=self and b.command!=gl.command:
+	if b!=self and b.command!=command:
 		bs.append(b)
 func _on_watchout_body_exited(b):
-	if b!=self and b.command!=gl.command:
+	if b!=self and b.command!=command:
 		bs.remove(gl.i_search(bs,b))
-
 
 func end_att():
 	attacked=true

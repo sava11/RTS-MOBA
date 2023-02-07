@@ -79,8 +79,8 @@ func _physics_process(delta):
 			t.get_node("spr").self_modulate=c_com
 			if t.type==0:
 				get_tree().current_scene.get_node("map/PlayGround").add_child(t)
-				if t.command==gl.command:
-					t.vision(true)
+				#if t.command==gl.command:
+				#	t.vision(true)
 			u_mode=mode.nill
 var timers=[]
 func add_unit():
@@ -104,10 +104,10 @@ func _on_hurt_box_area_entered(area):
 		queue_free()
 		get_tree().current_scene.call_deferred("emit_signal","reloadmap")
 func _on_watchout_body_entered(body):
-	if body.command!=gl.command:
-		body.vision(true)
+	#if body.command!=gl.command:
+	#	body.vision(true)
 	pass # Replace with function body.
 func _on_watchout_body_exited(body):
-	if body.command!=gl.command:
-		body.vision(false)
+	#if body.command!=gl.command:
+	#	body.vision(false)
 	pass # Replace with function body.

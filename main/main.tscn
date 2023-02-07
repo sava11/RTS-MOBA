@@ -1,17 +1,22 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://main/img/output/map_45 - 4.png" type="Texture" id=1]
+[ext_resource path="res://main/units/unit.tscn" type="PackedScene" id=2]
 [ext_resource path="res://main/objs/building/main/base.tscn" type="PackedScene" id=3]
 [ext_resource path="res://main/pl_cam/pl_cam.gd" type="Script" id=4]
-[ext_resource path="res://1625918657_13-kartinkin-com-p-tekstura-travi-dlya-genplana-krasivo-14.png" type="Texture" id=5]
+[ext_resource path="res://main/img/1625918657_13-kartinkin-com-p-tekstura-travi-dlya-genplana-krasivo-14.png" type="Texture" id=5]
 [ext_resource path="res://main/main.gd" type="Script" id=6]
 [ext_resource path="res://main/img/output/map_45 - 1.png" type="Texture" id=7]
 [ext_resource path="res://main/img/output/ramk.png" type="Texture" id=8]
-[ext_resource path="res://1626890776_3-kartinkin-com-p-shchebenka-tekstura-besshovnaya-krasivo-3.jpg" type="Texture" id=9]
+[ext_resource path="res://main/img/1626890776_3-kartinkin-com-p-shchebenka-tekstura-besshovnaya-krasivo-3.jpg" type="Texture" id=9]
 [ext_resource path="res://main/img/output/bcg.png" type="Texture" id=10]
 [ext_resource path="res://main/img/output/map_45 - 3.png" type="Texture" id=11]
 [ext_resource path="res://main/img/output/map_45 - 2.png" type="Texture" id=12]
 [ext_resource path="res://main/maps/c_colored.tscn" type="PackedScene" id=13]
+[ext_resource path="res://main/font/normal.tres" type="DynamicFont" id=14]
+[ext_resource path="res://main/ChoiceObjectMenu.gd" type="Script" id=15]
+[ext_resource path="res://main/font/COMICI.TTF" type="DynamicFontData" id=16]
+[ext_resource path="res://main/font/COMICBD.TTF" type="DynamicFontData" id=17]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
@@ -36,6 +41,12 @@ shader = SubResource( 1 )
 shader_param/speed = 0.1
 shader_param/strength = 0.1
 shader_param/noise = SubResource( 4 )
+
+[sub_resource type="DynamicFont" id=5]
+font_data = ExtResource( 16 )
+
+[sub_resource type="DynamicFont" id=6]
+font_data = ExtResource( 17 )
 
 [node name="Node2D" type="Node2D"]
 pause_mode = 2
@@ -135,6 +146,11 @@ position = Vector2( 436, -296 )
 command = 2
 c_com = Color( 0, 0, 1, 1 )
 
+[node name="gr" parent="map/PlayGround" instance=ExtResource( 2 )]
+position = Vector2( -440, 352 )
+command = 2
+damage = 5.0
+
 [node name="ar" type="Node2D" parent="."]
 
 [node name="cam" type="Camera2D" parent="."]
@@ -155,3 +171,36 @@ script = ExtResource( 4 )
 [node name="patr_zones" type="Node2D" parent="."]
 
 [node name="cl" type="CanvasLayer" parent="."]
+
+[node name="ChoiceMenu" type="Panel" parent="cl"]
+self_modulate = Color( 1, 1, 1, 0.145098 )
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -280.0
+script = ExtResource( 15 )
+
+[node name="UpCont" type="Control" parent="cl/ChoiceMenu"]
+margin_left = -744.0
+margin_right = -704.0
+margin_bottom = 40.0
+
+[node name="txt" type="RichTextLabel" parent="cl/ChoiceMenu/UpCont"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 744.0
+margin_top = -40.0
+margin_right = 744.0
+margin_bottom = 32.0
+custom_fonts/italics_font = SubResource( 5 )
+custom_fonts/bold_font = SubResource( 6 )
+custom_fonts/normal_font = ExtResource( 14 )
+text = "меню выбора управления"
+scroll_active = false
+deselect_on_focus_loss_enabled = false
+
+[node name="DownCont" type="Control" parent="cl/ChoiceMenu"]
+margin_left = 75.0
+margin_right = 240.0
+margin_bottom = 320.0
