@@ -31,9 +31,6 @@ func reload_map(pl,scl,list):
 		np.make_polygons_from_outlines()
 		e.get_node("n").navpoly=np
 		add_path(e.get_node("n"),scl[id],list[id])
-func _physics_process(delta):
-	if Input.is_action_just_pressed("a"):
-		_reload()
 var zone=[]
 func add_patrol(ent):
 	if ent.is_in_group("unit"):
@@ -74,3 +71,5 @@ func add_path(path_nod:NavigationPolygonInstance,sc=1,eps=0):
 		navpol.make_polygons_from_outlines()
 func clear_path(path_nod):
 	path_nod.navpoly=null
+
+	

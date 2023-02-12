@@ -20,7 +20,9 @@ func b_in(b):
 	if not (b is TileMap) and bs.find(b)==-1:
 		bs.append(b)
 		b.choiced=true
+		get_tree().current_scene.get_node("cl/ChoiceMenu").add(b.type)
 func b_out(b):
 	if bs.find(b)!=-1:
 		b.choiced=false
 		bs.remove(bs.find(b))
+		get_tree().current_scene.get_node("cl/ChoiceMenu").rem(b.type)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://main/img/output/map_45 - 4.png" type="Texture" id=1]
 [ext_resource path="res://main/units/unit.tscn" type="PackedScene" id=2]
@@ -13,10 +13,6 @@
 [ext_resource path="res://main/img/output/map_45 - 3.png" type="Texture" id=11]
 [ext_resource path="res://main/img/output/map_45 - 2.png" type="Texture" id=12]
 [ext_resource path="res://main/maps/c_colored.tscn" type="PackedScene" id=13]
-[ext_resource path="res://main/font/normal.tres" type="DynamicFont" id=14]
-[ext_resource path="res://main/ChoiceObjectMenu.gd" type="Script" id=15]
-[ext_resource path="res://main/font/COMICI.TTF" type="DynamicFontData" id=16]
-[ext_resource path="res://main/font/COMICBD.TTF" type="DynamicFontData" id=17]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
@@ -42,11 +38,13 @@ shader_param/speed = 0.1
 shader_param/strength = 0.1
 shader_param/noise = SubResource( 4 )
 
-[sub_resource type="DynamicFont" id=5]
-font_data = ExtResource( 16 )
+[sub_resource type="CircleShape2D" id=5]
+resource_local_to_scene = true
+radius = 328.0
 
-[sub_resource type="DynamicFont" id=6]
-font_data = ExtResource( 17 )
+[sub_resource type="CircleShape2D" id=6]
+resource_local_to_scene = true
+radius = 328.0
 
 [node name="Node2D" type="Node2D"]
 pause_mode = 2
@@ -77,12 +75,13 @@ stretch_mode = 2
 [node name="b" type="Polygon2D" parent="map/borders"]
 texture = ExtResource( 9 )
 texture_scale = Vector2( 20, 20 )
-polygon = PoolVector2Array( -144, -64, -64, 88, 96, 80, 176, 216, 208, 240, 232, 232, 232, 216, 200, 56, 272, 8, 272, -40, 184, -8, 144, -8, 96, -40, -8, -80, -48, -40, -128, -80 )
+polygon = PoolVector2Array( 35, 130, 205, 230, 230, 225, 280, 85, 264, -8, -10, -215, -105, -195, -150, -150, -105, 5, -30, 110 )
 
 [node name="c" parent="map/borders" instance=ExtResource( 13 )]
 self_modulate = Color( 0.568627, 0.623529, 1, 1 )
 material = SubResource( 2 )
-polygon = PoolVector2Array( -128, -64, -56, 72, 104, 72, 200, 224, 224, 224, 160, 48, 264, 0, 264, -24, 192, 0, 128, 0, 0, -72, -40, -24 )
+position = Vector2( 0, -5 )
+polygon = PoolVector2Array( 35, 120, 200, 224, 224, 224, 265, 85, 260, 15, -15, -195, -95, -180, -135, -140, -105, -35, -75, 25, -15, 95 )
 
 [node name="bcg" type="Node2D" parent="map"]
 visible = false
@@ -125,13 +124,11 @@ texture = ExtResource( 8 )
 [node name="ground" type="Node2D" parent="map/PlayGround"]
 
 [node name="nav" type="Navigation2D" parent="map/PlayGround/ground"]
-cell_size = 2.0
 
 [node name="n" type="NavigationPolygonInstance" parent="map/PlayGround/ground/nav"]
 travel_cost = 0.0
 
 [node name="nav2" type="Navigation2D" parent="map/PlayGround/ground"]
-cell_size = 2.0
 
 [node name="n" type="NavigationPolygonInstance" parent="map/PlayGround/ground/nav2"]
 travel_cost = 0.0
@@ -141,15 +138,56 @@ position = Vector2( -436, 296 )
 command = 1
 c_com = Color( 1, 0, 0, 1 )
 
+[node name="Line2D" parent="map/PlayGround/main" index="0"]
+points = PoolVector2Array( 0, 0, 661, -36, 872, -296 )
+
+[node name="c" parent="map/PlayGround/main/watchout" index="0"]
+shape = SubResource( 5 )
+
+[node name="main3" parent="map/PlayGround" instance=ExtResource( 3 )]
+position = Vector2( -436, 0 )
+command = 1
+c_com = Color( 1, 0, 0, 1 )
+
+[node name="Line2D" parent="map/PlayGround/main3" index="0"]
+points = PoolVector2Array( 0, 0, 211, -260, 872, -296 )
+
+[node name="c" parent="map/PlayGround/main3/watchout" index="0"]
+shape = SubResource( 5 )
+
 [node name="main2" parent="map/PlayGround" instance=ExtResource( 3 )]
 position = Vector2( 436, -296 )
 command = 2
 c_com = Color( 0, 0, 1, 1 )
 
-[node name="gr" parent="map/PlayGround" instance=ExtResource( 2 )]
-position = Vector2( -440, 352 )
+[node name="Line2D" parent="map/PlayGround/main2" index="0"]
+points = PoolVector2Array( 0, 0, -662, 36, -872, 296 )
+
+[node name="c" parent="map/PlayGround/main2/watchout" index="0"]
+shape = SubResource( 6 )
+
+[node name="main4" parent="map/PlayGround" instance=ExtResource( 3 )]
+position = Vector2( 436, 0 )
 command = 2
-damage = 5.0
+c_com = Color( 0, 0, 1, 1 )
+
+[node name="Line2D" parent="map/PlayGround/main4" index="0"]
+points = PoolVector2Array( 0, 0, -211, 260, -872, 296 )
+
+[node name="c" parent="map/PlayGround/main4/watchout" index="0"]
+shape = SubResource( 6 )
+
+[node name="gr" parent="map/PlayGround" instance=ExtResource( 2 )]
+position = Vector2( 155, -110 )
+command = 2
+
+[node name="gr2" parent="map/PlayGround" instance=ExtResource( 2 )]
+position = Vector2( 125, -145 )
+command = 2
+
+[node name="gr3" parent="map/PlayGround" instance=ExtResource( 2 )]
+position = Vector2( 265, 170 )
+command = 2
 
 [node name="ar" type="Node2D" parent="."]
 
@@ -172,35 +210,15 @@ script = ExtResource( 4 )
 
 [node name="cl" type="CanvasLayer" parent="."]
 
-[node name="ChoiceMenu" type="Panel" parent="cl"]
-self_modulate = Color( 1, 1, 1, 0.145098 )
-anchor_left = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -280.0
-script = ExtResource( 15 )
-
-[node name="UpCont" type="Control" parent="cl/ChoiceMenu"]
-margin_left = -744.0
-margin_right = -704.0
-margin_bottom = 40.0
-
-[node name="txt" type="RichTextLabel" parent="cl/ChoiceMenu/UpCont"]
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 744.0
-margin_top = -40.0
-margin_right = 744.0
-margin_bottom = 32.0
-custom_fonts/italics_font = SubResource( 5 )
-custom_fonts/bold_font = SubResource( 6 )
-custom_fonts/normal_font = ExtResource( 14 )
-text = "меню выбора управления"
-scroll_active = false
-deselect_on_focus_loss_enabled = false
-
-[node name="DownCont" type="Control" parent="cl/ChoiceMenu"]
-margin_left = 75.0
-margin_right = 240.0
-margin_bottom = 320.0
+[editable path="map/PlayGround/main"]
+[editable path="map/PlayGround/main/watchout"]
+[editable path="map/PlayGround/main/hurt_box"]
+[editable path="map/PlayGround/main3"]
+[editable path="map/PlayGround/main3/watchout"]
+[editable path="map/PlayGround/main3/hurt_box"]
+[editable path="map/PlayGround/main2"]
+[editable path="map/PlayGround/main2/watchout"]
+[editable path="map/PlayGround/main2/hurt_box"]
+[editable path="map/PlayGround/main4"]
+[editable path="map/PlayGround/main4/watchout"]
+[editable path="map/PlayGround/main4/hurt_box"]
