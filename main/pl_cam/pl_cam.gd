@@ -1,7 +1,7 @@
 extends Camera2D
 export(int)var command=0
 onready var tree=get_tree().current_scene
-onready var cam=tree.get_node("cam")
+onready var cam=self
 var event_pos=Vector2.ZERO
 
 func _input(event: InputEvent) -> void:
@@ -61,35 +61,5 @@ func _process(delta):
 
 	#print((to_global(get_local_mouse_position())-global_position)+get_local_mouse_position())
 	#offset=(get_global_mouse_position()-global_position)*tree.get_node("cam").zoom
-func _draw():
-	if Input.is_action_pressed("lbm"):
-		if tree.get_node("ar").get_child_count()==0:
-			if choise_rect_pos!=get_global_mouse_position():
-				choise_rect_pos=get_global_mouse_position()
-				var a=Area2D.new()
-				var c=CollisionShape2D.new()
-				a.add_child(c)
-				a.name="ar"
-				c.name="col"
-				c.shape=RectangleShape2D.new()
-				tree.get_node("ar").add_child(a)
-				a.collision_layer=5
-				a.set_script(preload("res://main/choise_script.gd"))
-				a.connect("body_entered",a,"b_in")
-				a.connect("body_exited",a,"b_out")
-		if tree.get_node("ar").get_child_count()>0:
-			var c=tree.get_node("ar/ar/col")
-			var a=tree.get_node("ar/ar")
-			c.get_parent().collision_layer=8
-			c.get_parent().collision_mask=8
-			a.global_position=(get_global_mouse_position()-choise_rect_pos)/2+choise_rect_pos
-			c.shape.extents=(get_global_mouse_position()-choise_rect_pos)/2
-			draw_rect(Rect2(get_local_mouse_position()-c.shape.extents*2,c.shape.extents*2),Color(50,200,50), false, 0.1,true)
-	else:
-		choise_rect_pos=get_global_mouse_position()
-		if tree.get_node("ar").get_child_count()>0:
-			tree.get_node("ar/ar").disconnect("body_entered",tree.get_node("ar/ar"),"b_in")
-			tree.get_node("ar/ar").disconnect("body_exited",tree.get_node("ar/ar"),"b_out")
-			tree.get_node("ar/ar").queue_free()
 var v=Vector2.ZERO
 var pres_l=false

@@ -6,16 +6,20 @@ var fname=".a"
 var fformat="SN"
 var otstp=5
 var sn=[]
-enum powers{wall}
-enum program_history_items{game,menu}
-var program_history=[program_history_items.menu]
+func in_get_menu_area():
+	var varible=get_tree().current_scene.get_node("cl/cntrl")
+	var m=get_camera().get_local_mouse_position()+gl.get_prkt_win()/2
+	if not(varible.rect_size.x<m.x and varible.rect_position.x<m.x):
+		return true
+	return false
 
-enum game_history_items{nill,menu,set,premap,map}
-var game_history=[game_history_items.nill]
-
-enum menu_history_items{main,sett,saves,Allert}
-var menu_history=[menu_history_items.main]
-
+func to_glb_line(pv:PoolVector2Array,pos:Vector2,_scale=1,loc_pos=0):
+	var pool=pv
+	var poolvec2=PoolVector2Array([])
+	for e in pool:
+		var t=gl.move(rad2deg(gl.angle(e)))*(gl._sqrt(e*_scale))
+		poolvec2.append((t+pos))
+	return poolvec2
 func to_glb_PV(pv:PoolVector2Array,pos:Vector2,_scale=1,loc_pos=0):
 	var pool=Geometry.offset_polygon_2d(pv,loc_pos+1,0)[0]
 	var poolvec2=PoolVector2Array([])
@@ -30,12 +34,9 @@ func _get_nav_path(t):
 	match t:
 		0:
 			return get_tree().current_scene.get_node("map/PlayGround/ground/nav")
-func bac_his():
-	if len(menu_history)>1:
-		menu_history.remove(len(menu_history)-1)
-func bac_his_g():
-	if len(game_history)>1:
-		game_history.remove(len(game_history)-1)
+#func bac_his():
+#	if len(menu_history)>1:
+#		menu_history.remove(len(menu_history)-1)
 func get_hero():
 	return get_tree().current_scene.get_node("player")
 func get_camera():
@@ -131,7 +132,7 @@ func jos(a,b):
 		return b*round(a/b)
 	else:return 0
 func circ(a,mn,mx):
-	return mn+(a-mn) % (abs(mx+1)+abs(mn))
+	return abs(a)%(mn+mx)+mn
 func circ1(a,mn,mx):
 	#print("output ",a," ",mn," ",mx)
 	var res=abs(a)%(mn+mx)+mn
@@ -242,9 +243,8 @@ func _process(delta):
 	#				butts.visible=false
 	#				set.visible=true
 	#				if Input.is_action_just_pressed("ui_cancel"):bac_his_g()
-func game_sett():
-	game_history.append(game_history_items.set)
-func gm_strt():bac_his_g()
+
+
 func save_nodes(n):
 	var che=false
 	if n!=self:

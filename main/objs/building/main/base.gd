@@ -4,13 +4,10 @@ export(int) var command=-1
 var sc=1
 onready var max_build_y=Array($c.polygon).max().y
 onready var to_vec:=Vector2.DOWN*10+Vector2(0,max_build_y)
-onready var line=$Line2D
 export(Color)var c_com=Color(1,1,1,1)
-enum mode{nill,to_pos,add_test_unit}
-var u_mode=mode.nill
-var varible=null
 onready var status=$stats
 onready var hub= $hurt_box
+var varible=null
 func _draw():
 	if choiced:
 		for e in range(0,len($c.polygon)-1):
@@ -22,7 +19,7 @@ func vision(t:bool):
 	#$img.visible=t
 	modulate.a=0.5+0.5*int(t)
 func _ready():
-	
+	$Line2D.hide()
 	if gl.command==command:
 		hub.collision_layer=2
 		hub.collision_mask=0
@@ -36,7 +33,7 @@ func _ready():
 		hub.collision_mask=0
 		collision_layer=17
 		collision_mask=17
-		line.queue_free()
+		#line.queue_free()
 		$watchout.collision_layer=8
 		$watchout.collision_mask=8
 		vision(false)
@@ -54,40 +51,40 @@ func _physics_process(delta):
 		if varible==null:
 			varible=preload("res://main/objs/building/main/menu.tscn").instance()
 			varible.par=self
-			varible.vars=PoolStringArray(["set_point","add_unit"])
+			varible.vars=PoolStringArray(["add_unit"])
 			get_tree().current_scene.get_node("cl").add_child(varible)
-			line.show()
 	else:
 		if varible!=null:
 			varible.queue_free()
-			line.hide()
 			varible=null
-	match u_mode:
-		#mode.nill:
-			#pass
-		mode.to_pos:
-			if Input.is_action_just_pressed("rbm") and choiced==true:
-				to_vec=get_global_mouse_position()-global_position
-				line.points=PoolVector2Array([Vector2.ZERO,to_vec])
-				u_mode=mode.nill
-		mode.add_test_unit:
-			var t=preload("res://main/units/unit.tscn").instance()
-			t.global_position=global_position+Vector2(0,max_build_y+t.get_node("c").shape.radius)
-			t.m_path=[to_vec+global_position]
-			t.command=command
-			t.self_modulate=c_com
-			t.get_node("spr").self_modulate=c_com
-			if t.type==0:
-				get_tree().current_scene.get_node("map/PlayGround").add_child(t)
-				#if t.command==gl.command:
-				#	t.vision(true)
-			u_mode=mode.nill
+	
+	if timers!=[] and trening==null:
+		trening=timers[0]
+		if trening.keys()==["test"]:
+			trening_time=trening["test"]
+	if trening!=null:
+		if trening_time>0:
+			trening_time-=delta
+		else:
+			if trening.keys()==["test"]:
+				var t=preload("res://main/units/unit.tscn").instance()
+				t.global_position=global_position+Vector2(0,max_build_y+t.get_node("c").shape.radius)
+				t.command=command
+				t.self_modulate=c_com
+				t.get_node("spr").self_modulate=c_com
+				if t.type==0:
+					var arr=gl.to_glb_line($Line2D.points,global_position)
+					arr.remove(0)
+					t.mpath=Array(arr)
+					print(arr)
+					get_tree().current_scene.get_node("map/PlayGround").add_child(t)
+				timers.remove(gl.i_search(timers,trening))
+				trening=null
+var trening=null
+var trening_time=0
 var timers=[]
 func add_unit():
-	u_mode=mode.add_test_unit
-	pass
-func set_point():
-	u_mode=mode.to_pos
+	timers.append({"test":2})
 	pass
 func _on_s_input_event(viewport, event, shape_idx):
 	if Input.is_action_just_pressed("lbm") and command==gl.command:

@@ -314,7 +314,6 @@ tracks/2/keys = {
 [sub_resource type="AnimationNodeStateMachinePlayback" id=63]
 
 [node name="gr" type="RigidBody2D" groups=["unit"]]
-input_pickable = true
 mode = 2
 physics_material_override = SubResource( 55 )
 custom_integrator = true
@@ -342,8 +341,6 @@ speed_scale = 7.0
 m_he = 20.0
 
 [node name="nav_ag" type="NavigationAgent2D" parent="."]
-target_desired_distance = 98.45
-path_max_distance = 10.0
 
 [node name="att_pos" type="Area2D" parent="."]
 position = Vector2( 0, -35 )
@@ -382,7 +379,6 @@ collision_layer = 17
 collision_mask = 17
 
 [node name="c2" type="CollisionShape2D" parent="watchout"]
-visible = false
 position = Vector2( -1, 0 )
 shape = SubResource( 58 )
 
@@ -400,6 +396,9 @@ anims/att = SubResource( 59 )
 tree_root = SubResource( 62 )
 anim_player = NodePath("../AP")
 parameters/playback = SubResource( 63 )
+
+[node name="Line2D" type="Line2D" parent="."]
+width = 5.0
 
 [connection signal="area_entered" from="hurt_box" to="." method="_on_hurt_box_area_entered"]
 [connection signal="invi_ended" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_ended"]
