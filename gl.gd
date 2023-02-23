@@ -8,7 +8,7 @@ var otstp=5
 var sn=[]
 func in_get_menu_area():
 	var varible=get_tree().current_scene.get_node("cl/cntrl")
-	var m=get_camera().get_local_mouse_position()+gl.get_prkt_win()/2
+	var m=get_camera().get_local_mouse_position()+get_prkt_win()/2
 	if not(varible.rect_size.x<m.x and varible.rect_position.x<m.x):
 		return true
 	return false
@@ -17,7 +17,7 @@ func to_glb_line(pv:PoolVector2Array,pos:Vector2,_scale=1,loc_pos=0):
 	var pool=pv
 	var poolvec2=PoolVector2Array([])
 	for e in pool:
-		var t=gl.move(rad2deg(gl.angle(e)))*(gl._sqrt(e*_scale))
+		var t=move(rad2deg(gl.angle(e)))*(_sqrt(e*_scale))
 		poolvec2.append((t+pos))
 	return poolvec2
 func to_glb_PV(pv:PoolVector2Array,pos:Vector2,_scale=1,loc_pos=0):
@@ -30,10 +30,7 @@ func to_glb_PV(pv:PoolVector2Array,pos:Vector2,_scale=1,loc_pos=0):
 
 func target(to,from):
 	return rad2deg(angle(to-from))+180
-func _get_nav_path(t):
-	match t:
-		0:
-			return get_tree().current_scene.get_node("map/PlayGround/ground/nav")
+
 #func bac_his():
 #	if len(menu_history)>1:
 #		menu_history.remove(len(menu_history)-1)

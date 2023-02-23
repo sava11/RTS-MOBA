@@ -6,8 +6,8 @@ var event_pos=Vector2.ZERO
 
 func _input(event: InputEvent) -> void:
 	var w_size=Vector2(abs(limit_left)+abs(limit_right),abs(limit_top)+abs(limit_bottom))
-	var w=gl.get_view_win().x#ProjectSettings.get("display/window/size/width")
-	var h=gl.get_view_win().y#ProjectSettings.get("display/window/size/height")
+	var w=fnc.get_view_win().x#ProjectSettings.get("display/window/size/width")
+	var h=fnc.get_view_win().y#ProjectSettings.get("display/window/size/height")
 	var _min=[(w_size.x/w),(w_size.y/h)].min()
 	if event is InputEventScreenDrag:
 		event_pos=event.position

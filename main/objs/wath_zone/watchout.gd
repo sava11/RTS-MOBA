@@ -7,4 +7,4 @@ func _on_b_entered(b):
 		bs.append(b)
 func _on_b_exited(b):
 	if b.command!=get_parent().command:
-		bs.remove(gl.i_search(bs,b))
+		bs.remove(fnc.i_search(bs,b))

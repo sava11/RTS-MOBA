@@ -1,0 +1,399 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://main/img/1625918657_13-kartinkin-com-p-tekstura-travi-dlya-genplana-krasivo-14.png" type="Texture" id=1]
+[ext_resource path="res://main/img/1626890776_3-kartinkin-com-p-shchebenka-tekstura-besshovnaya-krasivo-3.jpg" type="Texture" id=2]
+[ext_resource path="res://main/maps/map/map_script.gd" type="Script" id=3]
+[ext_resource path="res://main/maps/c.tscn" type="PackedScene" id=4]
+[ext_resource path="res://main/objs/building/main/base.tscn" type="PackedScene" id=5]
+[ext_resource path="res://main/maps/build_area/build_part.tscn" type="PackedScene" id=6]
+
+[sub_resource type="CircleShape2D" id=1]
+resource_local_to_scene = true
+radius = 328.0
+
+[sub_resource type="RectangleShape2D" id=3]
+resource_local_to_scene = true
+extents = Vector2( 30, 30 )
+
+[sub_resource type="CircleShape2D" id=2]
+resource_local_to_scene = true
+radius = 328.0
+
+[node name="map_name" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="ground" type="TextureRect" parent="."]
+margin_left = -800.0
+margin_top = -800.0
+margin_right = 31200.0
+margin_bottom = 31200.0
+rect_scale = Vector2( 0.05, 0.05 )
+mouse_filter = 2
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 2
+
+[node name="p" type="Polygon2D" parent="."]
+texture = ExtResource( 2 )
+texture_scale = Vector2( 15, 15 )
+polygon = PoolVector2Array( -700, 200, -700, -400, -400, -700, 200, -700, 200, -500, -300, -500, -500, -300, -500, 200 )
+
+[node name="p2" type="Polygon2D" parent="."]
+rotation = 3.14159
+texture = ExtResource( 2 )
+texture_scale = Vector2( 15, 15 )
+polygon = PoolVector2Array( -700, 199.998, -699.999, -400.002, -399.998, -700.001, 200.002, -700, 200.001, -499.999, -299.999, -500.001, -499.999, -300.001, -500.001, 199.999 )
+
+[node name="p3" type="Polygon2D" parent="."]
+texture = ExtResource( 2 )
+texture_scale = Vector2( 15, 15 )
+polygon = PoolVector2Array( -400, 200, -200, 400, 400, -200, 200, -400 )
+
+[node name="PlayGround" type="YSort" parent="."]
+
+[node name="ground" type="Node2D" parent="PlayGround"]
+
+[node name="nav" type="Navigation2D" parent="PlayGround/ground"]
+
+[node name="n" type="NavigationPolygonInstance" parent="PlayGround/ground/nav"]
+
+[node name="main" parent="PlayGround" instance=ExtResource( 5 )]
+position = Vector2( -600, 600 )
+c_name = "GJ"
+command = 1
+c_com = Color( 1, 0, 0, 1 )
+
+[node name="c" parent="PlayGround/main/watchout" index="0"]
+shape = SubResource( 1 )
+
+[node name="sumpos" parent="PlayGround/main" index="5"]
+position = Vector2( 50, -50 )
+
+[node name="area1" type="Node2D" parent="PlayGround"]
+position = Vector2( -600, 340 )
+
+[node name="a1" parent="PlayGround/area1" instance=ExtResource( 6 )]
+position = Vector2( -30, -30 )
+command = 1
+
+[node name="c" parent="PlayGround/area1/a1" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area1/a1" index="1"]
+position = Vector2( -50, 0 )
+
+[node name="a2" parent="PlayGround/area1" instance=ExtResource( 6 )]
+position = Vector2( 30, -30 )
+command = 1
+
+[node name="c" parent="PlayGround/area1/a2" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area1/a2" index="1"]
+position = Vector2( 50, 0 )
+
+[node name="a3" parent="PlayGround/area1" instance=ExtResource( 6 )]
+position = Vector2( -30, 30 )
+command = 1
+
+[node name="c" parent="PlayGround/area1/a3" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area1/a3" index="1"]
+position = Vector2( -50, 0 )
+
+[node name="a4" parent="PlayGround/area1" instance=ExtResource( 6 )]
+position = Vector2( 30, 30 )
+command = 1
+
+[node name="c" parent="PlayGround/area1/a4" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area1/a4" index="1"]
+position = Vector2( 50, 0 )
+
+[node name="area2" type="Node2D" parent="PlayGround"]
+position = Vector2( -340, 600 )
+rotation = 1.57079
+
+[node name="a1" parent="PlayGround/area2" instance=ExtResource( 6 )]
+position = Vector2( -30, -30 )
+command = 1
+
+[node name="c" parent="PlayGround/area2/a1" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area2/a1" index="1"]
+position = Vector2( -50, 0 )
+
+[node name="a2" parent="PlayGround/area2" instance=ExtResource( 6 )]
+position = Vector2( 30, -30 )
+command = 1
+
+[node name="c" parent="PlayGround/area2/a2" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area2/a2" index="1"]
+position = Vector2( 50, 0 )
+
+[node name="a3" parent="PlayGround/area2" instance=ExtResource( 6 )]
+position = Vector2( -30, 30 )
+command = 1
+
+[node name="c" parent="PlayGround/area2/a3" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area2/a3" index="1"]
+position = Vector2( -50, 0 )
+
+[node name="a4" parent="PlayGround/area2" instance=ExtResource( 6 )]
+position = Vector2( 30, 30 )
+command = 1
+
+[node name="c" parent="PlayGround/area2/a4" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area2/a4" index="1"]
+position = Vector2( 50, 0 )
+
+[node name="area3" type="Node2D" parent="PlayGround"]
+position = Vector2( -400, 400 )
+rotation = 0.785397
+
+[node name="a1" parent="PlayGround/area3" instance=ExtResource( 6 )]
+position = Vector2( -30, -30 )
+command = 1
+start_buid = 1
+
+[node name="c" parent="PlayGround/area3/a1" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area3/a1" index="1"]
+position = Vector2( -50, 0 )
+
+[node name="a2" parent="PlayGround/area3" instance=ExtResource( 6 )]
+position = Vector2( 30, -30 )
+command = 1
+
+[node name="c" parent="PlayGround/area3/a2" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area3/a2" index="1"]
+position = Vector2( 50, 0 )
+
+[node name="a3" parent="PlayGround/area3" instance=ExtResource( 6 )]
+position = Vector2( -30, 30 )
+command = 1
+
+[node name="c" parent="PlayGround/area3/a3" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area3/a3" index="1"]
+position = Vector2( -50, 0 )
+
+[node name="a4" parent="PlayGround/area3" instance=ExtResource( 6 )]
+position = Vector2( 30, 30 )
+command = 1
+
+[node name="c" parent="PlayGround/area3/a4" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area3/a4" index="1"]
+position = Vector2( 50, 0 )
+
+[node name="main2" parent="PlayGround" instance=ExtResource( 5 )]
+position = Vector2( 600, -600 )
+command = 2
+c_com = Color( 0, 0, 1, 1 )
+
+[node name="c" parent="PlayGround/main2/watchout" index="0"]
+shape = SubResource( 2 )
+
+[node name="sumpos" parent="PlayGround/main2" index="5"]
+position = Vector2( -50, 50 )
+
+[node name="area4" type="Node2D" parent="PlayGround"]
+position = Vector2( 340, -600 )
+rotation = -1.5708
+
+[node name="a1" parent="PlayGround/area4" instance=ExtResource( 6 )]
+position = Vector2( -30, -30 )
+command = 2
+
+[node name="c" parent="PlayGround/area4/a1" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area4/a1" index="1"]
+position = Vector2( -50, 0 )
+
+[node name="a2" parent="PlayGround/area4" instance=ExtResource( 6 )]
+position = Vector2( 30, -30 )
+command = 2
+
+[node name="c" parent="PlayGround/area4/a2" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area4/a2" index="1"]
+position = Vector2( 50, 0 )
+
+[node name="a3" parent="PlayGround/area4" instance=ExtResource( 6 )]
+position = Vector2( -30, 30 )
+command = 2
+
+[node name="c" parent="PlayGround/area4/a3" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area4/a3" index="1"]
+position = Vector2( -50, 0 )
+
+[node name="a4" parent="PlayGround/area4" instance=ExtResource( 6 )]
+position = Vector2( 30, 30 )
+command = 2
+
+[node name="c" parent="PlayGround/area4/a4" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area4/a4" index="1"]
+position = Vector2( 50, 0 )
+
+[node name="area5" type="Node2D" parent="PlayGround"]
+position = Vector2( 600, -340 )
+rotation = 3.14159
+
+[node name="a1" parent="PlayGround/area5" instance=ExtResource( 6 )]
+position = Vector2( -30, -30 )
+command = 2
+
+[node name="c" parent="PlayGround/area5/a1" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area5/a1" index="1"]
+position = Vector2( -50, 0 )
+
+[node name="a2" parent="PlayGround/area5" instance=ExtResource( 6 )]
+position = Vector2( 30, -30 )
+command = 2
+
+[node name="c" parent="PlayGround/area5/a2" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area5/a2" index="1"]
+position = Vector2( 50, 0 )
+
+[node name="a3" parent="PlayGround/area5" instance=ExtResource( 6 )]
+position = Vector2( -30, 30 )
+command = 2
+
+[node name="c" parent="PlayGround/area5/a3" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area5/a3" index="1"]
+position = Vector2( -50, 0 )
+
+[node name="a4" parent="PlayGround/area5" instance=ExtResource( 6 )]
+position = Vector2( 30, 30 )
+command = 2
+
+[node name="c" parent="PlayGround/area5/a4" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area5/a4" index="1"]
+position = Vector2( 50, 0 )
+
+[node name="area6" type="Node2D" parent="PlayGround"]
+position = Vector2( 400, -400 )
+rotation = -2.35619
+
+[node name="a1" parent="PlayGround/area6" instance=ExtResource( 6 )]
+position = Vector2( -30, -30 )
+command = 2
+
+[node name="c" parent="PlayGround/area6/a1" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area6/a1" index="1"]
+position = Vector2( -50, 0 )
+
+[node name="a2" parent="PlayGround/area6" instance=ExtResource( 6 )]
+position = Vector2( 30, -30 )
+command = 2
+
+[node name="c" parent="PlayGround/area6/a2" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area6/a2" index="1"]
+position = Vector2( 50, 0 )
+
+[node name="a3" parent="PlayGround/area6" instance=ExtResource( 6 )]
+position = Vector2( -30, 30 )
+command = 2
+
+[node name="c" parent="PlayGround/area6/a3" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area6/a3" index="1"]
+position = Vector2( -50, 0 )
+
+[node name="a4" parent="PlayGround/area6" instance=ExtResource( 6 )]
+position = Vector2( 30, 30 )
+command = 2
+start_buid = 1
+
+[node name="c" parent="PlayGround/area6/a4" index="0"]
+shape = SubResource( 3 )
+
+[node name="p" parent="PlayGround/area6/a4" index="1"]
+position = Vector2( 50, 0 )
+
+[node name="Line2D3" type="Line2D" parent="PlayGround"]
+points = PoolVector2Array( -200, 600, 350, 600, 600, 340, 600, -200 )
+
+[node name="Line2D2" type="Line2D" parent="PlayGround"]
+points = PoolVector2Array( -600, 200, -600, -350, -350, -600, 200, -600 )
+
+[node name="Line2D4" type="Line2D" parent="PlayGround"]
+points = PoolVector2Array( -300, 300, 300, -300 )
+
+[node name="ex" parent="PlayGround" instance=ExtResource( 4 )]
+
+[node name="c" parent="PlayGround/ex" index="0"]
+polygon = PoolVector2Array( -400, 200, 200, -400, 200, -500, -300, -500, -500, -300, -500, 200 )
+
+[node name="ex2" parent="PlayGround" instance=ExtResource( 4 )]
+position = Vector2( -40, 20 )
+
+[node name="c" parent="PlayGround/ex2" index="0"]
+polygon = PoolVector2Array( -160, 380, -160, 480, 340, 480, 540, 280, 540, -220, 440, -220 )
+
+[editable path="PlayGround/main"]
+[editable path="PlayGround/main/watchout"]
+[editable path="PlayGround/main/hurt_box"]
+[editable path="PlayGround/area1/a1"]
+[editable path="PlayGround/area1/a2"]
+[editable path="PlayGround/area1/a3"]
+[editable path="PlayGround/area1/a4"]
+[editable path="PlayGround/area2/a1"]
+[editable path="PlayGround/area2/a2"]
+[editable path="PlayGround/area2/a3"]
+[editable path="PlayGround/area2/a4"]
+[editable path="PlayGround/area3/a1"]
+[editable path="PlayGround/area3/a2"]
+[editable path="PlayGround/area3/a3"]
+[editable path="PlayGround/area3/a4"]
+[editable path="PlayGround/main2"]
+[editable path="PlayGround/main2/watchout"]
+[editable path="PlayGround/main2/hurt_box"]
+[editable path="PlayGround/area4/a1"]
+[editable path="PlayGround/area4/a2"]
+[editable path="PlayGround/area4/a3"]
+[editable path="PlayGround/area4/a4"]
+[editable path="PlayGround/area5/a1"]
+[editable path="PlayGround/area5/a2"]
+[editable path="PlayGround/area5/a3"]
+[editable path="PlayGround/area5/a4"]
+[editable path="PlayGround/area6/a1"]
+[editable path="PlayGround/area6/a2"]
+[editable path="PlayGround/area6/a3"]
+[editable path="PlayGround/area6/a4"]
+[editable path="PlayGround/ex"]
+[editable path="PlayGround/ex2"]

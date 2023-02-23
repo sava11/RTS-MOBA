@@ -22,7 +22,8 @@ func get_init():
 	return type
 
 func _ready():
-	if gl.command==command:
+	gm.unit_count+=1
+	if gm.command==command:
 		hib.collision_layer=0
 		hib.collision_mask=4
 		hub.collision_layer=2
@@ -42,11 +43,11 @@ func _ready():
 		$front.collision_layer=8
 		$front.collision_mask=$front.collision_layer
 		#$rc.collision_mask=8
-	$nav_ag.set_navigation(gl._get_nav_path(type))
+	$nav_ag.set_navigation(gm._get_nav_path(type))
 var step=0
 func set_anim(ang:float,t:String):
 	var type=0
-	type=gl.get_ang_move(ang-180,45)+1
+	type=fnc.get_ang_move(ang-180,45)+1
 	if type!=0:
 		var input=t+"-"+str(type)
 		$spr.play(input)
@@ -58,6 +59,8 @@ func _integrate_forces(st):
 	mvec=st.get_linear_velocity()
 	step=st.get_step()
 	if mpath!=[]:
+		if mpath_i==len(mpath):
+			mpath_i=len(mpath)-1
 		$nav_ag.set_target_location(mpath[mpath_i])
 	if $nav_ag.is_navigation_finished():
 		mvec=mvec.move_toward(Vector2(0,0),SPEED*10*step)
@@ -65,8 +68,8 @@ func _integrate_forces(st):
 		return
 	if mpath!=[]:
 		if attacked==true and $front.bs==[]:
-			set_anim(rad2deg(gl.angle(mvec)),"wait")
-			$front.rotation_degrees=rad2deg(gl.angle(mvec))-90
+			set_anim(rad2deg(fnc.angle(mvec)),"wait")
+			$front.rotation_degrees=rad2deg(fnc.angle(mvec))-90
 		path = $nav_ag.get_nav_path()
 		mvec = mvec.move_toward(global_position.direction_to($nav_ag.get_next_location()) * SPEED,SPEED*5*step)
 		if len(mpath)==1:
@@ -74,18 +77,18 @@ func _integrate_forces(st):
 				mpath=[]
 		elif len(mpath)>1:
 			if global_position.distance_to($nav_ag.get_final_location())<10:
-				mpath_i=gl.circ(mpath_i+1,0,len(mpath))
+				mpath_i=fnc.circ(mpath_i+1,0,len(mpath))
 				save_mpath_i=mpath_i
 	else:
 		mvec=mvec.move_toward(Vector2(0,0),SPEED*10*step)
 	var len_l=[]
 	for ent in bs:
-		len_l.append(gl._sqrt(self.global_position-ent.global_position))
+		len_l.append(fnc._sqrt(self.global_position-ent.global_position))
 	for ent in bs:
-		$front.rotation_degrees=rad2deg(gl.angle(ent.global_position-global_position))-90
-		if len_l.min()==gl._sqrt(self.global_position-ent.global_position):
+		$front.rotation_degrees=rad2deg(fnc.angle(ent.global_position-global_position))-90
+		if len_l.min()==fnc._sqrt(self.global_position-ent.global_position):
 			nearst=ent
-	if gl.i_search($front.bs,nearst)!=-1:
+	if fnc.i_search($front.bs,nearst)!=-1:
 		attk(nearst.global_position)
 	#РАДЗДЕЛИТЬ ПУТИ НА "ДЛЯ ВРАГОВ" и на "ДЛЯ ПУТИ"
 	if nearst!=null and is_instance_valid(nearst) :
@@ -108,7 +111,7 @@ func _on_watchout_body_entered(b):
 		bs.append(b)
 func _on_watchout_body_exited(b):
 	if b!=self and b.command!=command:
-		bs.remove(gl.i_search(bs,b))
+		bs.remove(fnc.i_search(bs,b))
 
 func end_att():
 	attacked=true
@@ -119,10 +122,10 @@ var attacked=true
 
 func attk(target_pos):
 	var t=target_pos-hib.global_position
-	hib.rotation_degrees=rad2deg(gl.angle(t))
-	hib.position=gl.move(hib.rotation_degrees)*10+Vector2(0,-36)
+	hib.rotation_degrees=rad2deg(fnc.angle(t))
+	hib.position=fnc.move(hib.rotation_degrees)*10+Vector2(0,-36)
 	$AP.play("att",0,attack_time)
-	set_anim(rad2deg(gl.angle(target_pos-global_position)),"att")
+	set_anim(rad2deg(fnc.angle(target_pos-global_position)),"att")
 	attacked=false
 
 func _on_hurt_box_area_entered(area):
@@ -132,4 +135,3 @@ func _on_hurt_box_area_entered(area):
 
 func dead():
 	queue_free()
-

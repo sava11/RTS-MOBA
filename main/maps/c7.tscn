@@ -1,5 +1,0 @@
-[gd_scene format=2]
-
-[node name="c7" type="CollisionPolygon2D" groups=["outOfBounds_del"]]
-position = Vector2( 480, -24 )
-polygon = PoolVector2Array( -1040, -352, -1040, 408, 80, 408, 80, -352, 64, -336, 64, 392, -1024, 392, -1024, -336, 64, -336, 80, -352 )

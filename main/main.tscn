@@ -1,54 +1,11 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://main/img/output/map_45 - 4.png" type="Texture" id=1]
-[ext_resource path="res://main/units/unit.tscn" type="PackedScene" id=2]
-[ext_resource path="res://main/objs/building/main/base.tscn" type="PackedScene" id=3]
+[ext_resource path="res://main/maps/map/map_name.tscn" type="PackedScene" id=1]
 [ext_resource path="res://main/pl_cam/pl_cam.gd" type="Script" id=4]
-[ext_resource path="res://main/img/1625918657_13-kartinkin-com-p-tekstura-travi-dlya-genplana-krasivo-14.png" type="Texture" id=5]
-[ext_resource path="res://main/main.gd" type="Script" id=6]
-[ext_resource path="res://main/img/output/map_45 - 1.png" type="Texture" id=7]
-[ext_resource path="res://main/img/output/ramk.png" type="Texture" id=8]
-[ext_resource path="res://main/img/1626890776_3-kartinkin-com-p-shchebenka-tekstura-besshovnaya-krasivo-3.jpg" type="Texture" id=9]
-[ext_resource path="res://main/img/output/bcg.png" type="Texture" id=10]
-[ext_resource path="res://main/img/output/map_45 - 3.png" type="Texture" id=11]
-[ext_resource path="res://main/img/output/map_45 - 2.png" type="Texture" id=12]
-[ext_resource path="res://main/maps/c_colored.tscn" type="PackedScene" id=13]
-
-[sub_resource type="Shader" id=1]
-code = "shader_type canvas_item;
-
-uniform sampler2D noise;
-uniform float speed : hint_range(0.05, 0.5) = 0.1;
-uniform float strength : hint_range(0.05, 0.5) = 0.1;
-void fragment( ){
-// sample noise
-float noise_value = texture(noise, UV + TIME * speed).r;
-COLOR = texture(SCREEN_TEXTURE, SCREEN_UV - (strength / 2.0) + vec2(noise_value) * strength);}"
-
-[sub_resource type="OpenSimplexNoise" id=3]
-
-[sub_resource type="NoiseTexture" id=4]
-seamless = true
-as_normalmap = true
-noise = SubResource( 3 )
-
-[sub_resource type="ShaderMaterial" id=2]
-shader = SubResource( 1 )
-shader_param/speed = 0.1
-shader_param/strength = 0.1
-shader_param/noise = SubResource( 4 )
-
-[sub_resource type="CircleShape2D" id=5]
-resource_local_to_scene = true
-radius = 328.0
-
-[sub_resource type="CircleShape2D" id=6]
-resource_local_to_scene = true
-radius = 328.0
+[ext_resource path="res://main/interface.gd" type="Script" id=14]
 
 [node name="Node2D" type="Node2D"]
 pause_mode = 2
-script = ExtResource( 6 )
 __meta__ = {
 "_editor_description_": "1. создать карты из доты
 	1.1. казармы
@@ -57,148 +14,14 @@ __meta__ = {
 
 [node name="map" type="Node2D" parent="."]
 
-[node name="ground" type="TextureRect" parent="map"]
-margin_left = -504.0
-margin_top = -288.0
-margin_right = 9656.0
-margin_bottom = 5472.0
-rect_scale = Vector2( 0.1, 0.1 )
-mouse_filter = 2
-texture = ExtResource( 5 )
-expand = true
-stretch_mode = 2
+[node name="map_name" parent="map" instance=ExtResource( 1 )]
 
-[node name="pol_ground" type="Polygon2D" parent="map"]
-
-[node name="borders" type="Node2D" parent="map"]
-
-[node name="b" type="Polygon2D" parent="map/borders"]
-texture = ExtResource( 9 )
-texture_scale = Vector2( 20, 20 )
-polygon = PoolVector2Array( 35, 130, 205, 230, 230, 225, 280, 85, 264, -8, -10, -215, -105, -195, -150, -150, -105, 5, -30, 110 )
-
-[node name="c" parent="map/borders" instance=ExtResource( 13 )]
-self_modulate = Color( 0.568627, 0.623529, 1, 1 )
-material = SubResource( 2 )
-position = Vector2( 0, -5 )
-polygon = PoolVector2Array( 35, 120, 200, 224, 224, 224, 265, 85, 260, 15, -15, -195, -95, -180, -135, -140, -105, -35, -75, 25, -15, 95 )
-
-[node name="bcg" type="Node2D" parent="map"]
-visible = false
-
-[node name="Map45-1" type="Sprite" parent="map/bcg"]
-position = Vector2( 26, 261 )
-texture = ExtResource( 7 )
-offset = Vector2( 0, -80 )
-region_enabled = true
-region_rect = Rect2( 327, 465, 600, 255 )
-
-[node name="Map45-2" type="Sprite" parent="map/bcg"]
-position = Vector2( -258, -14 )
-texture = ExtResource( 12 )
-region_enabled = true
-region_rect = Rect2( 163, 185, 355, 423 )
-
-[node name="Map45-3" type="Sprite" parent="map/bcg"]
-position = Vector2( -27, -262 )
-texture = ExtResource( 11 )
-offset = Vector2( 0, 90 )
-region_enabled = true
-region_rect = Rect2( 272.5, 111, 600, 255 )
-
-[node name="Map45-4" type="Sprite" parent="map/bcg"]
-position = Vector2( 381, 20 )
-texture = ExtResource( 1 )
-offset = Vector2( -120, 0 )
-region_enabled = true
-region_rect = Rect2( 683, 223, 355, 422 )
-
-[node name="Bcg" type="Sprite" parent="map/bcg"]
-texture = ExtResource( 10 )
-
-[node name="Ramk" type="Sprite" parent="map/bcg"]
-texture = ExtResource( 8 )
-
-[node name="PlayGround" type="YSort" parent="map"]
-
-[node name="ground" type="Node2D" parent="map/PlayGround"]
-
-[node name="nav" type="Navigation2D" parent="map/PlayGround/ground"]
-
-[node name="n" type="NavigationPolygonInstance" parent="map/PlayGround/ground/nav"]
-travel_cost = 0.0
-
-[node name="nav2" type="Navigation2D" parent="map/PlayGround/ground"]
-
-[node name="n" type="NavigationPolygonInstance" parent="map/PlayGround/ground/nav2"]
-travel_cost = 0.0
-
-[node name="main" parent="map/PlayGround" instance=ExtResource( 3 )]
-position = Vector2( -436, 296 )
-command = 1
-c_com = Color( 1, 0, 0, 1 )
-
-[node name="Line2D" parent="map/PlayGround/main" index="0"]
-points = PoolVector2Array( 0, 0, 661, -36, 872, -296 )
-
-[node name="c" parent="map/PlayGround/main/watchout" index="0"]
-shape = SubResource( 5 )
-
-[node name="main3" parent="map/PlayGround" instance=ExtResource( 3 )]
-position = Vector2( -436, 0 )
-command = 1
-c_com = Color( 1, 0, 0, 1 )
-
-[node name="Line2D" parent="map/PlayGround/main3" index="0"]
-points = PoolVector2Array( 0, 0, 211, -260, 872, -296 )
-
-[node name="c" parent="map/PlayGround/main3/watchout" index="0"]
-shape = SubResource( 5 )
-
-[node name="main2" parent="map/PlayGround" instance=ExtResource( 3 )]
-position = Vector2( 436, -296 )
-command = 2
-c_com = Color( 0, 0, 1, 1 )
-
-[node name="Line2D" parent="map/PlayGround/main2" index="0"]
-points = PoolVector2Array( 0, 0, -662, 36, -872, 296 )
-
-[node name="c" parent="map/PlayGround/main2/watchout" index="0"]
-shape = SubResource( 6 )
-
-[node name="main4" parent="map/PlayGround" instance=ExtResource( 3 )]
-position = Vector2( 436, 0 )
-command = 2
-c_com = Color( 0, 0, 1, 1 )
-
-[node name="Line2D" parent="map/PlayGround/main4" index="0"]
-points = PoolVector2Array( 0, 0, -211, 260, -872, 296 )
-
-[node name="c" parent="map/PlayGround/main4/watchout" index="0"]
-shape = SubResource( 6 )
-
-[node name="gr" parent="map/PlayGround" instance=ExtResource( 2 )]
-position = Vector2( 155, -110 )
-command = 2
-
-[node name="gr2" parent="map/PlayGround" instance=ExtResource( 2 )]
-position = Vector2( 125, -145 )
-command = 2
-
-[node name="gr3" parent="map/PlayGround" instance=ExtResource( 2 )]
-position = Vector2( 265, 170 )
-command = 2
-
-[node name="ar" type="Node2D" parent="."]
+[node name="maket" type="Node2D" parent="."]
 
 [node name="cam" type="Camera2D" parent="."]
 z_index = 100
 current = true
 process_mode = 0
-limit_left = -600
-limit_top = -410
-limit_right = 600
-limit_bottom = 410
 limit_smoothed = true
 drag_margin_left = 1.0
 drag_margin_top = 1.0
@@ -206,19 +29,10 @@ drag_margin_right = 1.0
 drag_margin_bottom = 1.0
 script = ExtResource( 4 )
 
-[node name="patr_zones" type="Node2D" parent="."]
-
 [node name="cl" type="CanvasLayer" parent="."]
+script = ExtResource( 14 )
 
-[editable path="map/PlayGround/main"]
-[editable path="map/PlayGround/main/watchout"]
-[editable path="map/PlayGround/main/hurt_box"]
-[editable path="map/PlayGround/main3"]
-[editable path="map/PlayGround/main3/watchout"]
-[editable path="map/PlayGround/main3/hurt_box"]
-[editable path="map/PlayGround/main2"]
-[editable path="map/PlayGround/main2/watchout"]
-[editable path="map/PlayGround/main2/hurt_box"]
-[editable path="map/PlayGround/main4"]
-[editable path="map/PlayGround/main4/watchout"]
-[editable path="map/PlayGround/main4/hurt_box"]
+[node name="mny" type="RichTextLabel" parent="cl"]
+margin_right = 190.0
+margin_bottom = 40.0
+mouse_filter = 2

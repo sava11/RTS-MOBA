@@ -1,4 +1,4 @@
-[gd_scene load_steps=175 format=2]
+[gd_scene load_steps=174 format=2]
 
 [ext_resource path="res://main/img/output-1/0080.png" type="Texture" id=1]
 [ext_resource path="res://main/units/test.gd" type="Script" id=2]
@@ -172,6 +172,7 @@ bounce = 0.25
 absorbent = true
 
 [sub_resource type="CircleShape2D" id=56]
+resource_local_to_scene = true
 radius = 5.0
 
 [sub_resource type="SpriteFrames" id=61]
@@ -263,10 +264,6 @@ height = 42.96
 
 [sub_resource type="CircleShape2D" id=58]
 radius = 193.0
-
-[sub_resource type="CapsuleShape2D" id=57]
-radius = 4.54
-height = 40.92
 
 [sub_resource type="Animation" id=59]
 resource_name = "att"
@@ -379,15 +376,9 @@ collision_layer = 17
 collision_mask = 17
 
 [node name="c2" type="CollisionShape2D" parent="watchout"]
+visible = false
 position = Vector2( -1, 0 )
 shape = SubResource( 58 )
-
-[node name="choice" type="Area2D" parent="."]
-position = Vector2( 0, -22 )
-
-[node name="c" type="CollisionShape2D" parent="choice"]
-visible = false
-shape = SubResource( 57 )
 
 [node name="AP" type="AnimationPlayer" parent="."]
 anims/att = SubResource( 59 )
@@ -397,9 +388,6 @@ tree_root = SubResource( 62 )
 anim_player = NodePath("../AP")
 parameters/playback = SubResource( 63 )
 
-[node name="Line2D" type="Line2D" parent="."]
-width = 5.0
-
 [connection signal="area_entered" from="hurt_box" to="." method="_on_hurt_box_area_entered"]
 [connection signal="invi_ended" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_ended"]
 [connection signal="invi_started" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_started"]
@@ -408,6 +396,3 @@ width = 5.0
 [connection signal="body_exited" from="front" to="front" method="_on_b_exited"]
 [connection signal="body_entered" from="watchout" to="." method="_on_watchout_body_entered"]
 [connection signal="body_exited" from="watchout" to="." method="_on_watchout_body_exited"]
-[connection signal="input_event" from="choice" to="." method="_on_input_event"]
-[connection signal="mouse_entered" from="choice" to="." method="_on_gr_mouse_entered"]
-[connection signal="mouse_exited" from="choice" to="." method="_on_gr_mouse_exited"]

@@ -10,20 +10,17 @@
 resource_local_to_scene = true
 radius = 328.0
 
-[node name="main" type="StaticBody2D"]
+[node name="main" type="StaticBody2D" groups=["MBASE"]]
+collision_layer = 33
+collision_mask = 33
 input_pickable = true
 script = ExtResource( 1 )
-
-[node name="Line2D" type="Line2D" parent="."]
-points = PoolVector2Array( 0, 0, 200, 152 )
-width = 2.0
-default_color = Color( 0.0666667, 0.52549, 0.0392157, 1 )
 
 [node name="stats" parent="." instance=ExtResource( 5 )]
 m_he = 200.0
 
 [node name="img" type="Sprite" parent="."]
-position = Vector2( 0, -25.5 )
+position = Vector2( 0, -16.5 )
 texture = ExtResource( 2 )
 
 [node name="watchout" parent="." instance=ExtResource( 3 )]
@@ -46,8 +43,11 @@ tspeed = 1
 polygon = PoolVector2Array( -55, -55, -55, 50, 55, 50, 55, -55 )
 
 [node name="c" type="CollisionPolygon2D" parent="." groups=["ground_build"]]
-position = Vector2( 0, -23 )
+position = Vector2( 0, -14 )
 polygon = PoolVector2Array( -55, -20, -55, 50, 55, 50, 55, -20 )
+
+[node name="sumpos" type="Position2D" parent="."]
+position = Vector2( 100, 0 )
 
 [connection signal="input_event" from="." to="." method="_on_s_input_event"]
 [connection signal="mouse_entered" from="." to="." method="_on_main_mouse_entered"]
