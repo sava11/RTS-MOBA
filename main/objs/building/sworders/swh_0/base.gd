@@ -44,7 +44,7 @@ func _ready():
 	$img.animation=str(img_id)
 	$img.playing=true
 	$img.global_rotation_degrees=0
-	$hurt_box/col.global_rotation_degrees=0
+	#$hurt_box/col.global_rotation_degrees=0
 	$a1/p.global_position=set_pos
 	$a1.command=command
 	if gm.command==command:
@@ -105,7 +105,7 @@ func _add_unit(unit):
 		t.get_node("spr").self_modulate=c_com
 		var en=map.get_nearst_enemy_base(global_position,command)
 		t.def+=settle["def"]
-		t.get_node("att_pos").damage+=settle["att"]
+		t.dmg+=settle["att"]
 		if t.type==0:
 			var arr=map.get_min_points(global_position)
 			t.mpath=Array(arr)

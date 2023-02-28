@@ -13,19 +13,16 @@ var mpath_i=0
 var to_enemy_follow_path=[]
 var pathing=false
 onready var status=$stats
-onready var hib= $att_pos
+var hib={"collision_layer":0,"collision_mask":0}
 onready var hub= $hurt_box
-#var tarcgets=[]
-# тип для выбора управления
-func get_init():
-	return type
+export(float,0,99999)var dmg=5
+var dmg_polyg=PoolVector2Array([Vector2(-15,15),Vector2(15,15),Vector2(15,-15),Vector2(-15,-15)])
 
 func _ready():
 	gm.unit_count+=1
-	#$att_pos.damage=damage
 	if gm.command==command:
-		hib.collision_layer=0
-		hib.collision_mask=4
+		hib["collision_layer"]=0
+		hib["collision_mask"]=4
 		hub.collision_layer=2
 		hub.collision_mask=0
 		collision_layer=9
@@ -34,8 +31,8 @@ func _ready():
 		$front.collision_mask=$front.collision_layer
 		#$rc.collision_mask=16
 	else:
-		hib.collision_layer=0
-		hib.collision_mask=2
+		hib["collision_layer"]=0
+		hib["collision_mask"]=2
 		hub.collision_layer=4
 		hub.collision_mask=0
 		collision_layer=17
@@ -90,7 +87,6 @@ func _integrate_forces(st):
 			nearst=ent
 	if fnc.i_search($front.bs,nearst)!=-1:
 		$front.rotation_degrees=rad2deg(fnc.angle(nearst.global_position-global_position))-90
-		hib.rotation_degrees=$front.rotation_degrees+90
 		attk(nearst.global_position)
 	#РАДЗДЕЛИТЬ ПУТИ НА "ДЛЯ ВРАГОВ" и на "ДЛЯ ПУТИ"
 	if nearst!=null and is_instance_valid(nearst) :
@@ -122,9 +118,22 @@ func end_att():
 	
 var attacked=true
 
+func add_att_zone():
+	var att=preload("res://main/boxes/hitboxdmg.tscn").instance()
+	#att.wait_time=1/attack_time
+	print(att.wait_time)
+	att.command=command
+	att.get_child(0).polygon=dmg_polyg
+	att.collision_layer=hib["collision_layer"]
+	att.collision_mask=hib["collision_mask"]
+	att.damage=dmg
+	get_parent().call_deferred("add_child",att)
+	att.global_position=global_position+Vector2(0,-35)
+	att.rotation_degrees=$front.rotation_degrees+90
 func attk(target_pos):
 	var t=target_pos-global_position
 	#hib.position=fnc.move(hib.rotation_degrees)*10+Vector2(0,-36)
+	
 	$AP.play("att",0,attack_time)
 	set_anim(rad2deg(fnc.angle(t)),"att")
 	attacked=false
@@ -132,5 +141,5 @@ func attk(target_pos):
 func _on_hurt_box_area_entered(area):
 	status.he-=area.damage*area.scale_damage/(def+1)
 	if status.he<=0:
-		gm.commands[area.get_parent().command]["money"]+=money_to_enemy
+		gm.commands[area.command]["money"]+=money_to_enemy
 		queue_free()

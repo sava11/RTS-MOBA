@@ -1,8 +1,7 @@
-[gd_scene load_steps=172 format=2]
+[gd_scene load_steps=171 format=2]
 
 [ext_resource path="res://main/img/output-1/0080.png" type="Texture" id=1]
 [ext_resource path="res://main/units/test.gd" type="Script" id=2]
-[ext_resource path="res://main/boxes/hitbox.gd" type="Script" id=3]
 [ext_resource path="res://main/boxes/hurt_box.gd" type="Script" id=4]
 [ext_resource path="res://main/objs/stats/stats.tscn" type="PackedScene" id=5]
 [ext_resource path="res://main/img/output-1/0020.png" type="Texture" id=6]
@@ -267,40 +266,19 @@ radius = 193.0
 
 [sub_resource type="Animation" id=59]
 resource_name = "att"
-tracks/0/type = "value"
-tracks/0/path = NodePath("att_pos:monitorable")
+tracks/0/type = "method"
+tracks/0/path = NodePath(".")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.5 ),
+"times": PoolRealArray( 0, 1 ),
 "transitions": PoolRealArray( 1, 1 ),
-"update": 1,
-"values": [ true, false ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("att_pos:monitoring")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 1,
-"values": [ true, false ]
-}
-tracks/2/type = "method"
-tracks/2/path = NodePath(".")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 1 ),
-"transitions": PoolRealArray( 1 ),
 "values": [ {
+"args": [  ],
+"method": "add_att_zone"
+}, {
 "args": [  ],
 "method": "end_att"
 } ]
@@ -368,17 +346,6 @@ collision_mask = 17
 visible = false
 position = Vector2( -1, 0 )
 shape = SubResource( 58 )
-
-[node name="att_pos" type="Area2D" parent="."]
-position = Vector2( 0, -35 )
-rotation = 1.5708
-collision_layer = 0
-collision_mask = 4
-script = ExtResource( 3 )
-damage = 5.0
-
-[node name="col" type="CollisionPolygon2D" parent="att_pos"]
-polygon = PoolVector2Array( 0, 0, 15, 9.99995, 15, -10.0001 )
 
 [node name="AP" type="AnimationPlayer" parent="."]
 anims/att = SubResource( 59 )

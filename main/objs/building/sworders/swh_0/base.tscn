@@ -78,7 +78,7 @@ collision_layer = 4
 tspeed = 1
 
 [node name="col" parent="hurt_box" index="0"]
-polygon = PoolVector2Array( -30, -54, -37, -12, -30, 30, 30, 30, 37.5, -12, 30, -54 )
+polygon = PoolVector2Array( -30, -30, -30, 30, 30, 30, 30, -30 )
 
 [node name="c" type="CollisionPolygon2D" parent="." groups=["ground_build"]]
 polygon = PoolVector2Array( -30, -30, -30, 30, 30, 30, 30, -30 )
