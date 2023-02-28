@@ -1,8 +1,14 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://main/maps/map/map_name.tscn" type="PackedScene" id=1]
+[ext_resource path="res://main/font/COMIC.TTF" type="DynamicFontData" id=2]
 [ext_resource path="res://main/pl_cam/pl_cam.gd" type="Script" id=4]
 [ext_resource path="res://main/interface.gd" type="Script" id=14]
+
+[sub_resource type="DynamicFont" id=1]
+size = 24
+extra_spacing_bottom = -4
+font_data = ExtResource( 2 )
 
 [node name="Node2D" type="Node2D"]
 pause_mode = 2
@@ -32,7 +38,25 @@ script = ExtResource( 4 )
 [node name="cl" type="CanvasLayer" parent="."]
 script = ExtResource( 14 )
 
-[node name="mny" type="RichTextLabel" parent="cl"]
-margin_right = 190.0
-margin_bottom = 40.0
+[node name="txt" type="RichTextLabel" parent="cl"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -40.0
+margin_right = 250.0
 mouse_filter = 2
+custom_fonts/normal_font = SubResource( 1 )
+text = "vcbgchghdghgsrg"
+
+[node name="mny" type="RichTextLabel" parent="cl/txt"]
+self_modulate = Color( 0.94902, 0.913725, 0.0588235, 1 )
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -50.0
+margin_top = -20.0
+margin_right = 98.0
+margin_bottom = 20.0
+mouse_filter = 2
+custom_fonts/normal_font = SubResource( 1 )
+text = "gold"

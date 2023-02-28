@@ -1,5 +1,6 @@
 extends StaticBody2D
 var choiced=false
+export(int,0,99999) var money_to_enemy=100
 export(String)var c_name=""
 export(int) var command=-1
 export(Color)var c_com=Color(1,1,1,1)
@@ -16,6 +17,8 @@ func _draw():
 
 func _ready():
 	var com_maket={
+	"money":250,
+	"battled_by":-1,
 	"color":{
 		"r":c_com.r,
 		"g":c_com.g,
@@ -25,7 +28,6 @@ func _ready():
 	"name":c_name
 	}
 	gm.commands.merge({command:com_maket})
-	print(gm.commands)
 	if gm.command==command:
 		hub.collision_layer=2
 		hub.collision_mask=0
@@ -57,9 +59,9 @@ func _on_main_mouse_entered():in_=true
 func _on_main_mouse_exited():in_=false
 func _on_hurt_box_area_entered(area):
 	status.he-=area.damage*area.scale_damage
+	var cmnd=area.get_parent().command
 	if status.he<=0:
-		queue_free()
-		get_parent().get_parent()._reload()
+		delete(cmnd)
 func _on_watchout_body_entered(body):
 	#if body.command!=gl.command:
 	#	body.vision(true)
@@ -68,3 +70,8 @@ func _on_watchout_body_exited(body):
 	#if body.command!=gl.command:
 	#	body.vision(false)
 	pass # Replace with function body.
+func delete(cmnd:int):
+	gm.commands[command]["battled_by"]=cmnd
+	gm.commands[cmnd]["money"]+=money_to_enemy
+	queue_free()
+	get_parent().get_parent()._reload()

@@ -1,10 +1,10 @@
 extends RigidBody2D
-enum types{space,sky,ground,water,underwater}
+export(int,0,99999) var money_to_enemy=5
 export(int)var command=0
 export(int)var type=0
-export(float,0.5,99999)var attack_time=0.5
-export(float,0.5,99999)var damage=0.5
-export(float,0,99999)var max_ang=15
+export(float,0.5,99)var attack_time=0.5
+export(float)var def=0
+#export(float,0.5,99999)var damage=5
 var path: Array = []
 export(int) var SPEED: int = 40
 var mvec:=Vector2.ZERO
@@ -12,7 +12,6 @@ var mpath=[]
 var mpath_i=0
 var to_enemy_follow_path=[]
 var pathing=false
-export(NodePath) var patrule_pos=null
 onready var status=$stats
 onready var hib= $att_pos
 onready var hub= $hurt_box
@@ -23,6 +22,7 @@ func get_init():
 
 func _ready():
 	gm.unit_count+=1
+	#$att_pos.damage=damage
 	if gm.command==command:
 		hib.collision_layer=0
 		hib.collision_mask=4
@@ -44,6 +44,7 @@ func _ready():
 		$front.collision_mask=$front.collision_layer
 		#$rc.collision_mask=8
 	$nav_ag.set_navigation(gm._get_nav_path(type))
+	$no.set_navigation(gm._get_nav_path(type))
 var step=0
 func set_anim(ang:float,t:String):
 	var type=0
@@ -83,12 +84,13 @@ func _integrate_forces(st):
 		mvec=mvec.move_toward(Vector2(0,0),SPEED*10*step)
 	var len_l=[]
 	for ent in bs:
-		len_l.append(fnc._sqrt(self.global_position-ent.global_position))
+		len_l.append(self.global_position.distance_to(ent.global_position))
 	for ent in bs:
-		$front.rotation_degrees=rad2deg(fnc.angle(ent.global_position-global_position))-90
-		if len_l.min()==fnc._sqrt(self.global_position-ent.global_position):
+		if len_l.min()==self.global_position.distance_to(ent.global_position):
 			nearst=ent
 	if fnc.i_search($front.bs,nearst)!=-1:
+		$front.rotation_degrees=rad2deg(fnc.angle(nearst.global_position-global_position))-90
+		hib.rotation_degrees=$front.rotation_degrees+90
 		attk(nearst.global_position)
 	#РАДЗДЕЛИТЬ ПУТИ НА "ДЛЯ ВРАГОВ" и на "ДЛЯ ПУТИ"
 	if nearst!=null and is_instance_valid(nearst) :
@@ -117,21 +119,18 @@ func end_att():
 	attacked=true
 	if $front.bs==[]:
 		set_anim($front.rotation_degrees,"wait")
-
+	
 var attacked=true
 
 func attk(target_pos):
-	var t=target_pos-hib.global_position
-	hib.rotation_degrees=rad2deg(fnc.angle(t))
-	hib.position=fnc.move(hib.rotation_degrees)*10+Vector2(0,-36)
+	var t=target_pos-global_position
+	#hib.position=fnc.move(hib.rotation_degrees)*10+Vector2(0,-36)
 	$AP.play("att",0,attack_time)
-	set_anim(rad2deg(fnc.angle(target_pos-global_position)),"att")
+	set_anim(rad2deg(fnc.angle(t)),"att")
 	attacked=false
 
 func _on_hurt_box_area_entered(area):
-	status.he-=area.damage*area.scale_damage
+	status.he-=area.damage*area.scale_damage/(def+1)
 	if status.he<=0:
-		dead()
-
-func dead():
-	queue_free()
+		gm.commands[area.get_parent().command]["money"]+=money_to_enemy
+		queue_free()

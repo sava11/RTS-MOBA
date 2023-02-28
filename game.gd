@@ -4,7 +4,6 @@ onready var cam=get_tree().current_scene.get_node("cam")
 var commands={}
 const max_unit_value=150
 var unit_count=0
-var money=250
 func _ready():
 	###SET_COMMAND_NEED!!!!!!!!!!!!!!
 	for e in get_tree().get_nodes_in_group("MBASE"):

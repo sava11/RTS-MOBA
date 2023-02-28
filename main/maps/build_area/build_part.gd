@@ -10,14 +10,16 @@ export(t)var start_buid=t.nill
 var container=null
 onready var path=get_parent().get_path()
 onready var map=get_tree().current_scene.get_node("map").get_child(0)
+var com_data={}
 var tree={}
 
-
 func _ready():
+	
+	com_data=gm.commands[command]
 	if get_parent().get("command")!=null:command=get_parent().command
 	if get_parent().get("tree")==null:
 			tree={t.sword:{
-			"img":"res://main/img/aca49daec57b423d08d2462a1bc90413.png",
+			"img":"res://main/img/sword.png",
 			"obj":load("res://main/objs/building/sworders/swh_0/base.tscn"),
 			"value":50,
 				},
@@ -54,8 +56,8 @@ func _draw():
 	if command==gm.command:
 		if choiced==true:
 			var area=$c.shape.extents
-			var r=Rect2(-area,area*2)
-			draw_rect(r,Color(1.0,1.0,1.0,1.0),false,2.0,true)
+			#draw_rect(r,Color(1.0,1.0,1.0,1.0),false,2.0,true)
+			draw_arc(Vector2.ZERO,fnc._sqrt(area),0,PI*2,360,Color(1.0,1.0,1.0,1.0),2.0,true)
 			draw_circle($p.position,5,Color(0.0,1.0,0.0,1.0))
 			cntrl.visible=true
 		else:
@@ -67,7 +69,7 @@ func _physics_process(delta):
 	var win=fnc.get_prkt_win()
 	var sizex=min(win.x,win.y)*0.05
 	cntrl.global_rotation_degrees=0
-	cntrl.get_child(0).rect_size=Vector2(sizex+otstup,sizex/2)*len(tree.keys())
+	cntrl.get_child(0).rect_size=Vector2(sizex+otstup,sizex/len(tree.keys())/1.5+otstup)*len(tree.keys())
 	cntrl.global_position.x=-cntrl.get_child(0).rect_size.x/2+global_position.x
 	cntrl.global_position.y=posy+global_position.y-cntrl.get_child(0).rect_size.y
 	if gm.command==command:
@@ -96,23 +98,27 @@ func _on_butt_mouse_exited():
 
 func _set_btn(e):
 	var obj=null
-	if tree[e].has("obj"):
+	if tree[e].has("obj") and gm.commands[gm.command]["money"]>=tree[e]["value"]:
 		obj=tree[e]["obj"].instance()
 		cr_obj(obj)
+		gm.commands[gm.command]["money"]-=tree[e]["value"]
+	if tree[e].has("unit") and gm.commands[gm.command]["money"]>=tree[e]["value"]:
+		get_parent().add_unit(preload("res://main/units/unit.tscn"))
+		gm.commands[gm.command]["money"]-=tree[e]["value"]
 	if tree[e].has("fnc"):
-		call_deferred(tree[e]["fnc"])
+		if tree[e].has("fnc_path"):
+			get_node(tree[e]["fnc_path"]).call_deferred(tree[e]["fnc"])
+		else:
+			call_deferred(tree[e]["fnc"])
 	pass
 func cr_obj(obj):
 	obj.position=position
 	obj.rotation_degrees=rotation_degrees
 	obj.command=command
+	obj.get_node("a1").command=command
 	#obj.auto_cr_time=-1
+	obj.set_pos=$p.global_position
 	get_parent().call_deferred("add_child",obj)
 	yield(get_tree(),"idle_frame")
-	#fnc.change_parent(obj,self)
-	obj.set_pos=$p.global_position
 	map._reload()
-	self.rotation_degrees=0
-	self.position=Vector2.ZERO
-	container=obj
 	queue_free()

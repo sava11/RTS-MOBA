@@ -1,4 +1,4 @@
-[gd_scene load_steps=174 format=2]
+[gd_scene load_steps=172 format=2]
 
 [ext_resource path="res://main/img/output-1/0080.png" type="Texture" id=1]
 [ext_resource path="res://main/units/test.gd" type="Script" id=2]
@@ -259,7 +259,7 @@ animations = [ {
 } ]
 
 [sub_resource type="CapsuleShape2D" id=65]
-radius = 4.52
+radius = 5.0
 height = 42.96
 
 [sub_resource type="CircleShape2D" id=58]
@@ -306,10 +306,6 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="AnimationNodeStateMachine" id=62]
-
-[sub_resource type="AnimationNodeStateMachinePlayback" id=63]
-
 [node name="gr" type="RigidBody2D" groups=["unit"]]
 mode = 2
 physics_material_override = SubResource( 55 )
@@ -320,8 +316,16 @@ can_sleep = false
 script = ExtResource( 2 )
 command = -1
 attack_time = 2.0
-max_ang = 5.0
 SPEED = 100
+
+[node name="stats" parent="." instance=ExtResource( 5 )]
+m_he = 20.0
+
+[node name="nav_ag" type="NavigationAgent2D" parent="."]
+
+[node name="no" type="NavigationObstacle2D" parent="."]
+estimate_radius = false
+radius = 41.79
 
 [node name="c" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 1 )
@@ -334,27 +338,12 @@ frames = SubResource( 61 )
 animation = "wait-1"
 speed_scale = 7.0
 
-[node name="stats" parent="." instance=ExtResource( 5 )]
-m_he = 20.0
-
-[node name="nav_ag" type="NavigationAgent2D" parent="."]
-
-[node name="att_pos" type="Area2D" parent="."]
-position = Vector2( 0, -35 )
-rotation = 1.5708
-collision_layer = 0
-collision_mask = 4
-script = ExtResource( 3 )
-damage = 5.0
-
-[node name="col" type="CollisionPolygon2D" parent="att_pos"]
-polygon = PoolVector2Array( 0, 0, 4.00004, 11, 7.00003, 7.99997, 9.00001, 1.99997, 8.99999, -2.00003, 6.99997, -8.00003, 3.99996, -11 )
-
 [node name="hurt_box" type="Area2D" parent="."]
 position = Vector2( 0, 1 )
 collision_layer = 2
 collision_mask = 0
 script = ExtResource( 4 )
+tspeed = 0.3
 
 [node name="col" type="CollisionShape2D" parent="hurt_box"]
 position = Vector2( 0, -24 )
@@ -380,13 +369,19 @@ visible = false
 position = Vector2( -1, 0 )
 shape = SubResource( 58 )
 
+[node name="att_pos" type="Area2D" parent="."]
+position = Vector2( 0, -35 )
+rotation = 1.5708
+collision_layer = 0
+collision_mask = 4
+script = ExtResource( 3 )
+damage = 5.0
+
+[node name="col" type="CollisionPolygon2D" parent="att_pos"]
+polygon = PoolVector2Array( 0, 0, 15, 9.99995, 15, -10.0001 )
+
 [node name="AP" type="AnimationPlayer" parent="."]
 anims/att = SubResource( 59 )
-
-[node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource( 62 )
-anim_player = NodePath("../AP")
-parameters/playback = SubResource( 63 )
 
 [connection signal="area_entered" from="hurt_box" to="." method="_on_hurt_box_area_entered"]
 [connection signal="invi_ended" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_ended"]

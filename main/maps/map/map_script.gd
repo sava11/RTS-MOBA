@@ -87,5 +87,7 @@ func add_path(path_nod:NavigationPolygonInstance,sc=1.0,eps=0.0):
 		path_nod.navpoly.make_polygons_from_outlines()
 
 func _physics_process(delta):
-	if Input.is_action_just_pressed("a"):
-		_reload()
+	if Input.is_action_just_pressed("s"):get_tree().paused=not get_tree().paused
+	if len(get_tree().get_nodes_in_group("MBASE"))==1:
+		get_tree().paused=true
+		pause_mode=Node.PAUSE_MODE_STOP
