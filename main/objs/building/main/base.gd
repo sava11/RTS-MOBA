@@ -59,7 +59,7 @@ func _on_main_mouse_entered():in_=true
 func _on_main_mouse_exited():in_=false
 func _on_hurt_box_area_entered(area):
 	status.he-=area.damage*area.scale_damage
-	var cmnd=area.get_parent().command
+	var cmnd=area.command
 	if status.he<=0:
 		delete(cmnd)
 func _on_watchout_body_entered(body):

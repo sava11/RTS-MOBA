@@ -122,7 +122,7 @@ func add_unit(unit):
 func _on_hurt_box_area_entered(area):
 	status.he-=area.damage*area.scale_damage
 	if status.he<=0:
-		delete(area.get_parent().command)
+		delete(area.command)
 func delete(cmnd:int):
 	gm.commands[cmnd]["money"]+=money_to_enemy
 	queue_free()

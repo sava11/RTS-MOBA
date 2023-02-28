@@ -121,14 +121,14 @@ var attacked=true
 func add_att_zone():
 	var att=preload("res://main/boxes/hitboxdmg.tscn").instance()
 	#att.wait_time=1/attack_time
-	print(att.wait_time)
+	#print(att.wait_time)
 	att.command=command
 	att.get_child(0).polygon=dmg_polyg
 	att.collision_layer=hib["collision_layer"]
 	att.collision_mask=hib["collision_mask"]
 	att.damage=dmg
 	get_parent().call_deferred("add_child",att)
-	att.global_position=global_position+Vector2(0,-35)
+	att.global_position=global_position
 	att.rotation_degrees=$front.rotation_degrees+90
 func attk(target_pos):
 	var t=target_pos-global_position
