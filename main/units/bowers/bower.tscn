@@ -1,7 +1,7 @@
 [gd_scene load_steps=171 format=2]
 
 [ext_resource path="res://main/img/output-1/0080.png" type="Texture" id=1]
-[ext_resource path="res://main/units/test.gd" type="Script" id=2]
+[ext_resource path="res://main/units/bowers/bower.gd" type="Script" id=2]
 [ext_resource path="res://main/boxes/hurt_box.gd" type="Script" id=4]
 [ext_resource path="res://main/objs/stats/stats.tscn" type="PackedScene" id=5]
 [ext_resource path="res://main/img/output-1/0020.png" type="Texture" id=6]
@@ -284,7 +284,7 @@ tracks/0/keys = {
 } ]
 }
 
-[node name="gr" type="RigidBody2D" groups=["unit"]]
+[node name="bow" type="RigidBody2D" groups=["unit"]]
 mode = 2
 physics_material_override = SubResource( 55 )
 custom_integrator = true
@@ -300,7 +300,7 @@ m_he = 20.0
 
 [node name="no" type="NavigationObstacle2D" parent="."]
 estimate_radius = false
-radius = 41.79
+radius = 88.01
 
 [node name="c" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 1 )
@@ -331,8 +331,10 @@ collision_layer = 16
 collision_mask = 16
 script = ExtResource( 166 )
 
-[node name="c" type="CollisionPolygon2D" parent="front"]
-polygon = PoolVector2Array( -16, 0, -14, 8, -9, 14, 0, 16, 9, 14, 14, 8, 16, 0, 0, -3 )
+[node name="с" type="CollisionPolygon2D" parent="front"]
+visible = false
+scale = Vector2( 10, 10 )
+polygon = PoolVector2Array( -16, 0, -14, 8, -9, 14, 0, 16, 9, 14, 14, 8, 16, 0 )
 
 [node name="watchout" type="Area2D" parent="."]
 collision_layer = 17
@@ -344,6 +346,9 @@ shape = SubResource( 58 )
 
 [node name="AP" type="AnimationPlayer" parent="."]
 anims/att = SubResource( 59 )
+
+[node name="r" type="RayCast2D" parent="."]
+enabled = true
 
 [connection signal="area_entered" from="hurt_box" to="." method="_on_hurt_box_area_entered"]
 [connection signal="invi_ended" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_ended"]

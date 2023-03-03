@@ -25,6 +25,7 @@ func _ready():
 				},
 		t.bow:{
 			"img":"res://main/img/aca49daec57b423d08d2462a1bc90413.png",
+			"obj":load("res://main/objs/building/bows/base.tscn"),
 			"value":50,
 				},
 		t.holy:{
@@ -33,7 +34,15 @@ func _ready():
 				},}
 	else:
 		if get_parent().get("tree")!={}:
-			tree=get_parent().get("tree")
+			tree={
+				-1:{
+					"img":"res://main/img/rebuild.png",
+					"fnc":"rebuild",
+					"value":15,
+					}
+				}
+			tree.merge(get_parent().get("tree"))
+			
 	cntrl.visible=false
 	var win=fnc.get_prkt_win()
 	var sizex=min(win.x,win.y)*0.05
@@ -56,8 +65,9 @@ func _draw():
 	if command==gm.command:
 		if choiced==true:
 			var area=$c.shape.extents
-			#draw_rect(r,Color(1.0,1.0,1.0,1.0),false,2.0,true)
-			draw_arc(Vector2.ZERO,fnc._sqrt(area),0,PI*2,360,Color(1.0,1.0,1.0,1.0),2.0,true)
+			var r=Rect2(-area*1.25,area*2.5)
+			draw_rect(r,Color(1.0,1.0,1.0,1.0),false,2.0,true)
+			#draw_arc(Vector2.ZERO,fnc._sqrt(area),0,PI*2,360,Color(1.0,1.0,1.0,1.0),2.0,true)
 			draw_circle($p.position,5,Color(0.0,1.0,0.0,1.0))
 			cntrl.visible=true
 		else:
@@ -69,7 +79,7 @@ func _physics_process(delta):
 	var win=fnc.get_prkt_win()
 	var sizex=min(win.x,win.y)*0.05
 	cntrl.global_rotation_degrees=0
-	cntrl.get_child(0).rect_size=Vector2(sizex+otstup,sizex/len(tree.keys())/1.5+otstup)*len(tree.keys())
+	cntrl.get_child(0).rect_size=Vector2((sizex+otstup)*len(tree.keys()),sizex+otstup)
 	cntrl.global_position.x=-cntrl.get_child(0).rect_size.x/2+global_position.x
 	cntrl.global_position.y=posy+global_position.y-cntrl.get_child(0).rect_size.y
 	if gm.command==command:
@@ -101,16 +111,16 @@ func _set_btn(e):
 	if tree[e].has("obj") and gm.commands[gm.command]["money"]>=tree[e]["value"]:
 		obj=tree[e]["obj"].instance()
 		cr_obj(obj)
-		gm.commands[gm.command]["money"]-=tree[e]["value"]
 	if tree[e].has("unit") and gm.commands[gm.command]["money"]>=tree[e]["value"]:
 		get_parent().add_unit(preload("res://main/units/unit.tscn"))
-		gm.commands[gm.command]["money"]-=tree[e]["value"]
 	if tree[e].has("fnc"):
 		if tree[e].has("fnc_path"):
 			get_node(tree[e]["fnc_path"]).call_deferred(tree[e]["fnc"])
 		else:
 			call_deferred(tree[e]["fnc"])
-	pass
+	if tree[e].has("value") and (tree[e].has("can_payd")==false or tree[e]["can_payd"]==true):
+		gm.commands[gm.command]["money"]-=tree[e]["value"]
+
 func cr_obj(obj):
 	obj.position=position
 	obj.rotation_degrees=rotation_degrees
@@ -122,3 +132,14 @@ func cr_obj(obj):
 	yield(get_tree(),"idle_frame")
 	map._reload()
 	queue_free()
+
+func rebuild():
+	var obj=load("res://main/maps/build_area/build_part.tscn").instance()
+	obj.command=command
+	get_parent().get_parent().call_deferred("add_child",obj)
+	yield(get_tree(),"idle_frame")
+	obj.global_position=global_position
+	obj.rotation_degrees=rotation_degrees
+	obj.get_node("p").global_position=$p.global_position
+	map._reload()
+	get_parent().queue_free()

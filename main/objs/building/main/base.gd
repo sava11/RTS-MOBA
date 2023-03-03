@@ -1,6 +1,6 @@
 extends StaticBody2D
+var parametrs={}
 var choiced=false
-export(int,0,99999) var money_to_enemy=100
 export(String)var c_name=""
 export(int) var command=-1
 export(Color)var c_com=Color(1,1,1,1)
@@ -16,18 +16,20 @@ func _draw():
 
 
 func _ready():
-	var com_maket={
-	"money":250,
-	"battled_by":-1,
-	"color":{
-		"r":c_com.r,
-		"g":c_com.g,
-		"b":c_com.b,
-		"a":c_com.a,
-		},
-	"name":c_name
-	}
-	gm.commands.merge({command:com_maket})
+	parametrs=objs.bparametrs["MBASE"].duplicate()
+	var color=parametrs["color"].duplicate()
+	parametrs.command=command
+	parametrs.name=c_name
+	color.r=c_com.r
+	color.g=c_com.g
+	color.b=c_com.b
+	color.a=c_com.a
+	parametrs.color=color
+	status.m_he=parametrs.HP
+	status.he=parametrs.HP
+	#print(parametrs)
+	gm.commands.merge({command:parametrs})
+	#print(gm.commands)
 	if gm.command==command:
 		hub.collision_layer=2
 		hub.collision_mask=0
@@ -72,6 +74,6 @@ func _on_watchout_body_exited(body):
 	pass # Replace with function body.
 func delete(cmnd:int):
 	gm.commands[command]["battled_by"]=cmnd
-	gm.commands[cmnd]["money"]+=money_to_enemy
+	gm.commands[cmnd]["money"]+=objs.bparametrs["MBASE"].money_to_enemy
 	queue_free()
 	get_parent().get_parent()._reload()

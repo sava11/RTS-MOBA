@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=2]
 
-[ext_resource path="res://main/objs/building/sworders/swh_0/base.gd" type="Script" id=1]
+[ext_resource path="res://main/objs/building/bows/base.gd" type="Script" id=1]
 [ext_resource path="res://main/maps/build_area/build_part.tscn" type="PackedScene" id=2]
 [ext_resource path="res://main/objs/building/sworders/swh_0/img/0006.png" type="Texture" id=3]
 [ext_resource path="res://main/boxes/hurt_box.tscn" type="PackedScene" id=4]
@@ -56,7 +56,7 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[node name="Sworder_House" type="StaticBody2D"]
+[node name="bows_House" type="StaticBody2D"]
 collision_layer = 33
 collision_mask = 33
 input_pickable = true

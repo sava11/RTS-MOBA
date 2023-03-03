@@ -15,7 +15,7 @@ var settle={
 	"atti":0,
 }
 var set_pos=Vector2.ZERO
-var com_data={}
+var gdata={}
 var tree={
 	0:{
 		"img":"res://main/img/updsword.png",
@@ -70,9 +70,7 @@ func _ready():
 		#$watchout.collision_layer=8
 		#$watchout.collision_mask=8
 	#yield(get_tree(),"idle_frame")
-	com_data=gm.commands[command]
-	#print(com_data)
-	#modulate=Color(com_data["color"]["r"],com_data["color"]["g"],com_data["color"]["b"],com_data["color"]["a"])
+	gdata=gm.commands[command]
 
 func _physics_process(delta):
 	update()
@@ -82,13 +80,13 @@ func _physics_process(delta):
 			trening_time=trening["test"]
 	if gm.unit_count<gm.max_unit_value:
 		if len(timers)<2:
-			timers.append({"test":objs.bparametrs["sworders"]["create_unit_time"]})
+			timers.append({"test":objs.bparametrs["bows"]["create_unit_time"]})
 	if trening!=null and gm.unit_count<gm.max_unit_value:
 		if trening_time>0:
 			trening_time-=delta
 		else:
 			if trening.keys()==["test"]:
-				_add_unit(preload("res://main/units/unit.tscn"))
+				_add_unit(preload("res://main/units/bowers/bower.tscn"))
 				timers.remove(fnc.i_search(timers,trening))
 				trening=null
 var trening=null
@@ -107,7 +105,7 @@ func add_def():
 func _add_unit(unit):
 	if gm.unit_count<gm.max_unit_value:
 		var t=unit.instance()
-		t.parametrs=objs.parametrs["sword"].duplicate()
+		t.parametrs=objs.parametrs["bower"].duplicate()
 		t.parametrs["command"]=command
 		#t.self_modulate=c_com
 		t.get_node("spr").self_modulate=c_com
@@ -120,7 +118,7 @@ func _add_unit(unit):
 			if en!=null:
 				t.mpath.append(en.global_position)
 			map.get_node("PlayGround").add_child(t)
-		t.modulate=Color(com_data["color"]["r"],com_data["color"]["g"],com_data["color"]["b"],com_data["color"]["a"])
+		t.modulate=Color(gdata["color"]["r"],gdata["color"]["g"],gdata["color"]["b"],gdata["color"]["a"])
 		t.global_position=set_pos
 func add_unit(unit):
 	if gm.commands[gm.command]["money"]>=25 and gm.unit_count<gm.max_unit_value:
