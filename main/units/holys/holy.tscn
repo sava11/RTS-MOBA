@@ -1,8 +1,7 @@
-[gd_scene load_steps=175 format=2]
+[gd_scene load_steps=170 format=2]
 
 [ext_resource path="res://main/img/output-1/0080.png" type="Texture" id=1]
-[ext_resource path="res://main/units/test.gd" type="Script" id=2]
-[ext_resource path="res://main/font/normal.tres" type="DynamicFont" id=3]
+[ext_resource path="res://main/units/holys/holy.gd" type="Script" id=2]
 [ext_resource path="res://main/boxes/hurt_box.gd" type="Script" id=4]
 [ext_resource path="res://main/objs/stats/stats.tscn" type="PackedScene" id=5]
 [ext_resource path="res://main/img/output-1/0020.png" type="Texture" id=6]
@@ -265,58 +264,7 @@ height = 42.96
 [sub_resource type="CircleShape2D" id=58]
 radius = 193.0
 
-[sub_resource type="Animation" id=59]
-resource_name = "att"
-tracks/0/type = "method"
-tracks/0/path = NodePath(".")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"values": [ {
-"args": [  ],
-"method": "add_att_zone"
-}, {
-"args": [  ],
-"method": "end_att"
-} ]
-}
-
-[sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0.105882, 0.462745, 0.211765, 1 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.027451, 0.929412, 0.0235294, 1 )
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-expand_margin_left = 4.0
-expand_margin_right = 4.0
-expand_margin_top = 4.0
-expand_margin_bottom = 4.0
-
-[sub_resource type="StyleBoxFlat" id=3]
-bg_color = Color( 0.176471, 0.647059, 0.219608, 1 )
-border_color = Color( 0, 0, 0, 1 )
-border_blend = true
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
-[sub_resource type="Theme" id=4]
-default_font = ExtResource( 3 )
-ProgressBar/styles/bg = SubResource( 2 )
-ProgressBar/styles/fg = SubResource( 3 )
-
-[node name="gr" type="RigidBody2D" groups=["unit"]]
-input_pickable = true
+[node name="holy" type="RigidBody2D" groups=["unit"]]
 mode = 2
 physics_material_override = SubResource( 55 )
 custom_integrator = true
@@ -329,10 +277,10 @@ script = ExtResource( 2 )
 m_he = 20.0
 
 [node name="nav_ag" type="NavigationAgent2D" parent="."]
-
-[node name="no" type="NavigationObstacle2D" parent="."]
-estimate_radius = false
-radius = 41.79
+path_max_distance = 60.0
+neighbor_dist = 20.0
+time_horizon = 1.0
+max_speed = 100.0
 
 [node name="c" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 1 )
@@ -342,7 +290,7 @@ shape = SubResource( 56 )
 position = Vector2( 2, -24.55 )
 scale = Vector2( 0.06, 0.06 )
 frames = SubResource( 61 )
-animation = "att-7"
+animation = "wait-1"
 speed_scale = 7.0
 
 [node name="hurt_box" type="Area2D" parent="."]
@@ -363,8 +311,10 @@ collision_layer = 16
 collision_mask = 16
 script = ExtResource( 166 )
 
-[node name="c" type="CollisionPolygon2D" parent="front"]
-polygon = PoolVector2Array( -16, 0, -14, 8, -9, 14, 0, 16, 9, 14, 14, 8, 16, 0, 0, -3 )
+[node name="с" type="CollisionPolygon2D" parent="front"]
+visible = false
+scale = Vector2( 10, 10 )
+polygon = PoolVector2Array( -16, 0, -14, 8, -9, 14, 0, 16, 9, 14, 14, 8, 16, 0 )
 
 [node name="watchout" type="Area2D" parent="."]
 collision_layer = 17
@@ -374,24 +324,12 @@ collision_mask = 17
 visible = false
 shape = SubResource( 58 )
 
-[node name="AP" type="AnimationPlayer" parent="."]
-anims/att = SubResource( 59 )
-
-[node name="pb" type="ProgressBar" parent="."]
-visible = false
-margin_left = -16.0
-margin_top = 4.0
-margin_right = 304.0
-margin_bottom = 30.32
-rect_scale = Vector2( 0.1, 0.1 )
-theme = SubResource( 4 )
+[node name="no" type="NavigationObstacle2D" parent="."]
 
 [connection signal="velocity_computed" from="nav_ag" to="." method="_on_nav_ag_velocity_computed"]
 [connection signal="area_entered" from="hurt_box" to="." method="_on_hurt_box_area_entered"]
 [connection signal="invi_ended" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_ended"]
 [connection signal="invi_started" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_started"]
-[connection signal="mouse_entered" from="hurt_box" to="." method="_on_gr_mouse_entered"]
-[connection signal="mouse_exited" from="hurt_box" to="." method="_on_gr_mouse_exited"]
 [connection signal="timeout" from="hurt_box/Timer" to="hurt_box" method="_on_Timer_timeout"]
 [connection signal="body_entered" from="front" to="front" method="_on_b_entered"]
 [connection signal="body_exited" from="front" to="front" method="_on_b_exited"]

@@ -10,13 +10,9 @@ script = ExtResource( 1 )
 [node name="col" type="CollisionPolygon2D" parent="."]
 polygon = PoolVector2Array( -15, 0, -15, 15, 15, 15, 15, 0 )
 
-[node name="r" type="RayCast2D" parent="."]
-enabled = true
-collision_mask = 0
-
 [node name="Timer" type="Timer" parent="."]
 process_mode = 0
-wait_time = 0.05
+wait_time = 0.15
 one_shot = true
 autostart = true
 

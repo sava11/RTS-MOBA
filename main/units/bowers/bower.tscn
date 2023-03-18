@@ -273,9 +273,12 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
 "values": [ {
+"args": [  ],
+"method": "set_att"
+}, {
 "args": [  ],
 "method": "add_att_zone"
 }, {
@@ -297,10 +300,10 @@ script = ExtResource( 2 )
 m_he = 20.0
 
 [node name="nav_ag" type="NavigationAgent2D" parent="."]
-
-[node name="no" type="NavigationObstacle2D" parent="."]
-estimate_radius = false
-radius = 88.01
+path_max_distance = 60.0
+neighbor_dist = 20.0
+time_horizon = 1.0
+max_speed = 100.0
 
 [node name="c" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 1 )
@@ -349,7 +352,11 @@ anims/att = SubResource( 59 )
 
 [node name="r" type="RayCast2D" parent="."]
 enabled = true
+collision_mask = 16
 
+[node name="no" type="NavigationObstacle2D" parent="."]
+
+[connection signal="velocity_computed" from="nav_ag" to="." method="_on_nav_ag_velocity_computed"]
 [connection signal="area_entered" from="hurt_box" to="." method="_on_hurt_box_area_entered"]
 [connection signal="invi_ended" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_ended"]
 [connection signal="invi_started" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_started"]

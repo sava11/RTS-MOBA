@@ -27,7 +27,7 @@ var pathing=false
 onready var status=$stats
 var hib={"collision_layer":0,"collision_mask":0}
 onready var hub= $hurt_box
-
+var buffs={"adef":0,"aatt":0}
 func _ready():
 	gm.unit_count+=1
 	status.m_he=parametrs.HP
@@ -42,6 +42,7 @@ func _ready():
 		collision_mask=collision_layer
 		$front.collision_layer=16
 		$front.collision_mask=$front.collision_layer
+		$r.collision_mask=16
 		#$rc.collision_mask=16
 	else:
 		hib["collision_layer"]=0
@@ -52,6 +53,7 @@ func _ready():
 		collision_mask=collision_layer
 		$front.collision_layer=8
 		$front.collision_mask=$front.collision_layer
+		$r.collision_mask=8
 		#$rc.collision_mask=8
 	$nav_ag.set_navigation(gm._get_nav_path(parametrs["type"]))
 	$no.set_navigation(gm._get_nav_path(parametrs["type"]))
@@ -89,11 +91,12 @@ func _integrate_forces(st):
 				mpath=[]
 		elif len(mpath)>1:
 			if global_position.distance_to($nav_ag.get_final_location())<10:
-				mpath_i=fnc.circ(mpath_i+1,0,len(mpath))
+				mpath_i=fnc.circ(mpath_i+1,0,len(mpath)-1)
 				save_mpath_i=mpath_i
 	else:
 		mvec=mvec.move_toward(Vector2(0,0),parametrs["speed"]*10*step)
 	var len_l=[]
+	nearst=null
 	for ent in bs:
 		len_l.append(self.global_position.distance_to(ent.global_position))
 	for ent in bs:
@@ -103,9 +106,14 @@ func _integrate_forces(st):
 	if nearst!=null and target_pos!=Vector2.ZERO:
 		$front.rotation_degrees=rad2deg(fnc.angle(target_pos-global_position))-90
 		attk(target_pos)
-	if nearst!=null and is_instance_valid(nearst) :
+		$r.cast_to=target_pos-global_position
+	if nearst!=null and is_instance_valid(nearst):
+		
+		if global_position.distance_to(nearst.global_position)<100:
+			mpath=[-global_position.direction_to(nearst.global_position)*parametrs["speed"]+global_position]
+		else:
+			mpath=[]
 		mpath_i=0
-		mpath=[]
 	update()
 	if bs==[]:
 		mpath=save_mpath
@@ -131,7 +139,8 @@ func end_att():
 	attacked=true
 	if bs==[]:
 		set_anim($front.rotation_degrees,"wait")
-	
+func set_att():
+	attacked=false
 var attacked=true
 func add_att_zone():
 	var att=preload("res://main/boxes/hitboxdmgShaped.tscn").instance()
@@ -139,8 +148,7 @@ func add_att_zone():
 	att.command=parametrs["command"]
 	att.collision_layer=hib["collision_layer"]
 	att.collision_mask=hib["collision_mask"]
-	att.damage=parametrs["dmg"]
-	$r.cast_to=target_pos-global_position
+	att.damage=parametrs["dmg"]+buffs["aatt"]
 	get_parent().call_deferred("add_child",att)
 	#att.global_position=global_position
 	att.global_position=$r.get_collision_point()
@@ -149,11 +157,9 @@ func attk(target_pos:Vector2):
 	var t=target_pos-global_position
 	$AP.play("att",0,parametrs["attack_speed"])
 	set_anim(rad2deg(fnc.angle(t)),"att")
-	attacked=false
 
 func _on_hurt_box_area_entered(area):
-	status.he-=area.damage*area.scale_damage*(float(area.damage*area.scale_damage)/(parametrs["def"]))
-	print(status.he)
+	status.he-=area.damage*area.scale_damage*(float(area.damage*area.scale_damage)/(parametrs["def"]+buffs["adef"]))
 	area.queue_free()
 	if status.he<=0:
 		gm.unit_count-=1

@@ -101,6 +101,7 @@ func to_glb_PV_and_rot(pv:PoolVector2Array,pos:Vector2,rot=0,_scale=1,loc_pos=0)
 func change_parent(where,what):
 	what.get_parent().call_deferred("remove_child",what)
 	where.call_deferred("add_child",what)
+	yield(get_tree(),"idle_frame")
 	#what.rotation_degrees=where.rotation_degrees
 	#what.position=where.to_local(what.global_position)
 func to_glob(pol:PoolVector2Array,pos:Vector2):

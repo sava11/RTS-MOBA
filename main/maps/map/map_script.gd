@@ -1,16 +1,20 @@
 extends Node2D
-onready var cam=get_tree().current_scene.get_node("cam")
+var map_players_max=2
+var building=load("res://main/objs/building/buildings/base.tscn")
+var build_zone=load("res://main/maps/build_area/build_part.tscn") 
 var polygon=[]
 var path_points=[]
 var scs=[1,1]
 var l = [5,20]
+var pause=true
 func _ready():
+	#get_tree().paused=true
 	var rect=$ground
 	var rect_size=rect.rect_size*rect.rect_scale
-	cam.limit_left=rect.rect_position.x
-	cam.limit_right=rect.rect_position.x+rect_size.x
-	cam.limit_top=rect.rect_position.y
-	cam.limit_bottom=rect.rect_position.y+rect_size.y
+	gm.cam.limit_left=rect.rect_position.x
+	gm.cam.limit_right=rect.rect_position.x+rect_size.x
+	gm.cam.limit_top=rect.rect_position.y
+	gm.cam.limit_bottom=rect.rect_position.y+rect_size.y
 	_reload()
 	for e in $PlayGround.get_children():
 		if e is Line2D:
@@ -45,8 +49,7 @@ func get_nearst_enemy_base(gpos,command):
 	else: return null
 
 func _reload():
-	cam=get_tree().current_scene.get_node("cam")
-	var pl=PoolVector2Array([Vector2(cam.limit_left,cam.limit_top),Vector2(cam.limit_right,cam.limit_top),Vector2(cam.limit_right,cam.limit_bottom),Vector2(cam.limit_left,cam.limit_bottom)])
+	var pl=PoolVector2Array([Vector2(gm.cam.limit_left,gm.cam.limit_top),Vector2(gm.cam.limit_right,gm.cam.limit_top),Vector2(gm.cam.limit_right,gm.cam.limit_bottom),Vector2(gm.cam.limit_left,gm.cam.limit_bottom)])
 	yield(get_tree(),"idle_frame")
 	reload_map(pl,scs,l)
 func reload_map(pl,scl,list):
@@ -90,4 +93,20 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("s"):get_tree().paused=not get_tree().paused
 	if len(get_tree().get_nodes_in_group("MBASE"))==1:
 		get_tree().paused=true
-		pause_mode=Node.PAUSE_MODE_STOP
+
+func spawn_new_rebuild_area(PNode,pos:Vector2,rot:float,set_pos:Vector2,command:int):
+	var obj=build_zone.instance()
+	obj.command=command
+	PNode.call_deferred("add_child",obj)
+	yield(get_tree(),"idle_frame")
+	obj.global_position=pos
+	obj.rotation_degrees=rot
+	obj.get_node("p").global_position=set_pos
+	_reload()
+
+
+func _on_pause_timer_timeout():
+	#get_tree().paused=false
+	pause=false
+	get_parent().get_parent().get_node("cl").emit_signal("msg","game started")
+	pass # Replace with function body.

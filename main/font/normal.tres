@@ -1,7 +1,10 @@
 [gd_resource type="DynamicFont" load_steps=2 format=2]
 
-[ext_resource path="res://main/font/COMIC.TTF" type="DynamicFontData" id=1]
+[sub_resource type="DynamicFontData" id=2]
+override_oversampling = 5.0
+font_path = "res://main/font/COMIC.TTF"
 
 [resource]
-extra_spacing_bottom = -4
-font_data = ExtResource( 1 )
+use_mipmaps = true
+use_filter = true
+font_data = SubResource( 2 )

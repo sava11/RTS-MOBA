@@ -9,40 +9,47 @@ enum t{nill,sword,bow,holy}
 export(t)var start_buid=t.nill
 var container=null
 onready var path=get_parent().get_path()
-onready var map=get_tree().current_scene.get_node("map").get_child(0)
+onready var map=gm.tree
 var com_data={}
 var tree={}
 
 func _ready():
-	
 	com_data=gm.commands[command]
+	if map!=null:
+		map=map.get_node("map").get_child(0)
+	yield(get_tree(),"idle_frame")
 	if get_parent().get("command")!=null:command=get_parent().command
 	if get_parent().get("tree")==null:
-			tree={t.sword:{
+			tree={
+		t.sword:{
 			"img":"res://main/img/sword.png",
-			"obj":load("res://main/objs/building/sworders/swh_0/base.tscn"),
+			"name":"sword",
+			"obj_name":"swords",
 			"value":50,
 				},
 		t.bow:{
-			"img":"res://main/img/aca49daec57b423d08d2462a1bc90413.png",
-			"obj":load("res://main/objs/building/bows/base.tscn"),
+			"img":"res://main/img/bow.png",
+			"name":"bow",
+			"obj_name":"bows",
 			"value":50,
 				},
 		t.holy:{
-			"img":"res://main/img/aca49daec57b423d08d2462a1bc90413.png",
+			"img":"res://main/img/holy.png",
+			"name":"holy",
+			"obj_name":"holys",
 			"value":50,
 				},}
 	else:
 		if get_parent().get("tree")!={}:
 			tree={
-				-1:{
+				"rebuild":{
 					"img":"res://main/img/rebuild.png",
 					"fnc":"rebuild",
-					"value":15,
+					"value":-25,
 					}
 				}
 			tree.merge(get_parent().get("tree"))
-			
+
 	cntrl.visible=false
 	var win=fnc.get_prkt_win()
 	var sizex=min(win.x,win.y)*0.05
@@ -60,7 +67,7 @@ func _ready():
 		btn.mouse_filter=Control.MOUSE_FILTER_PASS
 		btn.rect_position=Vector2((btn.rect_size.x+otstup)*fnc.i_search(list,e)+otstup/2,otstup/2)
 	if start_buid!=t.nill:
-		cr_obj(tree[start_buid]["obj"].instance())
+		cr_obj(tree[start_buid]["obj_name"],tree[start_buid]["name"])
 func _draw():
 	if command==gm.command:
 		if choiced==true:
@@ -88,7 +95,7 @@ func _physics_process(delta):
 			choiced=false
 	
 func _on_input_event(viewport, event, shape_idx):
-	if Input.is_action_just_pressed("lbm"):
+	if Input.is_action_just_pressed("lbm") and command==gm.command:
 		choiced=not choiced
 	pass # Replace with function body.
 
@@ -106,40 +113,42 @@ func _on_but_mouse_entered():
 func _on_butt_mouse_exited():
 	in_but_area=false
 
-func _set_btn(e):
+remote func _set_btn(e):
 	var obj=null
-	if tree[e].has("obj") and gm.commands[gm.command]["money"]>=tree[e]["value"]:
-		obj=tree[e]["obj"].instance()
-		cr_obj(obj)
-	if tree[e].has("unit") and gm.commands[gm.command]["money"]>=tree[e]["value"]:
-		get_parent().add_unit(preload("res://main/units/unit.tscn"))
+	if tree[e].has("name") and gm.commands[command]["money"]>=tree[e]["value"]:
+		cr_obj(tree[e]["obj_name"],tree[e]["name"])
+	if tree[e].has("unit") and gm.commands[command]["money"]>=tree[e]["value"]:
+		get_parent().add_unit(tree[e].unit)
 	if tree[e].has("fnc"):
 		if tree[e].has("fnc_path"):
 			get_node(tree[e]["fnc_path"]).call_deferred(tree[e]["fnc"])
 		else:
 			call_deferred(tree[e]["fnc"])
-	if tree[e].has("value") and (tree[e].has("can_payd")==false or tree[e]["can_payd"]==true):
-		gm.commands[gm.command]["money"]-=tree[e]["value"]
+	if tree[e].has("value") and (tree[e].has("can_payd")==false or tree[e]["can_payd"]==true) and gm.can_change_money(command,-tree[e]["value"]):
+		pass
 
-func cr_obj(obj):
-	obj.position=position
-	obj.rotation_degrees=rotation_degrees
-	obj.command=command
-	obj.get_node("a1").command=command
-	#obj.auto_cr_time=-1
-	obj.set_pos=$p.global_position
-	get_parent().call_deferred("add_child",obj)
-	yield(get_tree(),"idle_frame")
-	map._reload()
-	queue_free()
+remotesync func cr_obj(objn:String,n:String):
+	if map!=null:
+		var obj=map.building.instance()
+		obj.preset_name=objn
+		obj.upreset_name=n
+		obj.position=position
+		obj.rotation_degrees=rotation_degrees
+		obj.command=command
+		if not get_tree().is_network_server():
+			# Tell server we are ready to start.
+			rpc_id(1, "ready_to_start", get_tree().get_network_unique_id())
+		obj.get_node("a1").command=command
+		#obj.auto_cr_time=-1
+		obj.set_pos=$p.global_position
+		get_parent().call_deferred("add_child",obj)
+		yield(get_tree(),"idle_frame")
+		obj.preset_name=objn
+		map._reload()
+		queue_free()
 
-func rebuild():
-	var obj=load("res://main/maps/build_area/build_part.tscn").instance()
-	obj.command=command
-	get_parent().get_parent().call_deferred("add_child",obj)
-	yield(get_tree(),"idle_frame")
-	obj.global_position=global_position
-	obj.rotation_degrees=rotation_degrees
-	obj.get_node("p").global_position=$p.global_position
-	map._reload()
-	get_parent().queue_free()
+remotesync func rebuild():
+	if map!=null:
+		map.call_deferred("spawn_new_rebuild_area",get_parent().get_parent(),global_position,rotation_degrees,$p.global_position,command)
+		get_parent().queue_free()
+		queue_free()
