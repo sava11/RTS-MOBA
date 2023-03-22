@@ -1,5 +1,0 @@
-[gd_scene format=2]
-
-[node name="ex" type="StaticBody2D"]
-
-[node name="c" type="CollisionPolygon2D" parent="." groups=["ground_build"]]

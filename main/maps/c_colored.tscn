@@ -1,9 +1,0 @@
-[gd_scene format=2]
-
-[node name="c" type="Area2D"]
-collision_layer = 32
-collision_mask = 32
-
-[node name="p" type="Polygon2D" parent="." groups=["ground_build"]]
-
-[node name="c" type="CollisionPolygon2D" parent="."]

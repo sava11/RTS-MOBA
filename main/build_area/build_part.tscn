@@ -1,0 +1,43 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://main/build_area/build_part.gd" type="Script" id=1]
+
+[sub_resource type="RectangleShape2D" id=1]
+resource_local_to_scene = true
+extents = Vector2( 30, 30 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.121569, 0.564706, 0.0470588, 1 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="Theme" id=3]
+Panel/styles/panel = SubResource( 2 )
+
+[node name="a1" type="Area2D"]
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="c" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="p" type="Position2D" parent="."]
+position = Vector2( -60, 0 )
+
+[node name="z_ingx" type="Node2D" parent="."]
+position = Vector2( 0, -40 )
+z_index = 200
+
+[node name="CO" type="Panel" parent="z_ingx"]
+input_pass_on_modal_close_click = false
+theme = SubResource( 3 )
+
+[connection signal="input_event" from="." to="." method="_on_input_event"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="z_ingx/CO" to="." method="_on_but_mouse_entered"]
+[connection signal="mouse_exited" from="z_ingx/CO" to="." method="_on_butt_mouse_exited"]
