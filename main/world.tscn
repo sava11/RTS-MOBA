@@ -4,53 +4,103 @@
 [ext_resource path="res://main/world.gd" type="Script" id=2]
 [ext_resource path="res://main/sys_parts/building_area/ba.tscn" type="PackedScene" id=3]
 
-[node name="world" type="Node2D"]
+[node name="MAIN" type="Node2D"]
 script = ExtResource( 2 )
 
 [node name="map" type="Node2D" parent="."]
 
-[node name="PlayGround" type="Node2D" parent="map"]
+[node name="map_name" type="Node2D" parent="map"]
 
-[node name="mains" type="Node2D" parent="map/PlayGround"]
+[node name="ground" type="TextureRect" parent="map/map_name"]
+margin_left = -320.0
+margin_top = -320.0
+margin_right = 320.0
+margin_bottom = 320.0
+mouse_filter = 2
 
-[node name="rb2d" parent="map/PlayGround/mains" instance=ExtResource( 1 )]
-position = Vector2( 256, 221 )
+[node name="PlayGround" type="YSort" parent="map/map_name"]
+
+[node name="ground" type="Node2D" parent="map/map_name/PlayGround"]
+
+[node name="nav" type="Navigation2D" parent="map/map_name/PlayGround/ground"]
+
+[node name="n" type="NavigationPolygonInstance" parent="map/map_name/PlayGround/ground/nav"]
+
+[node name="mains" type="Node2D" parent="map/map_name/PlayGround"]
+
+[node name="rb2d" parent="map/map_name/PlayGround/mains" instance=ExtResource( 1 )]
+position = Vector2( -256, -256 )
 type = 0
 command = 1
 c_name = "w"
 
-[node name="ba1" type="Node2D" parent="map/PlayGround/mains/rb2d"]
-position = Vector2( 544, 195 )
+[node name="ba1" type="Node2D" parent="map/map_name/PlayGround/mains/rb2d"]
+position = Vector2( 96, 96 )
+rotation = 2.35619
 
-[node name="ba" parent="map/PlayGround/mains/rb2d/ba1" instance=ExtResource( 3 )]
+[node name="ba" parent="map/map_name/PlayGround/mains/rb2d/ba1" instance=ExtResource( 3 )]
 position = Vector2( -40, -40 )
+add_node_path = NodePath("../../../..")
+start_build = 1
 command = 1
 
-[node name="ba2" parent="map/PlayGround/mains/rb2d/ba1" instance=ExtResource( 3 )]
+[node name="ps" parent="map/map_name/PlayGround/mains/rb2d/ba1/ba" index="2"]
+position = Vector2( -50, 0 )
+
+[node name="ba2" parent="map/map_name/PlayGround/mains/rb2d/ba1" instance=ExtResource( 3 )]
 position = Vector2( 40, -40 )
+add_node_path = NodePath("../../../..")
 command = 1
 
-[node name="ba3" parent="map/PlayGround/mains/rb2d/ba1" instance=ExtResource( 3 )]
+[node name="ba3" parent="map/map_name/PlayGround/mains/rb2d/ba1" instance=ExtResource( 3 )]
 position = Vector2( 40, 40 )
+add_node_path = NodePath("../../../..")
 command = 1
 
-[node name="ba4" parent="map/PlayGround/mains/rb2d/ba1" instance=ExtResource( 3 )]
+[node name="ba4" parent="map/map_name/PlayGround/mains/rb2d/ba1" instance=ExtResource( 3 )]
 position = Vector2( -40, 40 )
+add_node_path = NodePath("../../../..")
 command = 1
 
-[node name="rb2d2" parent="map/PlayGround/mains" instance=ExtResource( 1 )]
-position = Vector2( 912, 512 )
+[node name="ps" parent="map/map_name/PlayGround/mains/rb2d/ba1/ba4" index="2"]
+position = Vector2( -50, 0 )
+
+[node name="rb2d2" parent="map/map_name/PlayGround/mains" instance=ExtResource( 1 )]
+position = Vector2( 256, 256 )
 type = 0
 command = 2
 c_name = "b"
 c_com = Color( 0, 0, 0, 1 )
 
-[node name="rb2d3" parent="map/PlayGround/mains" instance=ExtResource( 1 )]
-position = Vector2( 608, 159 )
-type = 0
-command = 3
-c_name = "o"
-c_com = Color( 0.996078, 0.443137, 0, 1 )
+[node name="ba1" type="Node2D" parent="map/map_name/PlayGround/mains/rb2d2"]
+position = Vector2( -96, -96 )
+rotation = -0.785398
+
+[node name="ba" parent="map/map_name/PlayGround/mains/rb2d2/ba1" instance=ExtResource( 3 )]
+position = Vector2( -40, -40 )
+add_node_path = NodePath("../../../..")
+start_build = 1
+
+[node name="ps" parent="map/map_name/PlayGround/mains/rb2d2/ba1/ba" index="2"]
+position = Vector2( -50, 0 )
+
+[node name="ba2" parent="map/map_name/PlayGround/mains/rb2d2/ba1" instance=ExtResource( 3 )]
+position = Vector2( 40, -40 )
+add_node_path = NodePath("../../../..")
+
+[node name="ba3" parent="map/map_name/PlayGround/mains/rb2d2/ba1" instance=ExtResource( 3 )]
+position = Vector2( 40, 40 )
+add_node_path = NodePath("../../../..")
+
+[node name="ba4" parent="map/map_name/PlayGround/mains/rb2d2/ba1" instance=ExtResource( 3 )]
+position = Vector2( -40, 40 )
+add_node_path = NodePath("../../../..")
+
+[node name="ps" parent="map/map_name/PlayGround/mains/rb2d2/ba1/ba4" index="2"]
+position = Vector2( -50, 0 )
+
+[node name="Line2D" type="Line2D" parent="map/map_name/PlayGround"]
+points = PoolVector2Array( -224, -224, 224, 224 )
 
 [node name="cv" type="CanvasLayer" parent="."]
 
@@ -60,3 +110,15 @@ margin_top = 481.0
 margin_right = 161.0
 margin_bottom = 521.0
 mouse_filter = 2
+
+[node name="cam" type="Camera2D" parent="."]
+current = true
+
+[editable path="map/map_name/PlayGround/mains/rb2d/ba1/ba"]
+[editable path="map/map_name/PlayGround/mains/rb2d/ba1/ba2"]
+[editable path="map/map_name/PlayGround/mains/rb2d/ba1/ba3"]
+[editable path="map/map_name/PlayGround/mains/rb2d/ba1/ba4"]
+[editable path="map/map_name/PlayGround/mains/rb2d2/ba1/ba"]
+[editable path="map/map_name/PlayGround/mains/rb2d2/ba1/ba2"]
+[editable path="map/map_name/PlayGround/mains/rb2d2/ba1/ba3"]
+[editable path="map/map_name/PlayGround/mains/rb2d2/ba1/ba4"]

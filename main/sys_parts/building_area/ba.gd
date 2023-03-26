@@ -1,5 +1,6 @@
 extends Area2D
 enum t{nill,sword,bow,holy}
+export(NodePath)var add_node_path
 export(t)var start_build=t.nill
 export(int)var command=-1
 export(float,0,50)var otstup=10
@@ -7,7 +8,6 @@ var choiced=false
 puppet var pchoiced=false
 onready var cntrl=$z_ingx
 onready var posy=cntrl.position.y
-var pid=0
 var building=null
 func _draw():
 	if command==gm.command_id:
@@ -20,7 +20,7 @@ func _draw():
 			cntrl.visible=true
 		else:
 			var area=$c.shape.extents
-			var r=Rect2(-area,area*2)
+			var r=Rect2(-area-Vector2(1,1),area*2+Vector2(2,2))
 			draw_rect(r,Color(0.0,1.0,0.0,1.0),false,2.0,true)
 			cntrl.visible=false
 var tree={}
@@ -77,11 +77,14 @@ func _updeate_ready():
 		btn.focus_mode=Control.FOCUS_NONE
 		btn.mouse_filter=Control.MOUSE_FILTER_PASS
 		btn.rect_position=Vector2((btn.rect_size.x+otstup)*fnc.i_search(list,e)+otstup/2,otstup/2)
-	#if start_build!=t.nill and get_tree().is_network_server():
-	#	rpc("cr_obj",tree[start_build]["obj_name"],tree[start_build]["name"],1)
+	
+	
 func _ready():
 	_updeate_ready()
-
+	yield(get_tree(),"idle_frame")
+	if start_build!=t.nill:
+		print(tree)
+		cr_obj(tree[start_build]["obj_name"],tree[start_build]["name"],get_network_master())
 
 var mouse_in_area=false
 func _on_mouse_entered():
@@ -119,13 +122,13 @@ remotesync func logic(e,id):
 	if tree[e].has("name") and gm.commands[command]["money"]>=tree[e]["value"]:
 		cr_obj(tree[e]["obj_name"],tree[e]["name"],id)
 	if tree[e].has("unit") and gm.commands[command]["money"]>=tree[e]["value"]:
-		get_parent().rpc("add_unit",tree[e].unit,id)
+		building.call_deferred("add_unit",tree[e].unit,id)
 	if tree[e].has("fnc"):
 		if tree[e].has("fnc_path"):
 			#get_node(tree[e]["fnc_path"]).set_network_master(id)
-			get_node(tree[e]["fnc_path"]).rpc(tree[e]["fnc"])
+			get_node(tree[e]["fnc_path"]).call_deferred(tree[e]["fnc"])
 		else:
-			rpc(tree[e]["fnc"])
+			call_deferred(tree[e]["fnc"])
 	if tree[e].has("value") and gm.can_change_money(command,-tree[e]["value"]):
 		pass
 remotesync func cr_obj(objn:String,n:String,id):
@@ -133,18 +136,20 @@ remotesync func cr_obj(objn:String,n:String,id):
 	#obj.set_network_master(get_tree().get_network_unique_id())
 	building.preset_name=objn
 	building.upreset_name=n
-	building.position=position
-	building.rotation_degrees=rotation_degrees
+	building.global_position=global_position
+	building.global_rotation_degrees=global_rotation_degrees
 	building.command=command
 	building.pid=id
-	print(building)
+	building.get_node("pos").global_position=$ps.global_position
 	#obj.auto_cr_time=-1
 	#obj.set_pos=$p.global_position
-	#map._reload()
-	get_parent().call_deferred("add_child",building)
+	if get_node_or_null(add_node_path)!=null:
+		get_node(add_node_path).call_deferred("add_child",building)
+	else:get_parent().call_deferred("add_child",building)
 	yield(get_tree(),"idle_frame")
 	_updeate_ready()
 	
+	gm.gms._reload()
 	#if get_parent().filename=="res://main/Base/rb2d.tscn":
 	#	get_parent().queue_free()
 	#else:
@@ -157,7 +162,8 @@ func _on_s_input_event(viewport, event, shape_idx):
 			choiced=false
 remotesync func rebuild():
 	#map.call_deferred("spawn_new_rebuild_area",get_parent().get_parent(),global_position,rotation_degrees,$p.global_position,command)
-	if building!=null:
-		building.queue_free()
-		building=null
-		_updeate_ready()
+	
+	building.queue_free()
+	building=null
+	_updeate_ready()
+	gm.gms._reload()

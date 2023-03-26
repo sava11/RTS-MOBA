@@ -34,7 +34,7 @@ func get_area(pol):
 func _rotate_vec(vec:Vector2,ang:float):
 	return move(rad2deg(angle(vec))+ang)*_sqrt(vec)
 func angle(V:Vector2):
-	return -atan2(-V.y,V.x)
+	return rad2deg(-atan2(-V.y,V.x))
 func _sqrt(v:Vector2):
 	return sqrt(v.x*v.x+v.y*v.y)
 func sqrtV(v:Vector2):
@@ -46,7 +46,7 @@ func jos(a,b):
 		return b*round(a/b)
 	else:return 0
 func circ(a,mn,mx):
-	return abs(a)%(mn+mx+1)+mn
+	return a%(mx+1)+mn
 func i_search(a,i):
 	var inte=0
 	for k in a:
@@ -85,7 +85,7 @@ func to_glb_PV(pv:PoolVector2Array,pos:Vector2,_scale=1,loc_pos=0):
 	else:pool=pv
 	var poolvec2=PoolVector2Array([])
 	for e in pool:
-		var t=move(rad2deg(angle(e)))*(_sqrt(e*_scale))
+		var t=move(angle(e))*(_sqrt(e*_scale))
 		poolvec2.append((t+pos))
 	return poolvec2
 func to_glb_PV_and_rot(pv:PoolVector2Array,pos:Vector2,rot=0,_scale=1,loc_pos=0):
@@ -95,8 +95,8 @@ func to_glb_PV_and_rot(pv:PoolVector2Array,pos:Vector2,rot=0,_scale=1,loc_pos=0)
 	else:pool=pv
 	var poolvec2=PoolVector2Array([])
 	for e in pool:
-		var t=move(rad2deg(angle(e)+rot))*(_sqrt(e*_scale))
-		poolvec2.append((t+pos))
+		var t=move(angle(e)+rot)*(_sqrt(e*_scale))
+		poolvec2.append(t+pos)
 	return poolvec2
 func change_parent(where,what):
 	what.get_parent().call_deferred("remove_child",what)

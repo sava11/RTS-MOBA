@@ -85,7 +85,10 @@ func refresh_lobby():
 	$Players/Start.disabled = not get_tree().is_network_server()
 
 
-func _on_start_pressed():
+func _on_start_pressed():###############ДОДЕЛАТЬ!
+	#88.201.208.115
+	for e in gamestate.get_player_list():
+		pass
 	gamestate.begin_game()
 
 

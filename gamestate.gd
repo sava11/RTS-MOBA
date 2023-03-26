@@ -7,7 +7,7 @@ signal connection_failed()
 signal connection_succeeded()
 signal game_ended()
 signal game_error(what)
-
+var world_name=""
 # Default game server port. Can be any number between 1024 and 49151.
 # Not on the list of registered or common ports as of November 2020:
 # https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers
@@ -85,22 +85,24 @@ func unregister_player(id):
 remote func pre_start_game(spawn_points):
 	# Change scene.
 	var world = load("res://main/world.tscn").instance()
-
+	world_name=world.name
 	get_tree().get_root().get_node("Lobby").hide()
 
 	#var player_scene = load("res://main/player/rb2d.tscn")
 	var i=0
+	gm.gms=world
 	for p_id in spawn_points:
-		var player = world.get_node("map/PlayGround/mains").get_child(i)#player_scene.instance()
+		var player = world.get_node("map").get_child(0).get_node("PlayGround/mains").get_child(i)#player_scene.instance()
 
 		player.set_name(str(p_id)) # Use unique ID as node name.
 		#player.position=Vector2(500,500)
 		player.set_network_master(p_id) #set unique id as master.
+		player.pid=p_id
 		player.command=i+1
 		if p_id == get_tree().get_network_unique_id():
 			# If node for this peer id, set name.
 			player.set_player_name(player_name)
-			gm.command_id=i+1
+			gm.command_id=player.command
 		else:
 			# Otherwise set name from peer.
 			player.set_player_name(players[p_id])
@@ -171,9 +173,9 @@ func begin_game():
 
 
 func end_game():
-	if has_node("/root/world"): # Game is in progress.
+	if has_node("/root/"+world_name): # Game is in progress.
 		# End it
-		get_node("/root/world").queue_free()
+		get_node("/root/"+world_name).queue_free()
 
 	emit_signal("game_ended")
 	players.clear()
