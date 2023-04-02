@@ -22,7 +22,6 @@ var buffs={
 var target=Vector2.ZERO
 var _temp_target=Vector2.ZERO
 func _ready() -> void:
-	set_network_master(pid)
 	var color=gm.commands[command].color
 	modulate=Color(color.r,color.g,color.b,color.a)
 	if gm.command_id==command:
@@ -43,6 +42,7 @@ func _ready() -> void:
 	_timer.connect("timeout", self, "_update_pathfinding")
 	_agent.connect("velocity_computed", self, "move")
 	_agent.set_navigation(gm._get_nav_path(0))
+	set_network_master(pid)
 	#$no.set_navigation(gm._get_nav_path(0))
 
 
@@ -95,7 +95,7 @@ remotesync func attk(target_pos,pid_):
 	var t=target_pos-global_position
 	$AP.get_animation("att").track_set_key_value(0,0,[target_pos,Vector2(0,0),0,pid_])
 	$AP.play("att",0,cd["att_time"])
-	set_anim(fnc.angle(t),"att")
+#	set_anim(fnc.angle(t),"att")
 func move(velocity: Vector2) -> void:
 	_velocity = move_and_slide(velocity)
 	#_sprite.rotation = lerp_angle(_sprite.rotation, velocity.angle(), 10.0 * get_physics_process_delta_time())
@@ -108,12 +108,13 @@ func _on_hurt_box_area_entered(area):
 	if status.he<=0:
 		gm.commands[area.command]["money"]+=cd["money_to_enemy"]
 		rpc("delete")
-remotesync func delete():
+
+sync func delete():
 	queue_free()
 
-func set_anim(ang:float,t:String):
-	var type=0
-	type=fnc.get_ang_move(ang-180,45)+1
+#func set_anim(ang:float,t:String):
+#	var type=0
+#	type=fnc.get_ang_move(ang-180,45)+1
 	#if type!=0:
 		#var input=t+"-"+str(type)
 		#$spr.play(input)

@@ -15,7 +15,6 @@ var buffs={
 	"udef":0,
 	}
 
-var choiced=false
 onready var status=$stats
 onready var hub= $hurt_box
 var tree={}
@@ -104,49 +103,53 @@ func _ready():
 	#if ((get_tree().network_peer==null ) or is_network_master()):#and command==gm.command_id
 	if type==t.MAIN:
 		gm.commands.merge({command:cd})
-func _draw():
-	if choiced:
-		for e in range(0,len($c.polygon)-1):
-			draw_line($c.polygon[e]+$c.position,$c.polygon[e+1]+$c.position,Color(50,200,50),0.5,true)
-		draw_line($c.polygon[len($c.polygon)-1]+$c.position,$c.polygon[0]+$c.position,Color(50,200,50),0.5,true)
+#func _draw():
+#	if choiced:
+#		for e in range(0,len($c.polygon)-1):
+#			draw_line($c.polygon[e]+$c.position,$c.polygon[e+1]+$c.position,Color(50,200,50),0.5,true)
+#		draw_line($c.polygon[len($c.polygon)-1]+$c.position,$c.polygon[0]+$c.position,Color(50,200,50),0.5,true)
+
+puppet var pstatus_he=0
+puppet var pstatus_m_he=0
 func _process(delta):
 	#gm.commands[gm.command_id]["money"]-=25*delta
 	update()
 	#gm.command[gm.command_id]["money"]
-	if is_network_master():
-		if type!=t.MAIN:
-			if len(timers)<2:
-				timers.append({upreset_name:cd.units[upreset_name].ucrt})
-			var unit_to_train=timers[0]
-			unit_to_train[unit_to_train.keys()[0]]-=delta
-			if unit_to_train[unit_to_train.keys()[0]]<=0:
-				rpc("add_unit",upreset_name,pid)
-				timers.remove(0)
+	if get_tree().is_network_server():
+		$vcont/pb.value=status.he
+		$vcont/pb.max_value=status.m_he
+		#if type!=t.MAIN:
+		#	if len(timers)<2:
+		#		timers.append({upreset_name:cd.units[upreset_name].ucrt})
+		#	var unit_to_train=timers[0]
+		#	unit_to_train[unit_to_train.keys()[0]]-=delta
+		#	if unit_to_train[unit_to_train.keys()[0]]<=0:
+		#		rpc("add_unit",upreset_name,pid)
+		#		timers.remove(0)
+		rset("pstatus_he",status.he)
+		rset("pstatus_m_he",status.m_he)
+	else:
+		status.he=pstatus_he
+		status.m_he=pstatus_m_he
+		$vcont/pb.value=status.he
+		$vcont/pb.max_value=status.m_he
+		
 var timers=[]
+#sync func add_unit(un,id):
+#	if cd.units[un].unit_path!="" and cd.units[un].unit_path!="null":
+#		var unit=load(cd.units[un].unit_path).instance()
+#		unit.pid=id
+#		unit.command=command
+#		var path=gm.gms.get_min_points(global_position)
+#		unit.target=path[len(path)-1]
+#		unit._temp_target=path[len(path)-1]
+#		unit.cd=cd.units[upreset_name]
+#		unit.buffs["aatt"]+=buffs["uatt"]
+#		unit.buffs["adef"]+=buffs["udef"]
+#		unit.get_node("stats").m_he=cd.units[upreset_name].hp
+#		if get_node_or_null(add_node_path)!=null:get_node(add_node_path).call_deferred("add_child",unit)
+#		else:get_parent().call_deferred("add_child",unit)
+#		unit.global_position=$pos.global_position
 
-remotesync func add_unit(un,id):
-	if cd.units[un].unit_path!="" and cd.units[un].unit_path!="null":
-		var unit=load(cd.units[un].unit_path).instance()
-		unit.pid=id
-		unit.command=command
-		var path=gm.gms.get_min_points(global_position)
-		unit.target=path[len(path)-1]
-		unit._temp_target=path[len(path)-1]
-		unit.cd=cd.units[upreset_name]
-		unit.buffs["aatt"]+=buffs["uatt"]
-		unit.buffs["adef"]+=buffs["udef"]
-		unit.get_node("stats").m_he=cd.units[upreset_name].hp
-		unit.global_position=$pos.global_position
-		if get_node_or_null(add_node_path)!=null:get_node(add_node_path).call_deferred("add_child",unit)
-		else:get_parent().call_deferred("add_child",unit)
-func _on_s_input_event(viewport, event, shape_idx):
-	if Input.is_action_just_pressed("lbm") and command==gm.command_id:
-		if choiced==false:
-			choiced=true
-		else:
-			choiced=false
 func set_player_name(new_name):
 	get_node("label").set_text(new_name)
-
-	
-	

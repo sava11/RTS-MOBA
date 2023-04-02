@@ -59,19 +59,18 @@ func _reload():
 		Vector2(rect.rect_position.x,rect.rect_position.y+rect_size.y)
 	])
 	yield(get_tree(),"idle_frame")
-	reload_map(pl,scs,l)
-func reload_map(pl,scl,list):
+	reload_map(pl)
+func reload_map(pl):
 	var p=pl
-	for e in $map.get_child(0).get_node("PlayGround/ground").get_children():
-		var id=fnc.i_search($map.get_child(0).get_node("PlayGround/ground").get_children(),e)
-		e.get_node("n").navpoly=NavigationPolygon.new()
-		#for e1 in get_tree().get_nodes_in_group("outOfBounds_del"):
-		#	var t=Geometry.clip_polygons_2d(pl,fnc.to_glb_PV(e1.polygon,e1.global_position,1,0))
-		#	if t!=[]:
-		#		p=t
-		e.get_node("n").navpoly.add_outline(p)
-		e.get_node("n").navpoly.make_polygons_from_outlines()
-		add_path(e.get_node("n"),scl[id],list[id])
+	var e=$map.get_child(0).get_node("PlayGround/ground").get_child(0)
+	e.get_child(0).navpoly=NavigationPolygon.new()
+	#for e1 in get_tree().get_nodes_in_group("outOfBounds_del"):
+	#	var t=Geometry.clip_polygons_2d(pl,fnc.to_glb_PV(e1.polygon,e1.global_position,1,0))
+	#	if t!=[]:
+	#		p=t
+	e.get_child(0).navpoly.add_outline(p)
+	e.get_child(0).navpoly.make_polygons_from_outlines()
+	add_path(e.get_child(0))
 func _merge_polygons(array:Array):
 	var arr=array
 	var i=0
@@ -86,16 +85,15 @@ func _merge_polygons(array:Array):
 			i1+=1
 		i+=1
 	return arr
-func add_path(path_nod:NavigationPolygonInstance,sc=1.0,eps=0.0):
+func add_path(path_nod:NavigationPolygonInstance):
 	var bs=[]
 	for e in get_tree().get_nodes_in_group("ground_build"):
-		#print(e.get_parent())
-		bs.append(fnc.to_glb_PV_and_rot(e.polygon,e.global_position,e.global_rotation_degrees,sc,eps))
+		bs.append(fnc.to_glb_PV_and_rot(e.polygon,e.global_position,e.global_rotation_degrees))
 	if len(bs)>1:
 		bs=_merge_polygons(bs)
 	for e in range(0,len(bs)):
 		path_nod.navpoly.add_outline(bs[e])
-		path_nod.navpoly.make_polygons_from_outlines()
+	path_nod.navpoly.make_polygons_from_outlines()
 
 #func get_nearst_enemy_base(gpos,command):
 #	var nds=get_tree().get_nodes_in_group("MBASE")

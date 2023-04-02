@@ -17,6 +17,9 @@ Panel/styles/panel = SubResource( 2 )
 
 [node name="ba" type="Area2D"]
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
 command = 2
 
 [node name="c" type="CollisionShape2D" parent="."]

@@ -4,11 +4,15 @@ export(NodePath)var add_node_path
 export(t)var start_build=t.nill
 export(int)var command=-1
 export(float,0,50)var otstup=10
-var choiced=false
-puppet var pchoiced=false
+
 onready var cntrl=$z_ingx
 onready var posy=cntrl.position.y
 var building=null
+var pid=1
+
+var choiced=false
+puppet var pchoiced=false
+
 func _draw():
 	if command==gm.command_id:
 		if choiced==true:
@@ -80,11 +84,11 @@ func _updeate_ready():
 	
 	
 func _ready():
+	pid=get_network_master()
 	_updeate_ready()
 	yield(get_tree(),"idle_frame")
 	if start_build!=t.nill:
-		print(tree)
-		cr_obj(tree[start_build]["obj_name"],tree[start_build]["name"],get_network_master())
+		cr_obj(tree[start_build]["obj_name"],tree[start_build]["name"],pid)
 
 var mouse_in_area=false
 func _on_mouse_entered():
@@ -116,7 +120,7 @@ func _physics_process(delta):
 
 func _set_btn(e):
 	if is_network_master():
-		rpc("logic",e,get_tree().get_network_unique_id())
+		rpc("logic",e,pid)
 	#logic(e,get_tree().get_network_unique_id())
 remotesync func logic(e,id):
 	if tree[e].has("name") and gm.commands[command]["money"]>=tree[e]["value"]:
@@ -140,30 +144,22 @@ remotesync func cr_obj(objn:String,n:String,id):
 	building.global_rotation_degrees=global_rotation_degrees
 	building.command=command
 	building.pid=id
-	building.get_node("pos").global_position=$ps.global_position
 	#obj.auto_cr_time=-1
 	#obj.set_pos=$p.global_position
-	if get_node_or_null(add_node_path)!=null:
-		get_node(add_node_path).call_deferred("add_child",building)
+	if get_node_or_null(add_node_path)!=null:get_node(add_node_path).call_deferred("add_child",building)
 	else:get_parent().call_deferred("add_child",building)
 	yield(get_tree(),"idle_frame")
 	_updeate_ready()
-	
+	building.get_node("pos").global_position=$ps.global_position
 	gm.gms._reload()
-	#if get_parent().filename=="res://main/Base/rb2d.tscn":
-	#	get_parent().queue_free()
-	#else:
-	#	queue_free()
+remotesync func rebuild():
+	building.queue_free()
+	building=null
+	_updeate_ready()
+	gm.gms._reload()
 func _on_s_input_event(viewport, event, shape_idx):
 	if Input.is_action_just_pressed("lbm") and command==gm.command_id:
 		if choiced==false:
 			choiced=true
 		else:
 			choiced=false
-remotesync func rebuild():
-	#map.call_deferred("spawn_new_rebuild_area",get_parent().get_parent(),global_position,rotation_degrees,$p.global_position,command)
-	
-	building.queue_free()
-	building=null
-	_updeate_ready()
-	gm.gms._reload()

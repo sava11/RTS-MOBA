@@ -38,5 +38,3 @@ margin_bottom = 42.0
 position = Vector2( 0, -48 )
 
 [node name="hurt_box" parent="." instance=ExtResource( 3 )]
-
-[connection signal="input_event" from="." to="." method="_on_s_input_event"]

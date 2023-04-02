@@ -75,11 +75,21 @@ var objs={
 				},
 			},
 	},
-	"player":{
-		"id":0,
-		"type":players_types.spectator,
-		"unit":"",
-	}
+	"heroes":{
+		"warior":{
+			"img":"res://main/img/sword.png",
+			"hp":100,
+			"def":10,
+			"att":10,
+			},
+		"builder":{
+			"img":"res://main/img/molot.png",
+			"hp":100,
+			"def":10,
+			"att":10,
+			},
+	},
+	
 }
 
 var players={}

@@ -47,6 +47,7 @@ margin_right = 229.0
 margin_bottom = 296.0
 size_flags_horizontal = 2
 size_flags_vertical = 2
+fixed_icon_size = Vector2( 25, 25 )
 
 [node name="PortForward" type="Label" parent="Players"]
 margin_left = -124.0
@@ -65,6 +66,13 @@ margin_top = 393.5
 margin_right = 341.0
 margin_bottom = 407.5
 text = "Find your public IP address"
+
+[node name="show_charters" type="Button" parent="Players"]
+margin_left = 318.0
+margin_top = 70.0
+margin_right = 446.0
+margin_bottom = 95.0
+text = "choice charter"
 
 [node name="Connect" type="Panel" parent="."]
 anchor_left = 0.5
@@ -149,7 +157,31 @@ size_flags_horizontal = 2
 size_flags_vertical = 2
 window_title = "Внимание!"
 
+[node name="charters" type="Panel" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -256.0
+margin_top = -182.0
+margin_right = 256.0
+margin_bottom = 182.0
+
+[node name="show_players" type="Button" parent="charters"]
+margin_left = -96.0
+margin_top = 5.0
+margin_right = -16.0
+margin_bottom = 39.0
+text = "back"
+
+[node name="hrs" type="Control" parent="charters"]
+margin_right = 40.0
+margin_bottom = 40.0
+
 [connection signal="pressed" from="Players/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="Players/FindPublicIP" to="." method="_on_find_public_ip_pressed"]
+[connection signal="button_down" from="Players/show_charters" to="." method="_on_show_charters_button_down"]
 [connection signal="pressed" from="Connect/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="Connect/Join" to="." method="_on_join_pressed"]
+[connection signal="button_down" from="charters/show_players" to="." method="_on_show_players_button_down"]
