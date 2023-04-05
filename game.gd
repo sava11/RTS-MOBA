@@ -31,10 +31,11 @@ var objs={
 				"sword1":{
 					"add_value":25,
 					"unit_path":"res://main/sys_parts/units/unit1/unit.tscn",
-					"ucrt":5,
+					"ucrt":20,
 					"att_time":2,#scale
-					"hp":20,
+					"hp":50,
 					"dmg":5,
+					"dmgspd":0,
 					"def":5,
 					"money_to_enemy":5,
 					},
@@ -51,8 +52,13 @@ var objs={
 			"units":{
 				"bow1":{
 					"add_value":20,
-					"unit_path":"null",
-					"ucrt":7.5,
+					"unit_path":"res://main/sys_parts/units/unit1/unit.tscn",
+					"ucrt":20,
+					"att_time":2,#scale
+					"hp":20,
+					"dmg":10,
+					"dmgspd":100,
+					"def":2,
 					"money_to_enemy":5,
 					},
 				},
@@ -67,26 +73,37 @@ var objs={
 			#"curent_unit_name":"sword1",
 			"units":{
 				"holy1":{
-					"add_value":30,
-					"unit_path":"null",
-					"ucrt":12,
-					"money_to_enemy":0,
+					"add_value":25,
+					"unit_path":"res://main/sys_parts/units/unit1/unit.tscn",
+					"ucrt":20,
+					"att_time":2,#scale
+					"hp":20,
+					"dmgspd":0,
+					"dmg":5,
+					"def":5,
+					"money_to_enemy":5,
 					},
 				},
 			},
 	},
+	
 	"heroes":{
+		"visitor":{
+		"img":"res://main/img/eye.png",
+			},
 		"warior":{
 			"img":"res://main/img/sword.png",
 			"hp":100,
 			"def":10,
 			"att":10,
+			"att_time":2,#scale
 			},
 		"builder":{
 			"img":"res://main/img/molot.png",
 			"hp":100,
 			"def":10,
 			"att":10,
+			"att_time":2,#scale
 			},
 	},
 	
@@ -105,7 +122,7 @@ func can_change_money(lcommand:int,value):
 	if (value<0 and commands[lcommand].money>=abs(value)) or value>0:
 		commands[lcommand].money+=value
 		return true
-	else:return false
+	return false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.

@@ -36,14 +36,14 @@ func _set_hero(e:String):
 		rpc_id(e1,"sent_to_server_hero",e)
 	sent_to_server_hero(e)
 remote func upd_ch_l(d:Dictionary):
-	gamestate.players_charters=d
+	#gamestate.players=d
 	refresh_lobby()
 remote func sent_to_server_hero(e:String):
-	if get_tree().get_rpc_sender_id()!=0:
-		gamestate.players_charters[get_tree().get_rpc_sender_id()].hero=e
-		rpc_id(get_tree().get_rpc_sender_id(),"upd_ch_l",gamestate.players_charters)
+	if get_tree().get_rpc_sender_id()!=get_tree().get_network_unique_id() and get_tree().get_rpc_sender_id()!=0 :
+		gamestate.players[get_tree().get_rpc_sender_id()].hero=e
+		rpc_id(get_tree().get_rpc_sender_id(),"upd_ch_l",gamestate.players)
 	else:
-		gamestate.players_charters[1].hero=e
+		gamestate.player_name.hero=e
 	refresh_lobby()
 
 func _on_host_pressed():
@@ -90,6 +90,7 @@ func _on_connection_failed():
 
 
 func _on_game_ended():
+	gm.commands={}
 	show()
 	$Connect.show()
 	$Players.hide()
@@ -102,26 +103,26 @@ func _on_game_error(errtxt):
 	$ErrorDialog.popup_centered_minsize()
 	$Connect/Host.disabled = false
 	$Connect/Join.disabled = false
+	$charters.hide()
 
 
 func refresh_lobby():
-	var players = gamestate.get_player_list()
-	players.sort()
+	var players = gamestate.players
+	#players.sort()
 	$Players/List.clear()
 	$Players/List.add_item(gamestate.get_player_name() + " (You)")
-	var charter=gamestate.get_self_charter()
-	if charter!=null and charter.hero!="":
-		$Players/List.set_item_icon(0,load(gm.objs.heroes[charter.hero].img))
+	if gamestate.player_name.hero!="":
+		$Players/List.set_item_icon(0,load(gm.objs.heroes[gamestate.player_name.hero].img))
+	else:
+		$Players/List.set_item_icon(0,load(gm.objs.heroes.visitor.img))
 	var i=1
-	for p in players:
-		for id in gamestate.players.keys():
-			if gamestate.players[id]==p:
-				charter=gamestate.players_charters[id]
-				break
-		
-		$Players/List.add_item(p)
-		if charter!=null and charter.hero!="":
+	for p in players.keys():
+		var charter=players[p]
+		$Players/List.add_item(charter.name)
+		if charter.hero!="":
 			$Players/List.set_item_icon(i,load(gm.objs.heroes[charter.hero].img))
+		else:
+			$Players/List.set_item_icon(i,load(gm.objs.heroes.visitor.img))
 		i+=1
 
 	$Players/Start.disabled = not get_tree().is_network_server()
@@ -135,10 +136,6 @@ func _on_start_pressed():
 
 func _on_find_public_ip_pressed():
 	OS.shell_open("https://icanhazip.com/")
-
-
-func _physics_process(delta):
-	pass#$Players/List.
 
 
 func _on_show_charters_button_down():

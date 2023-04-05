@@ -86,7 +86,7 @@ func to_glb_PV(pv:PoolVector2Array,pos:Vector2,_scale=1,loc_pos=0):
 	var poolvec2=PoolVector2Array([])
 	for e in pool:
 		var t=move(angle(e))*(_sqrt(e*_scale))
-		poolvec2.append((t+pos))
+		poolvec2.append(t+pos)
 	return poolvec2
 func to_glb_PV_and_rot(pv:PoolVector2Array,pos:Vector2,rot=0,_scale=1,loc_pos=0):
 	var pool=PoolVector2Array([])

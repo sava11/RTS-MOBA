@@ -5,7 +5,7 @@ export(t)var type=t.swords
 export var command=-1
 export var c_name=""
 export var c_com=Color(1,1,1,1)
-
+var battle_path:=PoolVector2Array([])
 var preset_name=""
 var upreset_name=""
 var cd={}
@@ -18,7 +18,7 @@ var buffs={
 onready var status=$stats
 onready var hub= $hurt_box
 var tree={}
-var pid=1#get_tree().get_network_unique_id()
+var pid=0#get_tree().get_network_unique_id()
 
 func settle_tree():
 	if type!=t.MAIN:
@@ -90,7 +90,7 @@ func _ready():
 		hub.collision_layer=4
 		hub.collision_mask=0
 	$hurt_box/col.polygon=$c.polygon
-	set_network_master(pid)
+	if pid!=0:set_network_master(pid)
 	settle_tree()
 	$vcont.global_rotation_degrees=0
 	for e in tree.keys():
@@ -115,17 +115,17 @@ func _process(delta):
 	#gm.commands[gm.command_id]["money"]-=25*delta
 	update()
 	#gm.command[gm.command_id]["money"]
-	if get_tree().is_network_server():
+	if is_network_master():
 		$vcont/pb.value=status.he
 		$vcont/pb.max_value=status.m_he
-		#if type!=t.MAIN:
-		#	if len(timers)<2:
-		#		timers.append({upreset_name:cd.units[upreset_name].ucrt})
-		#	var unit_to_train=timers[0]
-		#	unit_to_train[unit_to_train.keys()[0]]-=delta
-		#	if unit_to_train[unit_to_train.keys()[0]]<=0:
-		#		rpc("add_unit",upreset_name,pid)
-		#		timers.remove(0)
+		if type!=t.MAIN:
+			if len(timers)<2:
+				timers.append({upreset_name:cd.units[upreset_name].ucrt})
+			var unit_to_train=timers[0]
+			unit_to_train[unit_to_train.keys()[0]]-=delta
+			if unit_to_train[unit_to_train.keys()[0]]<=0:
+				rpc("add_unit",upreset_name,pid,"kb_"+str(int(rand_range(10000+command*100000,99999+command*100000))))
+				timers.remove(0)
 		rset("pstatus_he",status.he)
 		rset("pstatus_m_he",status.m_he)
 	else:
@@ -133,23 +133,28 @@ func _process(delta):
 		status.m_he=pstatus_m_he
 		$vcont/pb.value=status.he
 		$vcont/pb.max_value=status.m_he
+	
 		
 var timers=[]
-#sync func add_unit(un,id):
-#	if cd.units[un].unit_path!="" and cd.units[un].unit_path!="null":
-#		var unit=load(cd.units[un].unit_path).instance()
-#		unit.pid=id
-#		unit.command=command
-#		var path=gm.gms.get_min_points(global_position)
-#		unit.target=path[len(path)-1]
-#		unit._temp_target=path[len(path)-1]
-#		unit.cd=cd.units[upreset_name]
-#		unit.buffs["aatt"]+=buffs["uatt"]
-#		unit.buffs["adef"]+=buffs["udef"]
-#		unit.get_node("stats").m_he=cd.units[upreset_name].hp
-#		if get_node_or_null(add_node_path)!=null:get_node(add_node_path).call_deferred("add_child",unit)
-#		else:get_parent().call_deferred("add_child",unit)
-#		unit.global_position=$pos.global_position
+remotesync func add_unit(un,id,n):
+	if cd.units[un].unit_path!="" and cd.units[un].unit_path!="null":
+		var unit=load(cd.units[un].unit_path).instance()
+		unit.pid=id
+		unit.name=n
+		unit.set_network_master(id)
+		unit.command=command
+		#var path=gm.gms.get_min_points(global_position)
+		#print(command," ",path)
+		unit.battle_path=battle_path
+		#unit.target=path[len(path)-1]
+		#unit._temp_target=path[len(path)-1]
+		unit.cd=cd.units[upreset_name]
+		unit.buffs["aatt"]+=buffs["uatt"]
+		unit.buffs["adef"]+=buffs["udef"]
+		unit.get_node("stats").m_he=cd.units[upreset_name].hp
+		unit.global_position=$pos.global_position
+		if get_node_or_null(add_node_path)!=null:get_node(add_node_path).call_deferred("add_child",unit)
+		else:get_parent().call_deferred("add_child",unit)
 
 func set_player_name(new_name):
 	get_node("label").set_text(new_name)

@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=2]
-
-[ext_resource path="res://main/sys_parts/boxes/hitbox.tscn" type="PackedScene" id=1]
-
-[node name="AnimatedSprite" type="AnimatedSprite"]
-
-[node name="hirtbox" parent="." instance=ExtResource( 1 )]

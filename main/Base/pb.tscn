@@ -1,6 +1,4 @@
-[gd_scene load_steps=5 format=2]
-
-[ext_resource path="res://font/normal.tres" type="DynamicFont" id=1]
+[gd_scene load_steps=6 format=2]
 
 [sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.105882, 0.462745, 0.211765, 1 )
@@ -27,8 +25,15 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
+[sub_resource type="DynamicFontData" id=6]
+override_oversampling = 5.0
+font_path = "res://main/font/COMIC.TTF"
+
+[sub_resource type="DynamicFont" id=5]
+font_data = SubResource( 6 )
+
 [sub_resource type="Theme" id=4]
-default_font = ExtResource( 1 )
+default_font = SubResource( 5 )
 ProgressBar/styles/bg = SubResource( 2 )
 ProgressBar/styles/fg = SubResource( 3 )
 

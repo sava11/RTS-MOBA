@@ -1,156 +1,59 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://main/Base/rb2d.tscn" type="PackedScene" id=1]
+[ext_resource path="res://main/maps/map_name.tscn" type="PackedScene" id=1]
 [ext_resource path="res://main/world.gd" type="Script" id=2]
-[ext_resource path="res://main/sys_parts/building_area/ba.tscn" type="PackedScene" id=3]
+[ext_resource path="res://main/pl_cam.gd" type="Script" id=3]
+[ext_resource path="res://main/cv.gd" type="Script" id=4]
+
+[sub_resource type="DynamicFontData" id=3]
+override_oversampling = 5.0
+font_path = "res://main/font/COMIC.TTF"
+
+[sub_resource type="DynamicFont" id=1]
+font_data = SubResource( 3 )
+
+[sub_resource type="Theme" id=4]
+default_font = SubResource( 1 )
 
 [node name="MAIN" type="Node2D"]
 script = ExtResource( 2 )
 
 [node name="map" type="Node2D" parent="."]
 
-[node name="map_name" type="Node2D" parent="map"]
-
-[node name="ground" type="TextureRect" parent="map/map_name"]
-margin_left = -512.0
-margin_top = -320.0
-margin_right = 512.0
-margin_bottom = 320.0
-mouse_filter = 2
-
-[node name="spawnpoints" type="Node2D" parent="map/map_name"]
-
-[node name="pos1" type="Position2D" parent="map/map_name/spawnpoints"]
-position = Vector2( -448, -128 )
-
-[node name="pos2" type="Position2D" parent="map/map_name/spawnpoints"]
-position = Vector2( -448, 0 )
-
-[node name="pos3" type="Position2D" parent="map/map_name/spawnpoints"]
-position = Vector2( -320, -128 )
-
-[node name="pos4" type="Position2D" parent="map/map_name/spawnpoints"]
-position = Vector2( -320, 0 )
-
-[node name="pos5" type="Position2D" parent="map/map_name/spawnpoints"]
-position = Vector2( -384, -64 )
-
-[node name="pos6" type="Position2D" parent="map/map_name/spawnpoints"]
-position = Vector2( 448, 128 )
-
-[node name="pos7" type="Position2D" parent="map/map_name/spawnpoints"]
-position = Vector2( 448, 0 )
-
-[node name="pos8" type="Position2D" parent="map/map_name/spawnpoints"]
-position = Vector2( 320, 128 )
-
-[node name="pos9" type="Position2D" parent="map/map_name/spawnpoints"]
-position = Vector2( 320, 0 )
-
-[node name="pos10" type="Position2D" parent="map/map_name/spawnpoints"]
-position = Vector2( 384, 64 )
-
-[node name="PlayGround" type="YSort" parent="map/map_name"]
-
-[node name="ground" type="Node2D" parent="map/map_name/PlayGround"]
-
-[node name="nav" type="Navigation2D" parent="map/map_name/PlayGround/ground"]
-
-[node name="n" type="NavigationPolygonInstance" parent="map/map_name/PlayGround/ground/nav"]
-
-[node name="mains" type="Node2D" parent="map/map_name/PlayGround"]
-
-[node name="rb2d" parent="map/map_name/PlayGround/mains" instance=ExtResource( 1 )]
-position = Vector2( -256, -256 )
-type = 0
-command = 1
-c_name = "w"
-
-[node name="ba1" type="Node2D" parent="map/map_name/PlayGround/mains/rb2d"]
-position = Vector2( 105, 105 )
-rotation = 2.35619
-
-[node name="ba" parent="map/map_name/PlayGround/mains/rb2d/ba1" instance=ExtResource( 3 )]
-position = Vector2( -60, -60 )
-add_node_path = NodePath("../../../..")
-start_build = 1
-command = 1
-
-[node name="ps" parent="map/map_name/PlayGround/mains/rb2d/ba1/ba" index="2"]
-position = Vector2( -50, 0 )
-
-[node name="ba2" parent="map/map_name/PlayGround/mains/rb2d/ba1" instance=ExtResource( 3 )]
-position = Vector2( 60, -60 )
-add_node_path = NodePath("../../../..")
-command = 1
-
-[node name="ba3" parent="map/map_name/PlayGround/mains/rb2d/ba1" instance=ExtResource( 3 )]
-position = Vector2( 60, 60 )
-add_node_path = NodePath("../../../..")
-command = 1
-
-[node name="ba4" parent="map/map_name/PlayGround/mains/rb2d/ba1" instance=ExtResource( 3 )]
-position = Vector2( -60, 60 )
-add_node_path = NodePath("../../../..")
-command = 1
-
-[node name="ps" parent="map/map_name/PlayGround/mains/rb2d/ba1/ba4" index="2"]
-position = Vector2( -50, 0 )
-
-[node name="rb2d2" parent="map/map_name/PlayGround/mains" instance=ExtResource( 1 )]
-position = Vector2( 256, 256 )
-type = 0
-command = 2
-c_name = "b"
-c_com = Color( 0, 0, 0, 1 )
-
-[node name="ba1" type="Node2D" parent="map/map_name/PlayGround/mains/rb2d2"]
-position = Vector2( -105, -105 )
-rotation = -0.785398
-
-[node name="ba" parent="map/map_name/PlayGround/mains/rb2d2/ba1" instance=ExtResource( 3 )]
-position = Vector2( -60, -60 )
-add_node_path = NodePath("../../../..")
-start_build = 1
-
-[node name="ps" parent="map/map_name/PlayGround/mains/rb2d2/ba1/ba" index="2"]
-position = Vector2( -50, 0 )
-
-[node name="ba2" parent="map/map_name/PlayGround/mains/rb2d2/ba1" instance=ExtResource( 3 )]
-position = Vector2( 60, -60 )
-add_node_path = NodePath("../../../..")
-
-[node name="ba3" parent="map/map_name/PlayGround/mains/rb2d2/ba1" instance=ExtResource( 3 )]
-position = Vector2( 60, 60 )
-add_node_path = NodePath("../../../..")
-
-[node name="ba4" parent="map/map_name/PlayGround/mains/rb2d2/ba1" instance=ExtResource( 3 )]
-position = Vector2( -60, 60 )
-add_node_path = NodePath("../../../..")
-
-[node name="ps" parent="map/map_name/PlayGround/mains/rb2d2/ba1/ba4" index="2"]
-position = Vector2( -50, 0 )
-
-[node name="Line2D" type="Line2D" parent="map/map_name/PlayGround"]
-points = PoolVector2Array( -224, -224, 224, 224 )
-
-[node name="cv" type="CanvasLayer" parent="."]
-
-[node name="rt" type="RichTextLabel" parent="cv"]
-margin_left = 24.0
-margin_top = 481.0
-margin_right = 161.0
-margin_bottom = 521.0
-mouse_filter = 2
+[node name="map_name" parent="map" instance=ExtResource( 1 )]
 
 [node name="cam" type="Camera2D" parent="."]
 current = true
+script = ExtResource( 3 )
 
-[editable path="map/map_name/PlayGround/mains/rb2d/ba1/ba"]
-[editable path="map/map_name/PlayGround/mains/rb2d/ba1/ba2"]
-[editable path="map/map_name/PlayGround/mains/rb2d/ba1/ba3"]
-[editable path="map/map_name/PlayGround/mains/rb2d/ba1/ba4"]
-[editable path="map/map_name/PlayGround/mains/rb2d2/ba1/ba"]
-[editable path="map/map_name/PlayGround/mains/rb2d2/ba1/ba2"]
-[editable path="map/map_name/PlayGround/mains/rb2d2/ba1/ba3"]
-[editable path="map/map_name/PlayGround/mains/rb2d2/ba1/ba4"]
+[node name="cv" type="CanvasLayer" parent="."]
+script = ExtResource( 4 )
+
+[node name="c" type="Control" parent="cv"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="txt" type="RichTextLabel" parent="cv/c"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = -12.0
+margin_right = 128.0
+margin_bottom = 12.0
+rect_scale = Vector2( 2, 2 )
+mouse_filter = 2
+theme = SubResource( 4 )
+scroll_active = false
+
+[node name="mny" type="RichTextLabel" parent="cv/c/txt"]
+self_modulate = Color( 1, 0.890196, 0, 1 )
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -72.0
+margin_bottom = 24.0
+mouse_filter = 2
+
+[node name="msg" type="Control" parent="cv"]
+margin_right = 72.0
+margin_bottom = 24.0
+mouse_filter = 2

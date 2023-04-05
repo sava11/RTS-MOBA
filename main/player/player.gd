@@ -38,6 +38,7 @@ func _ready() -> void:
 		hib["collision_mask"]=2
 		hub.collision_layer=4
 		hub.collision_mask=0
+		$s2.visible=false
 	_timer.connect("timeout", self, "_update_pathfinding")
 	_agent.connect("velocity_computed", self, "move")
 	_agent.set_navigation(gm._get_nav_path(0))
@@ -87,7 +88,6 @@ remotesync func attk(target_pos,pid_):
 	var t=target_pos-global_position
 	$AP.get_animation("att").track_set_key_value(0,0,[target_pos,Vector2(0,0),0,pid_])
 	$AP.play("att",0,cd["att_time"])
-#	set_anim(fnc.angle(t),"att")
 func move(velocity: Vector2) -> void:
 	_velocity = move_and_slide(velocity)
 	#_sprite.rotation = lerp_angle(_sprite.rotation, velocity.angle(), 10.0 * get_physics_process_delta_time())
@@ -107,20 +107,7 @@ remotesync func delete():
 	_velocity=Vector2(0,0)
 	move_and_slide(_velocity)
 	#queue_free()
-
-#func set_anim(ang:float,t:String):
-#	var type=0
-#	type=fnc.get_ang_move(ang-180,45)+1
-	#if type!=0:
-		#var input=t+"-"+str(type)
-		#$spr.play(input)
-		#if t=="att":
-		#	$spr.speed_scale=(parametrs["attack_speed"])*1/step/15
-
-
 func set_player_name(new_name):
 	get_node("Label").set_text(new_name)
-
-
 func _on_a_input_event(viewport, event, shape_idx):
 	pass # Replace with function body.

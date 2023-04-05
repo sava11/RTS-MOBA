@@ -82,8 +82,13 @@ func _updeate_ready():
 		btn.mouse_filter=Control.MOUSE_FILTER_PASS
 		btn.rect_position=Vector2((btn.rect_size.x+otstup)*fnc.i_search(list,e)+otstup/2,otstup/2)
 	
-	
+var battle_path=PoolVector2Array([])
 func _ready():
+	for e in get_parent().get_children():
+		if e is Line2D:
+			battle_path=fnc.to_glb_PV_and_rot(e.points,e.global_position,e.global_rotation_degrees)
+			e.hide()
+			break
 	pid=get_network_master()
 	_updeate_ready()
 	yield(get_tree(),"idle_frame")
@@ -104,7 +109,11 @@ func _on_butt_mouse_exited():
 
 func _physics_process(delta):
 	update()
-	if is_network_master():
+	for e in get_parent().get_children():
+		if e is Line2D:
+			battle_path=fnc.to_glb_PV_and_rot(e.points,e.global_position,e.global_rotation_degrees)
+			break
+	if is_network_master() and gamestate.player_name.hero=="builder":
 		var win=fnc.get_prkt_win()
 		var sizex=min(win.x,win.y)*0.05
 		cntrl.global_rotation_degrees=0
@@ -126,7 +135,7 @@ remotesync func logic(e,id):
 	if tree[e].has("name") and gm.commands[command]["money"]>=tree[e]["value"]:
 		cr_obj(tree[e]["obj_name"],tree[e]["name"],id)
 	if tree[e].has("unit") and gm.commands[command]["money"]>=tree[e]["value"]:
-		building.call_deferred("add_unit",tree[e].unit,id)
+		building.call_deferred("add_unit",tree[e].unit,id,"kb_"+str(int(rand_range(10000,99999))))
 	if tree[e].has("fnc"):
 		if tree[e].has("fnc_path"):
 			#get_node(tree[e]["fnc_path"]).set_network_master(id)
@@ -144,11 +153,12 @@ remotesync func cr_obj(objn:String,n:String,id):
 	building.global_rotation_degrees=global_rotation_degrees
 	building.command=command
 	building.pid=id
+	building.battle_path=battle_path
 	#obj.auto_cr_time=-1
 	#obj.set_pos=$p.global_position
 	if get_node_or_null(add_node_path)!=null:get_node(add_node_path).call_deferred("add_child",building)
 	else:get_parent().call_deferred("add_child",building)
-	yield(get_tree(),"idle_frame")
+	#yield(get_tree(),"idle_frame")
 	_updeate_ready()
 	building.get_node("pos").global_position=$ps.global_position
 	gm.gms._reload()
@@ -158,7 +168,7 @@ remotesync func rebuild():
 	_updeate_ready()
 	gm.gms._reload()
 func _on_s_input_event(viewport, event, shape_idx):
-	if Input.is_action_just_pressed("lbm") and command==gm.command_id:
+	if Input.is_action_just_pressed("lbm") and command==gm.command_id and gamestate.player_name.hero=="builder":
 		if choiced==false:
 			choiced=true
 		else:

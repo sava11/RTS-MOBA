@@ -1,27 +1,12 @@
 extends Node2D
 
 var polygon=[]
-var path_points=[]
 var scs=[1,1]
-var l = [10]
 var pause=true
-onready var txt=$cv/rt
+onready var cv=$cv
 onready var cam=$cam
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(delta):
-	#print(gamestate.get_player_list()," ",gamestate.get_player_name())
-	if gm.commands.has(gm.command_id):
-		txt.text=str(gm.commands[gm.command_id]["money"])
-	#if is_network_master():
-		#if Input.is_action_just_pressed("rbm"):
-			#rpc("add_new_sts", Vector2(500,500),get_tree().get_network_unique_id())
-
-
-#var building=load("res://main/objs/building/buildings/base.tscn")
-
 onready var rect=$map.get_child(0).get_node("ground")
-onready var rect_size=rect.rect_size*rect.rect_scale
+onready var gr_size=rect.rect_size*rect.rect_scale
 func _ready():
 	#get_tree().paused=true
 	#cam.limit_left=rect.rect_position.x
@@ -29,34 +14,13 @@ func _ready():
 	#cam.limit_top=rect.rect_position.y
 	#cam.limit_bottom=rect.rect_position.y+rect_size.y
 	_reload()
-	for e in $map.get_child(0).get_node("PlayGround").get_children():
-		if e is Line2D:
-			e.hide()
-			path_points.append(fnc.to_glb_PV(e.points,e.position))
-	pass # Replace with function body.
-func get_min_points(gpos):
-	var l=[]
-	var min_len_id=0
-	for e in path_points:
-		var l1=[]
-		for i in e:
-			l1.append(fnc._sqrt(gpos-i))
-			min_len_id=fnc.i_search(l1,l1.min())
-		l.append(l1.min())
-	#print(min_point)
-	if 0==min_len_id:
-		return path_points[fnc.i_search(l,l.min())]
-	else:
-		var p=path_points[fnc.i_search(l,l.min())]
-		p.invert()
-		return p
 
 func _reload():
 	var pl=PoolVector2Array([
 		Vector2(rect.rect_position.x,rect.rect_position.y),
-		Vector2(rect.rect_position.x+rect_size.x,rect.rect_position.y),
-		Vector2(rect.rect_position.x+rect_size.x,rect.rect_position.y+rect_size.y),
-		Vector2(rect.rect_position.x,rect.rect_position.y+rect_size.y)
+		Vector2(rect.rect_position.x+gr_size.x,rect.rect_position.y),
+		Vector2(rect.rect_position.x+gr_size.x,rect.rect_position.y+gr_size.y),
+		Vector2(rect.rect_position.x,rect.rect_position.y+gr_size.y)
 	])
 	yield(get_tree(),"idle_frame")
 	reload_map(pl)
@@ -107,5 +71,33 @@ func add_path(path_nod:NavigationPolygonInstance):
 #		return nds[fnc.i_search(ps,ps.min())]
 #	else: return null
 
+
+#func find_nearst_path(gpos,ps):
+#	var l=[]
+#	for e in ps:
+#		var l1=[]
+#		var min_dot_id=0
+#		for i in e:
+#			l1.append(fnc._sqrt(i-gpos))
+#		if l1[fnc.i_search(l1,l1.min())]<l1[min_dot_id]:
+#			min_dot_id=fnc.i_search(l1,l1.min())
+#		l.append(l1[min_dot_id])
+#	return fnc.i_search(l,l.min())
+#func find_nearst_dot_in_path(gpos,path):
+#	var l=[]
+#	for i in path:
+#		l.append(fnc._sqrt(i-gpos))
+#	return fnc.i_search(l,l.min())
+
+#func get_min_points(gpos):
+#	var curnet_path_id=find_nearst_path(gpos,path_points)
+#	var min_len_id=find_nearst_dot_in_path(gpos,path_points[curnet_path_id])
+#	#print(min_point)
+#	if 0==min_len_id:
+#		return path_points[curnet_path_id]
+#	else:
+#		var p=path_points[curnet_path_id]
+#		p.invert()
+#		return p
 
 
