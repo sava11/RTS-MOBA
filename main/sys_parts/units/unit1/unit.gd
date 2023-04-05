@@ -47,8 +47,11 @@ func _ready() -> void:
 	#set_network_master(pid)
 	#$no.set_navigation(gm._get_nav_path(0))
 
-
 func _physics_process(delta: float) -> void:
+	if _velocity.x<0:
+		$spr.play("left")
+	elif _velocity.x>0:
+		$spr.play("right")
 	if is_network_master():
 		lll()
 		var target_global_position := _agent.get_next_location()
@@ -75,10 +78,6 @@ func _physics_process(delta: float) -> void:
 		global_position=pgp
 		move_and_slide(pvec)
 		target=ptarget
-	if _velocity.x<0:
-		$spr.scale.x=-0.2
-	elif $spr.scale.x>0:
-		$spr.scale.x=0.2
 
 func lll():
 	var v=[]
@@ -122,11 +121,11 @@ func _update_pathfinding() -> void:
 
 func _on_hurt_box_area_entered(area):
 	status.he-=area.damage*area.scale_damage*(float(area.damage*area.scale_damage)/(cd["def"]+buffs["adef"]))
+	$blink_timer.start(1)
 	if status.he<=0:
 		gm.commands[area.command]["money"]+=cd["money_to_enemy"]
 		if is_network_master():
 			rpc("delete")
-
 sync func delete():
 	queue_free()
 
@@ -137,3 +136,4 @@ func _on_a_body_entered(b):
 func _on_a_body_exited(b):
 	if (b.get("command") and b.command!=command) :
 		bs.remove(fnc.i_search(bs,b))
+

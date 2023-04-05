@@ -210,7 +210,6 @@ position = Vector2( 992, 992 )
 type = 0
 command = 2
 c_name = "b"
-c_com = Color( 0, 0, 0, 1 )
 
 [node name="ba1" type="Node2D" parent="PlayGround/mains/rb2d2"]
 position = Vector2( -288, -288 )

@@ -31,7 +31,7 @@ var objs={
 				"sword1":{
 					"add_value":25,
 					"unit_path":"res://main/sys_parts/units/unit1/unit.tscn",
-					"ucrt":20,
+					"ucrt":10,
 					"att_time":2,#scale
 					"hp":50,
 					"dmg":5,
