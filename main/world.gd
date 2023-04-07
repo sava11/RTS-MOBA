@@ -49,15 +49,30 @@ func _merge_polygons(array:Array):
 			i1+=1
 		i+=1
 	return arr
+
+func scl(p:PoolVector2Array,v:Vector2):
+	var po=PoolVector2Array([])
+	for e in p:
+		po.append(e*v)
+	return po
+
 func add_path(path_nod:NavigationPolygonInstance):
 	var bs=[]
 	for e in get_tree().get_nodes_in_group("ground_build"):
-		bs.append(fnc.to_glb_PV_and_rot(e.polygon,e.global_position,e.global_rotation_degrees))
+		bs.append(fnc.to_glb_PV_and_rot(scl(e.polygon,e.global_scale),e.global_position*e.global_scale,e.global_rotation_degrees,1,15))
 	if len(bs)>1:
 		bs=_merge_polygons(bs)
 	for e in range(0,len(bs)):
 		path_nod.navpoly.add_outline(bs[e])
 	path_nod.navpoly.make_polygons_from_outlines()
+
+#func _physics_process(delta):
+#	for e in gm.commands.keys():
+#		if gm.commands.get(e)==null:print(gm.commands," ",e)
+#		if gm.commands.get(e)!=null and gm.commands.get(e).battled_by!=-1:
+#			gamestate.end_game()
+			#get_tree().paused=true
+
 
 #func get_nearst_enemy_base(gpos,command):
 #	var nds=get_tree().get_nodes_in_group("MBASE")

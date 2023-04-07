@@ -8,5 +8,6 @@ func add_start_txt(n):
 	var msg=preload("res://main/sys_parts/txt_msg/txt_msg.tscn").instance()
 	$c/msgs.add_child(msg)
 func _process(delta):
-	$c/txt.text="money:"
-	$c/txt/mny.text=str(gm.commands[gm.command_id]["money"])
+	if gm.commands.get(gm.command_id)!=null:
+		$c/txt.text="money:"
+		$c/txt/mny.text=str(gm.commands[gm.command_id]["money"])

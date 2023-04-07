@@ -1,5 +1,5 @@
 extends Area2D
-enum t{nill,sword,bow,holy}
+enum t{nill,sword,bow}
 export(NodePath)var add_node_path
 export(t)var start_build=t.nill
 export(int)var command=-1
@@ -7,9 +7,8 @@ export(float,0,50)var otstup=10
 
 onready var cntrl=$z_ingx
 onready var posy=cntrl.position.y
-var building=null
-var pid=1
-
+var building
+var pid=0
 var choiced=false
 puppet var pchoiced=false
 
@@ -29,37 +28,29 @@ func _draw():
 			cntrl.visible=false
 var tree={}
 func _updeate_ready():
+	#yield(get_tree(),"idle_frame")
 	yield(get_tree(),"idle_frame")
-	
 	if (building!=null and is_instance_valid(building)!=false) and building.get("command")!=null:command=building.command
 	if (building==null or is_instance_valid(building)==false) or building.get("tree")==null:
 			tree={
 		t.sword:{
 			"img":"res://main/img/sword.png",
-			"name":"sword",
 			"obj_name":"swords",
 			"value":50,
 				},
 		t.bow:{
 			"img":"res://main/img/bow.png",
-			"name":"bow",
 			"obj_name":"bows",
 			"value":50,
-				},
-		t.holy:{
-			"img":"res://main/img/holy.png",
-			"name":"holy",
-			"obj_name":"holys",
-			"value":50,
-				},}
+				}}
 	else:
 		if building.get("tree")!={}:
-			if building.type!=0:
+			if building.type>0:
 				tree={
 					"rebuild":{
 						"img":"res://main/img/rebuild.png",
 						"fnc":"rebuild",
-						"value":-25,
+						"value":-abs(building.cd.rebuild_value)
 						}
 					}
 			tree.merge(building.get("tree"))
@@ -84,16 +75,17 @@ func _updeate_ready():
 	
 var battle_path=PoolVector2Array([])
 func _ready():
+	pid=get_network_master()
+	print(pid)
 	for e in get_parent().get_children():
 		if e is Line2D:
 			battle_path=fnc.to_glb_PV_and_rot(e.points,e.global_position,e.global_rotation_degrees)
 			e.hide()
 			break
-	pid=get_network_master()
 	_updeate_ready()
 	yield(get_tree(),"idle_frame")
 	if start_build!=t.nill:
-		cr_obj(tree[start_build]["obj_name"],tree[start_build]["name"],pid)
+		cr_obj(tree[start_build]["obj_name"],pid)
 
 var mouse_in_area=false
 func _on_mouse_entered():
@@ -122,9 +114,6 @@ func _physics_process(delta):
 		cntrl.global_position.y=posy+global_position.y-cntrl.get_child(0).rect_size.y
 		if mouse_in_area==false and in_but_area==false and Input.is_action_just_pressed("lbm"):
 			choiced=false
-		rset("pchoiced",choiced)
-	else:
-		choiced=pchoiced
 
 
 func _set_btn(e):
@@ -132,41 +121,47 @@ func _set_btn(e):
 		rpc("logic",e,pid)
 	#logic(e,get_tree().get_network_unique_id())
 remotesync func logic(e,id):
-	if tree[e].has("name") and gm.commands[command]["money"]>=tree[e]["value"]:
-		cr_obj(tree[e]["obj_name"],tree[e]["name"],id)
-	if tree[e].has("unit") and gm.commands[command]["money"]>=tree[e]["value"]:
-		building.call_deferred("add_unit",tree[e].unit,id,"kb_"+str(int(rand_range(10000,99999))))
+	if tree[e].has("value") and not(gm.can_change_money(command,-tree[e]["value"])):
+		return
+	if tree[e].has("obj_name"):
+		cr_obj(tree[e]["obj_name"],id)
 	if tree[e].has("fnc"):
 		if tree[e].has("fnc_path"):
-			#get_node(tree[e]["fnc_path"]).set_network_master(id)
 			get_node(tree[e]["fnc_path"]).call_deferred(tree[e]["fnc"])
 		else:
 			call_deferred(tree[e]["fnc"])
-	if tree[e].has("value") and gm.can_change_money(command,-tree[e]["value"]):
-		pass
-remotesync func cr_obj(objn:String,n:String,id):
+	
+remotesync func cr_obj(objn:String,id):
 	building=load("res://main/Base/rb2d.tscn").instance()
-	#obj.set_network_master(get_tree().get_network_unique_id())
 	building.preset_name=objn
-	building.upreset_name=n
 	building.global_position=global_position
 	building.global_rotation_degrees=global_rotation_degrees
 	building.command=command
 	building.pid=id
 	building.battle_path=battle_path
+	building.build_area=self
 	#obj.auto_cr_time=-1
 	#obj.set_pos=$p.global_position
 	if get_node_or_null(add_node_path)!=null:get_node(add_node_path).call_deferred("add_child",building)
 	else:get_parent().call_deferred("add_child",building)
-	#yield(get_tree(),"idle_frame")
+	yield(get_tree(),"idle_frame")
 	_updeate_ready()
 	building.get_node("pos").global_position=$ps.global_position
 	gm.gms._reload()
 remotesync func rebuild():
-	building.queue_free()
-	building=null
-	_updeate_ready()
-	gm.gms._reload()
+	if building!=null:
+		building.queue_free()
+		building=null
+		_updeate_ready()
+		gm.gms._reload()
+remotesync func upd_build():
+	if building!=null:
+		var v1=building.updpreset_name
+		building.queue_free()
+		building=null
+		gm.gms._reload()
+		cr_obj(v1,pid)
+		_updeate_ready()
 func _on_s_input_event(viewport, event, shape_idx):
 	if Input.is_action_just_pressed("lbm") and command==gm.command_id and gamestate.player_name.hero=="builder":
 		if choiced==false:

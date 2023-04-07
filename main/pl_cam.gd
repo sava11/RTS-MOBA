@@ -26,6 +26,12 @@ func _input(event: InputEvent) -> void:
 		cam.zoom.y=_min
 
 func _ready():
+	yield(get_tree(),"idle_frame")
+	for e in get_parent().get_node("map").get_child(0).get_node("PlayGround/mains").get_children():
+		if e.command==gm.command_id:
+			global_position=e.global_position
+			break
+	
 	var rect=get_node("../map").get_child(0).get_node("ground")
 	w_size=rect.rect_size*rect.rect_scale
 	var w=OS.window_size.x*cam.zoom.y#ProjectSettings.get("display/window/size/width")
@@ -44,8 +50,7 @@ func _process(delta):
 	update()
 	var s=get_viewport().size
 	var m=get_viewport().get_mouse_position()
-	var a=m - s * 0.5
-	var a1=get_local_mouse_position()
+	var a=(m - s * 0.5)*zoom.x
 	var w=ProjectSettings.get("display/window/size/width")
 	var h=ProjectSettings.get("display/window/size/height")
 	if Input.is_action_just_pressed("mbm"):

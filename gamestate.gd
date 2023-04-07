@@ -39,7 +39,7 @@ func _ready():
 # Callback from SceneTree.
 func _player_connected(id):
 	# Registration of a client beings here, tell the connected player that we are here.
-	rpc_id(id, "register_player", player_name.name)
+	rpc_id(id, "register_player", player_name)
 
 
 # Callback from SceneTree.
@@ -75,9 +75,7 @@ func _connected_fail():
 
 remote func register_player(new_player_name):
 	var id = get_tree().get_rpc_sender_id()
-	players[id] = {
-		"name":new_player_name,
-		"hero":"visitor"}
+	players[id] = new_player_name
 	emit_signal("player_list_changed")
 
 
@@ -88,7 +86,7 @@ func unregister_player(id):
 func get_command(i,p,c):
 	var t=float(p)/c
 	for e in range(1,c+1):
-		if i<t*e:
+		if i<t*e and i>=t*(e-1):
 			return e
 
 remote func pre_start_game(spawn_points):
@@ -96,6 +94,7 @@ remote func pre_start_game(spawn_points):
 	var world = load(choiced_world_preset).instance()
 	world_name=world.name
 	get_tree().get_root().get_node("Lobby").hide()
+	get_tree().get_root().add_child(world)
 	var i=0
 	gm.gms=world
 	for p_id in spawn_points:
@@ -110,7 +109,6 @@ remote func pre_start_game(spawn_points):
 			if e.command==player.command:
 				pos=e.get_node("spawnpoints").get_child(i&(e.get_node("spawnpoints").get_child_count()-1)).global_position
 				break
-		
 		if p_id == get_tree().get_network_unique_id():
 			# If node for this peer id, set name.
 			player.set_player_name(player_name.name)
@@ -122,10 +120,12 @@ remote func pre_start_game(spawn_points):
 					for e in world.get_node("map").get_child(0).get_node("PlayGround/mains").get_children():
 						if e.command==player.command:
 							e.pid=p_id
+							e.set_network_master(p_id)
+				player.global_position=pos
 				world.get_node("map").get_child(0).get_node("PlayGround").call_deferred("add_child",player)
-				player.set_deferred("global_position",pos)
 				player.target=pos
 				player.start_pos=pos
+				player_name.hero_path=str(world.get_node("map").get_child(0).get_node("PlayGround").get_path())+"/"+player.name
 				i+=1
 			else:
 				player.queue_free()
@@ -139,14 +139,16 @@ remote func pre_start_game(spawn_points):
 					for e in world.get_node("map").get_child(0).get_node("PlayGround/mains").get_children():
 						if e.command==player.command:
 							e.pid=p_id
+							e.set_network_master(p_id)
+				player.global_position=pos
 				world.get_node("map").get_child(0).get_node("PlayGround").call_deferred("add_child",player)
-				player.set_deferred("global_position",pos)
 				player.target=pos
 				player.start_pos=pos
+				players[p_id].hero_path=str(world.get_node("map").get_child(0).get_node("PlayGround").get_path())+"/"+player.name
 				i+=1
 			else:
 				player.queue_free()
-	get_tree().get_root().add_child(world)
+	
 	if not get_tree().is_network_server():
 		# Tell server we are ready to start.
 		rpc_id(1, "ready_to_start", get_tree().get_network_unique_id())
@@ -169,19 +171,23 @@ remote func ready_to_start(id):
 		post_start_game()
 
 
-func host_game(new_player_name):
+func host_game(new_player_name,hero="visitor"):
 	player_name = {
 		"name":new_player_name,
-		"hero":"visitor"}
+		"hero":hero,
+		"hero_path":""
+		}
 	peer = NetworkedMultiplayerENet.new()
 	peer.create_server(DEFAULT_PORT, MAX_PEERS)
 	get_tree().set_network_peer(peer)
 
 
-func join_game(ip, new_player_name):
+func join_game(ip, new_player_name,hero="visitor"):
 	player_name = {
 		"name":new_player_name,
-		"hero":"visitor"}
+		"hero":hero,
+		"hero_path":""
+		}
 	peer = NetworkedMultiplayerENet.new()
 	peer.create_client(ip, DEFAULT_PORT)
 	get_tree().set_network_peer(peer)
@@ -216,9 +222,7 @@ func begin_game():
 
 
 func end_game():
-	if has_node("/root/"+world_name): # Game is in progress.
-		# End it
+	if has_node("/root/"+world_name):
 		get_node("/root/"+world_name).queue_free()
-
 	emit_signal("game_ended")
 	players.clear()

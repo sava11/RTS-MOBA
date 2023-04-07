@@ -1,15 +1,93 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://main/player/player.gd" type="Script" id=1]
-[ext_resource path="res://icon.png" type="Texture" id=2]
-[ext_resource path="res://main/sys_parts/boxes/hurt_box.tscn" type="PackedScene" id=3]
+[ext_resource path="res://main/sys_parts/boxes/hurt_box.gd" type="Script" id=2]
+[ext_resource path="res://main/sys_parts/boxes/choice_area.tscn" type="PackedScene" id=3]
 [ext_resource path="res://main/sys_parts/stats/stats.tscn" type="PackedScene" id=4]
+[ext_resource path="res://main/sys_parts/units/unit1/sprts.png" type="Texture" id=5]
+
+[sub_resource type="AtlasTexture" id=3]
+flags = 4
+atlas = ExtResource( 5 )
+region = Rect2( 0, 0, 100, 256 )
+
+[sub_resource type="AtlasTexture" id=4]
+flags = 4
+atlas = ExtResource( 5 )
+region = Rect2( 100, 0, 100, 256 )
+
+[sub_resource type="SpriteFrames" id=5]
+animations = [ {
+"frames": [ SubResource( 3 ) ],
+"loop": true,
+"name": "left",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 4 ) ],
+"loop": true,
+"name": "right",
+"speed": 5.0
+} ]
+
+[sub_resource type="CircleShape2D" id=11]
+radius = 8.0
 
 [sub_resource type="CircleShape2D" id=1]
+radius = 8.0
 
-[sub_resource type="CapsuleShape2D" id=2]
-radius = 20.0
-height = 44.0
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0.607843, 0.607843, 0.607843, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.929412, 0.929412, 0.929412, 1 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 4.0
+expand_margin_right = 4.0
+expand_margin_top = 4.0
+expand_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 0.298039, 0.298039, 0.298039, 1 )
+border_color = Color( 0, 0, 0, 1 )
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="DynamicFontData" id=6]
+override_oversampling = 5.0
+font_path = "res://main/font/COMIC.TTF"
+
+[sub_resource type="DynamicFont" id=9]
+font_data = SubResource( 6 )
+
+[sub_resource type="Theme" id=10]
+default_font = SubResource( 9 )
+ProgressBar/styles/bg = SubResource( 7 )
+ProgressBar/styles/fg = SubResource( 8 )
+
+[sub_resource type="Animation" id=12]
+resource_name = "att"
+tracks/0/type = "method"
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.5 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "add_att_zone"
+} ]
+}
 
 [node name="kb" type="KinematicBody2D"]
 script = ExtResource( 1 )
@@ -17,19 +95,30 @@ script = ExtResource( 1 )
 [node name="stats" parent="." instance=ExtResource( 4 )]
 m_he = 20.0
 
+[node name="spr" type="AnimatedSprite" parent="."]
+position = Vector2( 0, -18 )
+scale = Vector2( 0.2, 0.2 )
+frames = SubResource( 5 )
+animation = "left"
+playing = true
+
 [node name="na" type="NavigationAgent2D" parent="."]
-path_desired_distance = 15.0
-target_desired_distance = 15.0
+path_desired_distance = 12.0
+target_desired_distance = 12.0
+path_max_distance = 60.0
 avoidance_enabled = true
-radius = 20.0
 neighbor_dist = 200.0
+max_speed = 120.0
 
-[node name="hurt_box" parent="." instance=ExtResource( 3 )]
+[node name="hurt_box" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource( 2 )
 
-[node name="s" type="Sprite" parent="."]
-position = Vector2( -7.15256e-07, -40 )
-scale = Vector2( 0.315, 1.25 )
-texture = ExtResource( 2 )
+[node name="col" type="CollisionShape2D" parent="hurt_box"]
+shape = SubResource( 11 )
+
+[node name="Timer" type="Timer" parent="hurt_box"]
 
 [node name="c" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
@@ -37,29 +126,50 @@ shape = SubResource( 1 )
 [node name="Label" type="Label" parent="."]
 anchor_right = 1.0
 margin_left = -56.0
-margin_top = -94.0
+margin_top = -104.0
 margin_right = 56.0
-margin_bottom = -80.0
+margin_bottom = -90.0
+align = 1
 autowrap = true
-
-[node name="a" type="Area2D" parent="."]
-position = Vector2( 0, -32 )
-collision_layer = 0
-collision_mask = 0
-
-[node name="c" type="CollisionShape2D" parent="a"]
-position = Vector2( 0, -8 )
-shape = SubResource( 2 )
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.1
 autostart = true
 
 [node name="s2" type="TextureRect" parent="."]
-margin_left = -12.5
+margin_left = -10.0
 margin_top = 5.0
-margin_right = 12.5
-margin_bottom = 30.0
+margin_right = 10.0
+margin_bottom = 25.0
 expand = true
 
-[connection signal="input_event" from="a" to="." method="_on_a_input_event"]
+[node name="vcont" type="Node2D" parent="."]
+position = Vector2( 0, -52 )
+z_index = 999
+
+[node name="pb" type="ProgressBar" parent="vcont"]
+self_modulate = Color( 0, 1, 0, 1 )
+margin_left = -16.0
+margin_right = 144.0
+margin_bottom = 27.0
+rect_scale = Vector2( 0.2, 0.2 )
+mouse_filter = 2
+theme = SubResource( 10 )
+value = 20.0
+percent_visible = false
+
+[node name="attray" type="RayCast2D" parent="."]
+enabled = true
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="choice_area" parent="." instance=ExtResource( 3 )]
+position = Vector2( 0, -18 )
+
+[node name="AP" type="AnimationPlayer" parent="."]
+anims/att = SubResource( 12 )
+
+[connection signal="area_entered" from="hurt_box" to="." method="_on_hurt_box_area_entered"]
+[connection signal="invi_ended" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_ended"]
+[connection signal="invi_started" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_started"]
+[connection signal="timeout" from="hurt_box/Timer" to="hurt_box" method="_on_Timer_timeout"]

@@ -31,6 +31,8 @@ func _ready() -> void:
 		hib["collision_mask"]=4
 		hub.collision_layer=2
 		hub.collision_mask=0
+		$attray.collision_mask=4
+		$s2.visible=true
 		#collision_layer=9
 		#collision_mask=collision_layer
 		#$rc.collision_mask=16
@@ -39,6 +41,8 @@ func _ready() -> void:
 		hib["collision_mask"]=2
 		hub.collision_layer=4
 		hub.collision_mask=0
+		$attray.collision_mask=2
+		$s2.visible=false
 		#collision_layer=17
 		#collision_mask=collision_layer
 	_timer.connect("timeout", self, "_update_pathfinding")
@@ -63,20 +67,21 @@ func _physics_process(delta: float) -> void:
 		if bs!=[]:
 			for e in bs:mn.append(global_position.distance_to(e.global_position))
 			target=bs[fnc.i_search(mn,mn.min())].global_position
-			if mn.min()<15: 
-				rpc("attk",target,pid)
+			$attray.cast_to=target-global_position
+			if fnc._sqrt(global_position-$attray.get_collision_point())<20: 
+				rpc("attk")
 				_velocity=Vector2.ZERO
 		else:target=_temp_target
-		if _agent.is_navigation_finished():return
-		_agent.set_velocity(_velocity)
-		
-		rset("pvec",_velocity)
 		rset("pgp",global_position)
 		rset("ptarget",target)
-		#_update_pathfinding()
+		if _agent.is_navigation_finished():return
+		_agent.set_velocity(_velocity)
+		rset("pvec",_velocity)
+		
 	else:
+		_velocity=pvec
 		global_position=pgp
-		move_and_slide(pvec)
+		move_and_slide(_velocity)
 		target=ptarget
 
 func lll():
@@ -85,7 +90,8 @@ func lll():
 	for e in battle_path:
 		if fnc._sqrt(e-global_position)<25:
 			battle_path.remove(fnc.i_search(battle_path,e))
-	_temp_target=battle_path[clamp(id,0,len(battle_path)-1)]
+	if len(battle_path)>0:
+		_temp_target=battle_path[clamp(id,0,len(battle_path)-1)]
 	
 
 
@@ -102,14 +108,14 @@ func add_att_zone():
 		att.get_node("Timer").wait_time=fnc._sqrt(target-global_position)/(cd["dmgspd"]*2)
 	att.mvec=target-global_position
 	att.get_child(1).autostart=true
-	att.get_child(0).polygon=PoolVector2Array([Vector2(0,-10),Vector2(0,10),Vector2(25,10),Vector2(25,-10)])
+	att.get_child(0).polygon=PoolVector2Array([Vector2(0,-10),Vector2(0,10),Vector2(30,10),Vector2(30,-10)])
 	att.collision_layer=hib["collision_layer"]
 	att.collision_mask=hib["collision_mask"]
 	att.damage=cd["dmg"]+buffs["aatt"]
 	get_parent().call_deferred("add_child",att)
 	att.global_position=global_position
 	att.global_rotation_degrees=fnc.angle(target-global_position)
-remotesync func attk(target_pos,pid_):
+remotesync func attk():
 	$AP.play("att",0,cd["att_time"])
 func move(velocity: Vector2) -> void:
 	_velocity = move_and_slide(velocity)
@@ -121,7 +127,6 @@ func _update_pathfinding() -> void:
 
 func _on_hurt_box_area_entered(area):
 	status.he-=area.damage*area.scale_damage*(float(area.damage*area.scale_damage)/(cd["def"]+buffs["adef"]))
-	$blink_timer.start(1)
 	if status.he<=0:
 		gm.commands[area.command]["money"]+=cd["money_to_enemy"]
 		if is_network_master():
@@ -136,4 +141,6 @@ func _on_a_body_entered(b):
 func _on_a_body_exited(b):
 	if (b.get("command") and b.command!=command) :
 		bs.remove(fnc.i_search(bs,b))
+
+
 

@@ -55,8 +55,8 @@ func _on_host_pressed():
 	$Players.show()
 	$Connect/ErrorLabel.text = ""
 
-	var player_name = $Connect/Name.text
-	gamestate.host_game(player_name)
+	var playername = $Connect/Name.text
+	gamestate.host_game(playername)
 	refresh_lobby()
 
 
@@ -94,6 +94,7 @@ func _on_game_ended():
 	show()
 	$Connect.show()
 	$Players.hide()
+	$charters.hide()
 	$Connect/Host.disabled = false
 	$Connect/Join.disabled = false
 

@@ -1,9 +1,10 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://main/sys_parts/units/unit1/unit.gd" type="Script" id=1]
 [ext_resource path="res://main/sys_parts/units/unit1/sprts.png" type="Texture" id=2]
 [ext_resource path="res://main/sys_parts/boxes/hurt_box.gd" type="Script" id=3]
 [ext_resource path="res://main/sys_parts/stats/stats.tscn" type="PackedScene" id=4]
+[ext_resource path="res://main/sys_parts/boxes/choice_area.tscn" type="PackedScene" id=5]
 
 [sub_resource type="Shader" id=9]
 code = "shader_type canvas_item;
@@ -45,9 +46,8 @@ animations = [ {
 "speed": 60.0
 } ]
 
-[sub_resource type="CapsuleShape2D" id=5]
-radius = 5.0
-height = 37.0
+[sub_resource type="CircleShape2D" id=11]
+radius = 6.18
 
 [sub_resource type="CircleShape2D" id=2]
 radius = 120.0
@@ -76,6 +76,11 @@ tracks/0/keys = {
 } ]
 }
 
+[sub_resource type="CapsuleShape2D" id=12]
+resource_local_to_scene = true
+radius = 15.0
+height = 30.0
+
 [node name="kb" type="KinematicBody2D"]
 script = ExtResource( 1 )
 
@@ -99,13 +104,12 @@ playing = true
 m_he = 20.0
 
 [node name="hurt_box" type="Area2D" parent="."]
-position = Vector2( 0, -20 )
 collision_layer = 2
 collision_mask = 0
 script = ExtResource( 3 )
 
 [node name="col" type="CollisionShape2D" parent="hurt_box"]
-shape = SubResource( 5 )
+shape = SubResource( 11 )
 
 [node name="Timer" type="Timer" parent="hurt_box"]
 
@@ -125,9 +129,29 @@ autostart = true
 [node name="AP" type="AnimationPlayer" parent="."]
 anims/att = SubResource( 3 )
 
+[node name="attray" type="RayCast2D" parent="."]
+enabled = true
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="choice_area" parent="." instance=ExtResource( 5 )]
+position = Vector2( 0, -20 )
+
+[node name="c" parent="choice_area" index="0"]
+shape = SubResource( 12 )
+
+[node name="s2" type="TextureRect" parent="."]
+margin_left = -7.5
+margin_top = 5.0
+margin_right = 7.5
+margin_bottom = 20.0
+expand = true
+
 [connection signal="area_entered" from="hurt_box" to="." method="_on_hurt_box_area_entered"]
 [connection signal="invi_ended" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_ended"]
 [connection signal="invi_started" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_started"]
 [connection signal="timeout" from="hurt_box/Timer" to="hurt_box" method="_on_Timer_timeout"]
 [connection signal="body_entered" from="a" to="." method="_on_a_body_entered"]
 [connection signal="body_exited" from="a" to="." method="_on_a_body_exited"]
+
+[editable path="choice_area"]
