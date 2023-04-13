@@ -48,35 +48,37 @@ texture = ExtResource( 3 )
 texture_scale = Vector2( 30, 30 )
 polygon = PoolVector2Array( 640, -768, -384, 256, -640, -512, -768, -512, -480, 352, -768, 640, -640, 768, 384, -256, 640, 512, 768, 512, 480, -352, 768, -640 )
 
-[node name="StaticBody2D" type="StaticBody2D" parent="ground"]
+[node name="s" type="StaticBody2D" parent="ground"]
+light_mask = 2
 position = Vector2( 13440, 12800 )
 scale = Vector2( 10, 10 )
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="up_big" type="CollisionPolygon2D" parent="ground/StaticBody2D" groups=["ground_build"]]
+[node name="up_big" type="CollisionPolygon2D" parent="ground/s" groups=["ground_build"]]
 polygon = PoolVector2Array( -112, -224, 0, -224, 32, -192, 656, -816, 656, -864, 624, -880, -432, -880, -496, -800, -496, -608 )
 
-[node name="down_big" type="CollisionPolygon2D" parent="ground/StaticBody2D" groups=["ground_build"]]
+[node name="down_big" type="CollisionPolygon2D" parent="ground/s" groups=["ground_build"]]
 rotation = 3.14159
 polygon = PoolVector2Array( -112, -224, 0, -224, 32, -192, 656, -816, 656, -864, 624, -880, -432, -880, -496, -800, -496, -608 )
 
-[node name="right_big" type="CollisionPolygon2D" parent="ground/StaticBody2D" groups=["ground_build"]]
+[node name="right_big" type="CollisionPolygon2D" parent="ground/s" groups=["ground_build"]]
 polygon = PoolVector2Array( 496, -352, 784, 496, 816, 496, 880, 432, 880, -624, 864, -656, 816, -656 )
 
-[node name="left_big" type="CollisionPolygon2D" parent="ground/StaticBody2D" groups=["ground_build"]]
+[node name="left_big" type="CollisionPolygon2D" parent="ground/s" groups=["ground_build"]]
 rotation = 3.14159
 polygon = PoolVector2Array( 496, -352, 784, 496, 816, 496, 880, 432, 880, -624, 864, -656, 816, -656 )
 
-[node name="right_small" type="CollisionPolygon2D" parent="ground/StaticBody2D" groups=["ground_build"]]
+[node name="right_small" type="CollisionPolygon2D" parent="ground/s" groups=["ground_build"]]
 polygon = PoolVector2Array( 600, 496, 616, 496, 376, -224, 184, -32, 208, -8, 224, 128 )
 
-[node name="left_small" type="CollisionPolygon2D" parent="ground/StaticBody2D" groups=["ground_build"]]
+[node name="left_small" type="CollisionPolygon2D" parent="ground/s" groups=["ground_build"]]
 rotation = 3.14159
 polygon = PoolVector2Array( 600, 496, 616, 496, 376, -224, 184, -32, 208, -8, 224, 128 )
 
 [node name="PlayGround" type="YSort" parent="."]
+light_mask = 2
 
 [node name="ground" type="Node2D" parent="PlayGround"]
 

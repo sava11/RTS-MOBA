@@ -78,7 +78,6 @@ tracks/0/keys = {
 
 [sub_resource type="CapsuleShape2D" id=12]
 resource_local_to_scene = true
-radius = 15.0
 height = 30.0
 
 [node name="kb" type="KinematicBody2D"]
@@ -135,7 +134,6 @@ collide_with_areas = true
 collide_with_bodies = false
 
 [node name="choice_area" parent="." instance=ExtResource( 5 )]
-position = Vector2( 0, -20 )
 
 [node name="c" parent="choice_area" index="0"]
 shape = SubResource( 12 )

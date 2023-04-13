@@ -1,10 +1,11 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://main/player/player.gd" type="Script" id=1]
 [ext_resource path="res://main/sys_parts/boxes/hurt_box.gd" type="Script" id=2]
 [ext_resource path="res://main/sys_parts/boxes/choice_area.tscn" type="PackedScene" id=3]
 [ext_resource path="res://main/sys_parts/stats/stats.tscn" type="PackedScene" id=4]
 [ext_resource path="res://main/sys_parts/units/unit1/sprts.png" type="Texture" id=5]
+[ext_resource path="res://main/sys_parts/antifog-512.png" type="Texture" id=6]
 
 [sub_resource type="AtlasTexture" id=3]
 flags = 4
@@ -91,6 +92,14 @@ tracks/0/keys = {
 
 [node name="kb" type="KinematicBody2D"]
 script = ExtResource( 1 )
+see_range = 500.0
+
+[node name="l" type="Light2D" parent="."]
+light_mask = 0
+texture = ExtResource( 6 )
+mode = 2
+shadow_enabled = true
+shadow_color = Color( 0, 0, 0, 1 )
 
 [node name="stats" parent="." instance=ExtResource( 4 )]
 m_he = 20.0
@@ -98,13 +107,14 @@ m_he = 20.0
 [node name="spr" type="AnimatedSprite" parent="."]
 position = Vector2( 0, -18 )
 scale = Vector2( 0.2, 0.2 )
+z_index = 999
 frames = SubResource( 5 )
 animation = "left"
 playing = true
 
 [node name="na" type="NavigationAgent2D" parent="."]
-path_desired_distance = 12.0
-target_desired_distance = 12.0
+path_desired_distance = 10.0
+target_desired_distance = 10.0
 path_max_distance = 60.0
 avoidance_enabled = true
 neighbor_dist = 200.0
@@ -164,7 +174,6 @@ collide_with_areas = true
 collide_with_bodies = false
 
 [node name="choice_area" parent="." instance=ExtResource( 3 )]
-position = Vector2( 0, -18 )
 
 [node name="AP" type="AnimationPlayer" parent="."]
 anims/att = SubResource( 12 )

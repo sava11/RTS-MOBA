@@ -35,6 +35,17 @@ func reload_map(pl):
 	e.get_child(0).navpoly.add_outline(p)
 	e.get_child(0).navpoly.make_polygons_from_outlines()
 	add_path(e.get_child(0))
+	var stc=$map.get_child(0).get_node("ground/s")
+	for i in stc.get_children():
+		if i is LightOccluder2D:
+			i.queue_free()
+	for i in get_tree().get_nodes_in_group("ground_build"):
+		if get_tree().get_nodes_in_group("buildings").find(i)==-1:
+			var lo=LightOccluder2D.new()
+			var oc=OccluderPolygon2D.new()
+			oc.polygon=fnc.to_glb_PV_and_rot(scl(i.polygon,i.global_scale),i.global_position*i.global_scale,i.global_rotation_degrees)
+			lo.occluder=oc
+			stc.add_child(lo)
 func _merge_polygons(array:Array):
 	var arr=array
 	var i=0
@@ -65,7 +76,19 @@ func add_path(path_nod:NavigationPolygonInstance):
 	for e in range(0,len(bs)):
 		path_nod.navpoly.add_outline(bs[e])
 	path_nod.navpoly.make_polygons_from_outlines()
-
+func add_player(p_id,t,command,cd,start_pos):
+	var player = load("res://main/player/player.tscn").instance()
+	player.set_player_name(t)
+	player.set_name(str(p_id)) # Use unique ID as node name.
+	player.set_network_master(p_id) #set unique id as master.
+	player.global_position=start_pos
+	player.target=start_pos
+	player._velocity=Vector2(0,0)
+	player.command=command
+	player.cd=cd
+	get_parent().call_deferred("add_child",player)
+	if get_tree().get_network_unique_id()==get_network_master():
+		get_node("cam").global_position=start_pos
 #func _physics_process(delta):
 #	for e in gm.commands.keys():
 #		if gm.commands.get(e)==null:print(gm.commands," ",e)

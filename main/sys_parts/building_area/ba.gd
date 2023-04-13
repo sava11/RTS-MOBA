@@ -76,7 +76,6 @@ func _updeate_ready():
 var battle_path=PoolVector2Array([])
 func _ready():
 	pid=get_network_master()
-	print(pid)
 	for e in get_parent().get_children():
 		if e is Line2D:
 			battle_path=fnc.to_glb_PV_and_rot(e.points,e.global_position,e.global_rotation_degrees)

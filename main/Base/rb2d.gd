@@ -1,4 +1,5 @@
 extends StaticBody2D
+export(float,1,9999) var see_range=250
 enum t{MAIN,swords,bows,holys}
 export(NodePath)var add_node_path
 export(t)var type=t.swords
@@ -102,6 +103,7 @@ func _ready():
 		hub.collision_mask=0
 		$vcont/pb.self_modulate=Color(0,1.0,0,1)
 	else:
+		$Light2D.queue_free()
 		hub.collision_layer=4
 		hub.collision_mask=0
 		$vcont/pb.self_modulate=Color(1.0,0,0,1)
@@ -110,6 +112,7 @@ func _ready():
 	for e in tree.keys():
 		if tree[e].has("fnc_path"):
 			tree[e]["fnc_path"]=str(get_path())
+	
 	#cd.command=command
 	#cd.p_id=cd.p_id
 	#status.m_he=cd.hp

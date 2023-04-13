@@ -74,9 +74,9 @@ func _physics_process(delta: float) -> void:
 		else:target=_temp_target
 		rset("pgp",global_position)
 		rset("ptarget",target)
+		rset("pvec",_velocity)
 		if _agent.is_navigation_finished():return
 		_agent.set_velocity(_velocity)
-		rset("pvec",_velocity)
 		
 	else:
 		_velocity=pvec

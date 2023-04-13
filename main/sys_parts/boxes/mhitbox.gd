@@ -5,6 +5,7 @@ var pid=1
 var mvec=Vector2.ZERO
 var speed=0
 var command=0
+var owner_=null
 func _ready():
 	if get_parent().get("command")!=null:
 		command=get_parent().command

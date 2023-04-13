@@ -35,7 +35,6 @@ func _ready():
 	get_tree().connect("connection_failed", self, "_connected_fail")
 	get_tree().connect("server_disconnected", self, "_server_disconnected")
 
-
 # Callback from SceneTree.
 func _player_connected(id):
 	# Registration of a client beings here, tell the connected player that we are here.
@@ -115,7 +114,6 @@ remote func pre_start_game(spawn_points):
 			gm.command_id=player.command
 			if player_name.hero!="visitor":
 				player.cd=gm.objs.heroes[player_name.hero]
-				player.get_node("s2").texture=load(player.cd.img)
 				if player_name.hero=="builder":
 					for e in world.get_node("map").get_child(0).get_node("PlayGround/mains").get_children():
 						if e.command==player.command:
@@ -134,7 +132,6 @@ remote func pre_start_game(spawn_points):
 			player.set_player_name(players[p_id].name)
 			if players[p_id].hero!="visitor":
 				player.cd=gm.objs.heroes[players[p_id].hero]
-				player.get_node("s2").texture=load(player.cd.img)
 				if players[p_id].hero=="builder":
 					for e in world.get_node("map").get_child(0).get_node("PlayGround/mains").get_children():
 						if e.command==player.command:

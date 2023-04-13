@@ -1,7 +1,7 @@
 extends KinematicBody2D
-
 #export var path_to_player := NodePath()
 var cd={}
+export(float,1,9999) var see_range=250
 var command=0
 var _velocity := Vector2.ZERO
 puppet var pvec:=Vector2.ZERO
@@ -20,12 +20,21 @@ var buffs={
 	}
 
 var target=Vector2.ZERO
+puppet var pterg=Vector2.ZERO
 var objet_target=null
 var not_in_target=true
 var _temp_target=Vector2.ZERO
 var start_pos=Vector2(0,0)
+
 func _ready() -> void:
+	if gm.command_id!=command:
+		$l.queue_free()
+	
+	#fnc.change_parent(get_parent().get_parent(),$lo)
+	$s2.texture=load(cd.img)
+	#$Light2D.scale=fnc.get_prkt_win()/$Light2D.texture.get_size()
 	#$rt.remote_path=gm.gms.get_node("cam").get_path()
+	#connect("die",gamestate,"clear_target")
 	if cd.empty()==false:
 		status.m_he=cd.hp
 		status.he=cd.hp
@@ -61,18 +70,20 @@ func _physics_process(delta: float) -> void:
 		if Input.is_action_just_pressed("rbm"):
 			if not_in_target==false:objet_target=null
 			target=get_global_mouse_position()
+		if is_instance_valid(objet_target) and fnc._sqrt(objet_target.global_position-global_position)>see_range:
+			objet_target=null
 		if is_instance_valid(objet_target):
 			target=objet_target.global_position
 			$attray.cast_to=target-global_position
-			if fnc._sqrt(global_position-$attray.get_collision_point())<35: 
+			if fnc._sqrt(global_position-$attray.get_collision_point())<15: 
 				rpc("attk",target,get_network_master())
 				_velocity=Vector2.ZERO
 		rset("pgp",global_position)
 		rset("pstatus_he",status.he)
 		rset("pstatus_m_he",status.m_he)
+		rset("pterg",target)
 		if _agent.is_navigation_finished():
 			_velocity=Vector2.ZERO
-			rset("pvec",_velocity)
 			return
 		var target_global_position := _agent.get_next_location()
 		var direction := global_position.direction_to(target_global_position)
@@ -85,9 +96,10 @@ func _physics_process(delta: float) -> void:
 	else:
 		global_position=pgp
 		_velocity=pvec
-		_agent.set_velocity(_velocity)
+		move_and_slide(_velocity)
 		status.he=pstatus_he
 		status.m_he=pstatus_m_he
+		target=pterg
 
 
 
@@ -98,6 +110,7 @@ func add_att_zone():
 	var att=preload("res://main/sys_parts/boxes/mhitbox.tscn").instance()
 	att.command=command
 	att.pid=get_network_master()
+	att.owner_=self
 	att.speed=cd["dmgspd"]*get_physics_process_delta_time()
 	if att.speed>0:
 		att.get_node("spr").show()
@@ -124,9 +137,10 @@ func _on_hurt_box_area_entered(area):
 	status.he-=area.damage*area.scale_damage*(float(area.damage*area.scale_damage)/(cd["def"]+buffs["adef"]))
 	if status.he<=0:
 		gm.commands[area.command]["money"]+=cd["money_to_enemy"]
-		rpc("delete")
+		if is_network_master():
+			rpc("delete",area.pid)
 
-remotesync func delete():
+remotesync func delete(id:int):
 	global_position=start_pos
 	target=start_pos
 	_velocity=Vector2(0,0)
@@ -134,8 +148,12 @@ remotesync func delete():
 	status.he=status.m_he
 	objet_target=null
 	not_in_target=true
-	gm.gms.get_node("cam").global_position=global_position
+	$choice_area.free()
+	var cha=preload("res://main/sys_parts/boxes/choice_area.tscn").instance()
+	cha.call_deferred("set_name","choice_area")
+	call_deferred("add_child",cha)
+	if get_tree().get_network_unique_id()==get_network_master():
+		gm.gms.get_node("cam").global_position=global_position
 	#queue_free()
 func set_player_name(new_name):
 	get_node("Label").set_text(new_name)
-
