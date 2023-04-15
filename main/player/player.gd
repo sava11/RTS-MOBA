@@ -26,8 +26,20 @@ var not_in_target=true
 var _temp_target=Vector2.ZERO
 var start_pos=Vector2(0,0)
 var can_moveing=true
+var points=0
+var llvl=1
+var lvl=1
+var to_next_lvl=0
+puppet var plvl=1
+func _upd_lvl():
+	if cd.empty()==false:
+		status.m_he=cd.lvls[lvl].hp
+		status.he=cd.lvls[lvl].hp
+		to_next_lvl+=cd.lvls[lvl].to_next_lvl
+
 
 func _ready() -> void:
+	_upd_lvl()
 	if gm.command_id!=command:
 		$l.queue_free()
 	
@@ -36,9 +48,7 @@ func _ready() -> void:
 	#$Light2D.scale=fnc.get_prkt_win()/$Light2D.texture.get_size()
 	#$rt.remote_path=gm.gms.get_node("cam").get_path()
 	#connect("die",gamestate,"clear_target")
-	if cd.empty()==false:
-		status.m_he=cd.hp
-		status.he=cd.hp
+	
 	if gm.command_id==command:
 		hib["collision_layer"]=0
 		hib["collision_mask"]=4
@@ -62,10 +72,14 @@ func _ready() -> void:
 var right=false
 puppet var pright=false
 func _physics_process(delta: float) -> void:
-	
+	if llvl!=lvl:
+		_upd_lvl()
+		llvl=lvl
 	$vcont/pb.value=status.he
 	$vcont/pb.max_value=status.m_he
 	if is_network_master():
+		if points>to_next_lvl:
+			lvl=((points-points%to_next_lvl)/to_next_lvl)+1
 		if right==false:
 			$spr.play("left")
 		else:
@@ -87,6 +101,7 @@ func _physics_process(delta: float) -> void:
 		rset("pstatus_he",status.he)
 		rset("pstatus_m_he",status.m_he)
 		rset("pterg",target)
+		rset("plvl",lvl)
 		if _agent.is_navigation_finished():
 			_velocity=Vector2.ZERO
 			return
@@ -106,6 +121,7 @@ func _physics_process(delta: float) -> void:
 		status.he=pstatus_he
 		status.m_he=pstatus_m_he
 		target=pterg
+		lvl=plvl
 
 
 
@@ -117,21 +133,21 @@ func add_att_zone():
 	att.command=command
 	att.pid=get_network_master()
 	att.owner_=self
-	att.speed=cd["dmgspd"]*get_physics_process_delta_time()
+	att.speed=cd.lvls[lvl]["dmgspd"]*get_physics_process_delta_time()
 	if att.speed>0:
 		att.get_node("spr").show()
-		att.get_node("Timer").wait_time=fnc._sqrt(target-global_position)/(cd["dmgspd"]*2)
+		att.get_node("Timer").wait_time=fnc._sqrt(target-global_position)/(cd.lvls[lvl]["dmgspd"]*2)
 	att.mvec=target-global_position
 	att.get_child(1).autostart=true
 	att.get_child(0).polygon=PoolVector2Array([Vector2(0,-10),Vector2(0,10),Vector2(30,10),Vector2(30,-10)])
 	att.collision_layer=hib["collision_layer"]
 	att.collision_mask=hib["collision_mask"]
-	att.damage=cd["dmg"]+buffs["aatt"]
+	att.damage=cd.lvls[lvl]["dmg"]+buffs["aatt"]
 	get_parent().call_deferred("add_child",att)
 	att.global_position=global_position
 	att.global_rotation_degrees=fnc.angle(target-global_position)
 remotesync func attk(target_pos,pid_):
-	$AP.play("att",0,cd["att_time"])
+	$AP.play("att",0,cd.lvls[lvl]["att_time"])
 func move(velocity: Vector2) -> void:
 	_velocity = move_and_slide(velocity)
 	if _velocity.x<0:
@@ -144,9 +160,13 @@ func _update_pathfinding() -> void:
 	_agent.set_target_location(target)
 
 func _on_hurt_box_area_entered(area):
-	status.he-=area.damage*area.scale_damage*(float(area.damage*area.scale_damage)/(cd["def"]+buffs["adef"]))
+	status.he-=area.damage*area.scale_damage*(float(area.damage*area.scale_damage)/(cd.lvls[lvl]["def"]+buffs["adef"]))
+	if is_instance_valid(area.owner_):
+		area.owner_.points+=cd.lvls[lvl]["help_points"]
 	if status.he<=0:
-		gm.commands[area.command]["money"]+=cd["money_to_enemy"]
+		if is_instance_valid(area.owner_):
+			area.owner_.points+=cd.lvls[lvl]["kill_points"]
+		gm.commands[area.command]["money"]+=cd.lvls[lvl]["money_to_enemy"]
 		if is_network_master():
 			rpc("delete",area.pid)
 
@@ -162,6 +182,7 @@ remotesync func delete(id:int):
 	objet_target=null
 	not_in_target=true
 	$choice_area.free()
+	
 	var cha=preload("res://main/sys_parts/boxes/choice_area.tscn").instance()
 	cha.call_deferred("set_name","choice_area")
 	call_deferred("add_child",cha)

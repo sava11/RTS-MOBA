@@ -115,7 +115,7 @@ func add_att_zone():
 	att.collision_layer=hib["collision_layer"]
 	att.collision_mask=hib["collision_mask"]
 	att.damage=cd["dmg"]+buffs["aatt"]
-	get_parent().call_deferred("add_child",att)
+	get_parent().add_child(att)
 	att.global_position=global_position
 	att.global_rotation_degrees=fnc.angle(target-global_position)
 	att.get_node("spr").position.y=cos(deg2rad(att.global_rotation_degrees))*-25
@@ -135,7 +135,11 @@ func _update_pathfinding() -> void:
 
 func _on_hurt_box_area_entered(area):
 	status.he-=area.damage*area.scale_damage*(float(area.damage*area.scale_damage)/(cd["def"]+buffs["adef"]))
+	if is_instance_valid(area.owner_):
+		area.owner_.points+=cd["help_points"]
 	if status.he<=0:
+		if is_instance_valid(area.owner_):
+			area.owner_.points+=cd["kill_points"]
 		gm.commands[area.command]["money"]+=cd["money_to_enemy"]
 		if is_network_master():
 			rpc("delete")

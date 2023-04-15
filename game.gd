@@ -43,6 +43,8 @@ var objs={
 				"dmgspd":0,
 				"def":5,
 				"money_to_enemy":5,
+				"help_points":2,
+				"kill_points":3,
 				},
 			},
 		"swords1":{
@@ -67,6 +69,8 @@ var objs={
 					"dmgspd":0,
 					"def":10,
 					"money_to_enemy":7,
+					"help_points":2,
+					"kill_points":4,
 					},
 			},
 		"bows":{
@@ -90,30 +94,68 @@ var objs={
 					"dmgspd":100,
 					"def":2,
 					"money_to_enemy":5,
+					"help_points":2,
+					"kill_points":3,
 					},
 			},
 		},
 	"heroes":{
 		"visitor":{
-		"img":"res://main/img/eye.png",
+			"img":"res://main/img/eye.png",
 			},
 		"warior":{
 			"img":"res://main/img/sword.png",
-			"hp":100,
-			"def":25,
-			"dmg":25,
-			"dmgspd":0,
-			"att_time":2,#scale
-			"money_to_enemy":30
+			"lvls":{
+				1:{
+					"hp":100,
+					"def":25,
+					"dmg":25,
+					"dmgspd":0,
+					"att_time":2,#scale
+					"money_to_enemy":30,
+					"help_points":2,
+					"kill_points":5,
+					"to_next_lvl":10,
+					},
+				2:{
+					"hp":110,
+					"def":25,
+					"dmg":30,
+					"dmgspd":0,
+					"att_time":1.8,#scale
+					"money_to_enemy":30,
+					"help_points":4,
+					"kill_points":7,
+					"to_next_lvl":10,
+					},
+				},
 			},
 		"builder":{
 			"img":"res://main/img/molot.png",
-			"hp":100,
-			"def":50,
-			"dmg":10,
-			"dmgspd":0,
-			"att_time":2,#scale
-			"money_to_enemy":30
+			"lvls":{
+				1:{
+					"hp":100,
+					"def":50,
+					"dmg":10,
+					"dmgspd":0,
+					"att_time":2,#scale
+					"money_to_enemy":30,
+					"help_points":3,
+					"kill_points":5,
+					"to_next_lvl":10,
+					},
+				2:{
+					"hp":100,
+					"def":55,
+					"dmg":15,
+					"dmgspd":0,
+					"att_time":2.5,#scale
+					"money_to_enemy":40,
+					"kill_points":6,
+					"help_points":4,
+					"to_next_lvl":10,
+					},
+				},
 			},
 	},
 	
