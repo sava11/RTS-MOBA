@@ -386,7 +386,6 @@ margin_bottom = 30.32
 rect_scale = Vector2( 0.1, 0.1 )
 theme = SubResource( 4 )
 
-[connection signal="velocity_computed" from="nav_ag" to="." method="_on_nav_ag_velocity_computed"]
 [connection signal="area_entered" from="hurt_box" to="." method="_on_hurt_box_area_entered"]
 [connection signal="invi_ended" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_ended"]
 [connection signal="invi_started" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_started"]

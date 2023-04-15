@@ -26,7 +26,7 @@ extents = Vector2( 30, 30 )
 script = ExtResource( 3 )
 
 [node name="pause_timer" type="Timer" parent="."]
-wait_time = 20.0
+wait_time = 5.0
 one_shot = true
 autostart = true
 
@@ -169,7 +169,6 @@ position = Vector2( 50, 0 )
 [node name="a3" parent="PlayGround/area2" instance=ExtResource( 6 )]
 position = Vector2( -50, 50 )
 command = 1
-start_buid = 2
 
 [node name="c" parent="PlayGround/area2/a3" index="0"]
 shape = SubResource( 3 )

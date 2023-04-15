@@ -25,6 +25,7 @@ var tree={
 }
 func _ready():
 	#print(gm.commands[command])
+	com_data=gm.commands[command]
 	tree={
 	"remont":{
 		"img":"res://main/img/molot.png",
@@ -56,7 +57,8 @@ func _ready():
 	},
 	
 	}
-	
+	if com_data.p_id>0:
+		set_network_master(com_data.p_id)
 	unit=load(objs.bparametrs[preset_name].unit)
 	parametrs=objs.bparametrs[preset_name].duplicate()
 	parametrs.command=command
@@ -92,50 +94,49 @@ func _ready():
 		#$watchout.collision_layer=8
 		#$watchout.collision_mask=8
 	#yield(get_tree(),"idle_frame")
-	com_data=gm.commands[command]
 	#print(com_data)
 	#modulate=Color(com_data["color"]["r"],com_data["color"]["g"],com_data["color"]["b"],com_data["color"]["a"])
 
 func _physics_process(delta):
-	#if is_network_master():
-		update()
-		pb.max_value=status.m_he
-		pb.value=status.he
-		if Geometry.is_point_in_polygon(get_global_mouse_position(), fnc.to_glb_PV_and_rot($c.polygon,$c.global_position,$c.global_rotation_degrees)):
-			pb.visible=true
-		else:
-			pb.visible=false
-
-		if status.he<status.m_he:tree.remont.remonted=false
-		if timers!=[] and trening==null:
-			trening=timers[0]
-			if trening.keys()==["test"]:
-				trening_time=trening["test"]
-		if gm.unit_count<gm.max_unit_value:
-			if len(timers)<2:
-				timers.append({"test":parametrs["create_unit_time"]})
-		if trening!=null and gm.unit_count<gm.max_unit_value and map.pause==false:
-			if trening_time>0:
-				trening_time-=delta
+	if is_network_master():
+			update()
+			pb.max_value=status.m_he
+			pb.value=status.he
+			if Geometry.is_point_in_polygon(get_global_mouse_position(), fnc.to_glb_PV_and_rot($c.polygon,$c.global_position,$c.global_rotation_degrees)):
+				pb.visible=true
 			else:
+				pb.visible=false
+
+			if status.he<status.m_he:tree.remont.remonted=false
+			if timers!=[] and trening==null:
+				trening=timers[0]
 				if trening.keys()==["test"]:
-					_add_unit()
-					timers.remove(fnc.i_search(timers,trening))
-					trening=null
+					trening_time=trening["test"]
+			if gm.unit_count<gm.max_unit_value:
+				if len(timers)<2:
+					timers.append({"test":parametrs["create_unit_time"]})
+			if trening!=null and gm.unit_count<gm.max_unit_value and map.pause==false:
+				if trening_time>0:
+					trening_time-=delta
+				else:
+					if trening.keys()==["test"]:
+						rpc("_add_unit",get_tree().get_network_unique_id())
+						timers.remove(fnc.i_search(timers,trening))
+						trening=null
 var trening=null
 var trening_time=0
 var timers=[]
-func add_att():
+remote func add_att():
 	if gm.commands[command]["money"]>=tree["add_att"]["value"] and settle["atti"]<mxattlvl:
 		settle["att"]+=5
 		settle["atti"]+=1
 		gm.commands[gm.command]["money"]-=tree["add_att"]["value"]
-func add_def():
+remote func add_def():
 	if gm.commands[gm.command]["money"]>=tree["add_def"]["value"] and settle["defi"]<mxdeflvl:
 		settle["def"]+=5
 		settle["defi"]+=1
 		gm.commands[gm.command]["money"]-=tree["add_def"]["value"]
-func _add_unit():
+remotesync func _add_unit(id):
 	if gm.unit_count<gm.max_unit_value:
 		var t=unit.instance()
 		t.parametrs=objs.parametrs[upreset_name].duplicate()
@@ -155,22 +156,23 @@ func _add_unit():
 			if en!=null:
 				t.mpath.append(en.global_position)
 		map.get_node("PlayGround").add_child(t)
+		t.set_network_master(id)
 		t.get_node("spr").modulate=Color(com_data["color"]["r"],com_data["color"]["g"],com_data["color"]["b"],com_data["color"]["a"])
 		t.global_position=set_pos
-func add_unit(unit):
-	if gm.commands[gm.command]["money"]>=25 and gm.unit_count<gm.max_unit_value:
-		_add_unit()
-		gm.commands[gm.command]["money"]-=25
+remotesync func add_unit(id):
+	if gm.commands[command]["money"]>=25 and gm.unit_count<gm.max_unit_value:
+		_add_unit(id)
+		gm.commands[command]["money"]-=25
 	pass
 func _on_hurt_box_area_entered(area):
 	status.he-=area.damage*area.scale_damage
 	if status.he<=0:
 		delete(area.command)
-func delete(cmnd:int):
+remotesync func delete(cmnd:int):
 	gm.commands[cmnd]["money"]+=objs.bparametrs[preset_name].money_to_enemy
 	$a1.rebuild()
 
-func remont():
+remote func remont():
 	if tree.remont.remonted==false and gm.can_change_money(parametrs.command,-tree.remont.value)==true:
 		status.he=status.m_he
 		tree.remont.remonted=true

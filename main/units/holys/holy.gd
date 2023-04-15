@@ -20,6 +20,8 @@ var parametrs={}#NEED USE objs.parametrs["_name_"].duplicate()
 #export(int) var SPEED: int = 40
 var path: Array = []
 var mvec:=Vector2.ZERO
+puppet var pmvec=Vector2.ZERO
+puppet var ppos=Vector2.ZERO
 var mpath=[]
 var mpath_i=0
 var to_enemy_follow_path=[]
@@ -65,50 +67,57 @@ onready var save_mpath=mpath
 var save_mpath_i=0
 var old_napravl=0
 func _integrate_forces(st):
-	mvec=st.get_linear_velocity()
 	step=st.get_step()
-	if mpath!=[]:
-		if mpath_i==len(mpath):
-			mpath_i=len(mpath)-1
-		$nav_ag.set_target_location(mpath[mpath_i])
-	if attacked==true:
-		old_napravl=rad2deg(fnc.angle(mvec))
-		set_anim(old_napravl,"wait")
-	if $nav_ag.is_navigation_finished():
-		mvec=mvec.move_toward(Vector2(0,0),parametrs["speed"]*10*step)
-		mpath=[]
-		return
-	if mpath!=[]:
-		path = $nav_ag.get_nav_path()
-		mvec = mvec.move_toward(global_position.direction_to($nav_ag.get_next_location()) * parametrs["speed"],parametrs["speed"]*5*step)
-		if len(mpath)==1:
-			if global_position.distance_to($nav_ag.get_final_location())<10:
-				mpath=[]
-		elif len(mpath)>1:
-			if global_position.distance_to($nav_ag.get_final_location())<10:
-				mpath_i=fnc.circ(mpath_i+1,0,len(mpath)-1)
-				save_mpath_i=mpath_i
-	else:
-		mvec=mvec.move_toward(Vector2(0,0),parametrs["speed"]*10*step)
-	var len_l=PoolVector2Array([])
-	if sbs!=[]:
-		var poss=[]
-		if len(sbs)>1:
-			for e in sbs:
-				poss.append(e.global_position)
-			mpath=[fnc.centr(poss)]
+	if is_network_master():
+		mvec=st.get_linear_velocity()
+		if mpath!=[]:
+			if mpath_i==len(mpath):
+				mpath_i=len(mpath)-1
+			$nav_ag.set_target_location(mpath[mpath_i])
+		if attacked==true:
+			old_napravl=rad2deg(fnc.angle(mvec))
+			set_anim(old_napravl,"wait")
+		if $nav_ag.is_navigation_finished():
+			mvec=mvec.move_toward(Vector2(0,0),parametrs["speed"]*10*step)
+			mpath=[]
+			return
+		if mpath!=[]:
+			path = $nav_ag.get_nav_path()
+			mvec = mvec.move_toward(global_position.direction_to($nav_ag.get_next_location()) * parametrs["speed"],parametrs["speed"]*5*step)
+			if len(mpath)==1:
+				if global_position.distance_to($nav_ag.get_final_location())<10:
+					mpath=[]
+			elif len(mpath)>1:
+				if global_position.distance_to($nav_ag.get_final_location())<10:
+					mpath_i=fnc.circ(mpath_i+1,0,len(mpath)-1)
+					save_mpath_i=mpath_i
 		else:
-			if global_position.distance_to(sbs[0].global_position)>=10:
-				mpath=[sbs[0].global_position]
+			mvec=mvec.move_toward(Vector2(0,0),parametrs["speed"]*10*step)
+		var len_l=PoolVector2Array([])
+		if sbs!=[]:
+			var poss=[]
+			if len(sbs)>1:
+				for e in sbs:
+					poss.append(e.global_position)
+				mpath=[fnc.centr(poss)]
 			else:
-				var com=gm.commands[parametrs.command]
-				var pos=Vector2(com.posx,com.posy)
-				mpath=[]
-		mpath_i=0
-	update()
-	if bs==[]:
-		mpath=save_mpath
-		mpath_i=save_mpath_i
+				if global_position.distance_to(sbs[0].global_position)>=10:
+					mpath=[sbs[0].global_position]
+				else:
+					var com=gm.commands[parametrs.command]
+					var pos=Vector2(com.posx,com.posy)
+					mpath=[]
+			mpath_i=0
+		update()
+		if bs==[]:
+			mpath=save_mpath
+			mpath_i=save_mpath_i
+	
+		rset("ppos",global_position)
+		rset("pmvec",mvec)
+	else:
+		global_position=ppos
+		mvec=pmvec
 	st.set_linear_velocity(mvec)
 func end_att():
 	attacked=true
@@ -139,10 +148,10 @@ func _on_watchout_body_exited(b):
 				b.buffs.aatt-=parametrs.add_att
 func _on_hurt_box_area_entered(area):
 	status.he-=area.damage*area.scale_damage*(float(area.damage*area.scale_damage)/(parametrs["def"]))
-	area.queue_free()
 	if status.he<=0:
 		gm.unit_count-=1
 		gm.commands[area.command]["money"]+=parametrs["money_to_enemy"]
 		yield(get_tree(),"idle_frame")
-		queue_free()
-
+		rpc("delete")
+remote func delete():
+	queue_free()

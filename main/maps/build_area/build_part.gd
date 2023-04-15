@@ -113,17 +113,18 @@ func _on_but_mouse_entered():
 func _on_butt_mouse_exited():
 	in_but_area=false
 
-remote func _set_btn(e):
-	var obj=null
+func _set_btn(e):
+	rpc("logics",e)
+remote func logics(e):
 	if tree[e].has("name") and gm.commands[command]["money"]>=tree[e]["value"]:
-		cr_obj(tree[e]["obj_name"],tree[e]["name"])
+		rpc("cr_obj",tree[e]["obj_name"],tree[e]["name"])
 	if tree[e].has("unit") and gm.commands[command]["money"]>=tree[e]["value"]:
-		get_parent().add_unit(tree[e].unit)
+		get_parent().rpc("add_unit",get_tree().get_network_unique_id())
 	if tree[e].has("fnc"):
 		if tree[e].has("fnc_path"):
-			get_node(tree[e]["fnc_path"]).call_deferred(tree[e]["fnc"])
+			get_node(tree[e]["fnc_path"]).rpc(tree[e]["fnc"])
 		else:
-			call_deferred(tree[e]["fnc"])
+			rpc(tree[e]["fnc"])
 	if tree[e].has("value") and (tree[e].has("can_payd")==false or tree[e]["can_payd"]==true) and gm.can_change_money(command,-tree[e]["value"]):
 		pass
 
