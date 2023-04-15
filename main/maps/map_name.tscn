@@ -24,6 +24,7 @@ __meta__ = {
 }
 
 [node name="stones" type="Polygon2D" parent="ground"]
+use_parent_material = true
 position = Vector2( 13440, 12800 )
 scale = Vector2( 10, 10 )
 antialiased = true
@@ -32,6 +33,7 @@ texture_scale = Vector2( 30, 30 )
 polygon = PoolVector2Array( 96, -96, 0, -192, -128, -208, -512, -592, -512, -768, -576, -832, -512, -832, -448, -896, 640, -896, 672, -864, 672, -816, 640, -768, 768, -640, 816, -672, 864, -672, 896, -640, 896, 0, 1088, 0, 1088, -704, 960, -960, 704, -1088, -448, -1088, -512, -1152, -704, -1152, -768, -1088, -1024, -1088, -1088, -1024, -1088, -768, -1152, -704, -1152, -512, -1088, -448, -1088, 0, -896, 0, -896, -448, -832, -512, -832, -576, -768, -512, -592, -512, -208, -128, -192, 0, -96, 96 )
 
 [node name="stones3" type="Polygon2D" parent="ground"]
+use_parent_material = true
 position = Vector2( 13440, 12800 )
 rotation = 3.14159
 scale = Vector2( 10, 10 )
@@ -41,6 +43,7 @@ texture_scale = Vector2( 30, 30 )
 polygon = PoolVector2Array( 96, -96, 0, -192, -128, -208, -512, -592, -512, -768, -576, -832, -512, -832, -448, -896, 640, -896, 672, -864, 672, -816, 640, -768, 768, -640, 816, -672, 864, -672, 896, -640, 896, 0, 1088, 0, 1088, -704, 960, -960, 704, -1088, -448, -1088, -512, -1152, -704, -1152, -768, -1088, -1024, -1088, -1088, -1024, -1088, -768, -1152, -704, -1152, -512, -1088, -448, -1088, 0, -896, 0, -896, -448, -832, -512, -832, -576, -768, -512, -592, -512, -208, -128, -192, 0, -96, 96 )
 
 [node name="stones2" type="Polygon2D" parent="ground"]
+use_parent_material = true
 position = Vector2( 13440, 12800 )
 scale = Vector2( 10, 10 )
 antialiased = true
@@ -108,7 +111,7 @@ command = 1
 [node name="ba2" parent="PlayGround/mains/rb2d/ba1" instance=ExtResource( 1 )]
 position = Vector2( 64, -64 )
 add_node_path = NodePath("../../../..")
-start_build = 1
+start_build = 2
 command = 1
 
 [node name="ps" parent="PlayGround/mains/rb2d/ba1/ba2" index="2"]
@@ -243,7 +246,7 @@ start_build = 1
 [node name="ba2" parent="PlayGround/mains/rb2d2/ba1" instance=ExtResource( 1 )]
 position = Vector2( 64, -64 )
 add_node_path = NodePath("../../../..")
-start_build = 1
+start_build = 2
 
 [node name="ps" parent="PlayGround/mains/rb2d2/ba1/ba2" index="2"]
 position = Vector2( -50, 0 )

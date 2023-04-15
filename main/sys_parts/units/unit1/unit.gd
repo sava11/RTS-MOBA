@@ -3,6 +3,7 @@ extends KinematicBody2D
 #export var path_to_player := NodePath()
 var cd={}
 var command=0
+var ranger=false
 var _velocity := Vector2.ZERO
 puppet var pvec:=Vector2.ZERO
 puppet var pgp=Vector2.ZERO
@@ -24,6 +25,7 @@ puppet var ptarget=Vector2.ZERO
 var _temp_target=Vector2.ZERO
 var battle_path=PoolVector2Array([])
 func _ready() -> void:
+	$na.target_desired_distance=100*int(ranger)
 	var color=gm.commands[command].color
 	modulate=Color(color.r,color.g,color.b,color.a)
 	if gm.command_id==command:
@@ -50,11 +52,11 @@ func _ready() -> void:
 	_agent.set_navigation(gm._get_nav_path(0))
 	#set_network_master(pid)
 	#$no.set_navigation(gm._get_nav_path(0))
-
+var right=false
 func _physics_process(delta: float) -> void:
-	if _velocity.x<0:
+	if right==false:
 		$spr.play("left")
-	elif _velocity.x>0:
+	else:
 		$spr.play("right")
 	if is_network_master():
 		lll()
@@ -68,9 +70,10 @@ func _physics_process(delta: float) -> void:
 			for e in bs:mn.append(global_position.distance_to(e.global_position))
 			target=bs[fnc.i_search(mn,mn.min())].global_position
 			$attray.cast_to=target-global_position
-			if fnc._sqrt(global_position-$attray.get_collision_point())<20: 
+			if fnc._sqrt(global_position-$attray.get_collision_point())<20+160*int(ranger): 
 				rpc("attk")
 				_velocity=Vector2.ZERO
+				right=target.x>0
 		else:target=_temp_target
 		rset("pgp",global_position)
 		rset("ptarget",target)
@@ -105,7 +108,7 @@ func add_att_zone():
 	att.speed=cd["dmgspd"]*get_physics_process_delta_time()
 	if att.speed>0:
 		att.get_node("spr").show()
-		att.get_node("Timer").wait_time=fnc._sqrt(target-global_position)/(cd["dmgspd"]*2)
+		att.get_node("Timer").wait_time=fnc._sqrt(target-global_position)/(cd["dmgspd"]*3.5)
 	att.mvec=target-global_position
 	att.get_child(1).autostart=true
 	att.get_child(0).polygon=PoolVector2Array([Vector2(0,-10),Vector2(0,10),Vector2(30,10),Vector2(30,-10)])
@@ -115,10 +118,15 @@ func add_att_zone():
 	get_parent().call_deferred("add_child",att)
 	att.global_position=global_position
 	att.global_rotation_degrees=fnc.angle(target-global_position)
+	att.get_node("spr").position.y=cos(deg2rad(att.global_rotation_degrees))*-25
 remotesync func attk():
 	$AP.play("att",0,cd["att_time"])
 func move(velocity: Vector2) -> void:
 	_velocity = move_and_slide(velocity)
+	if _velocity.x<0:
+		right=false
+	elif _velocity.x>0:
+		right=true
 	#_sprite.rotation = lerp_angle(_sprite.rotation, velocity.angle(), 10.0 * get_physics_process_delta_time())
 
 func _update_pathfinding() -> void:

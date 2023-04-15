@@ -25,6 +25,7 @@ var objet_target=null
 var not_in_target=true
 var _temp_target=Vector2.ZERO
 var start_pos=Vector2(0,0)
+var can_moveing=true
 
 func _ready() -> void:
 	if gm.command_id!=command:
@@ -58,26 +59,30 @@ func _ready() -> void:
 	_agent.set_navigation(gm._get_nav_path(0))
 	#set_network_master(pid)
 
-
+var right=false
+puppet var pright=false
 func _physics_process(delta: float) -> void:
-	if _velocity.x<0:
-		$spr.play("left")
-	elif _velocity.x>0:
-		$spr.play("right")
+	
 	$vcont/pb.value=status.he
 	$vcont/pb.max_value=status.m_he
 	if is_network_master():
+		if right==false:
+			$spr.play("left")
+		else:
+			$spr.play("right")
 		if Input.is_action_just_pressed("rbm"):
 			if not_in_target==false:objet_target=null
 			target=get_global_mouse_position()
 		if is_instance_valid(objet_target) and fnc._sqrt(objet_target.global_position-global_position)>see_range:
 			objet_target=null
-		if is_instance_valid(objet_target):
+		if objet_target!=null and is_instance_valid(objet_target):
 			target=objet_target.global_position
 			$attray.cast_to=target-global_position
-			if fnc._sqrt(global_position-$attray.get_collision_point())<15: 
+			if fnc._sqrt(global_position-$attray.get_collision_point())<15 and $attray.get_collider()!=null and $attray.get_collider().get_parent()==objet_target.get_parent(): 
 				rpc("attk",target,get_network_master())
 				_velocity=Vector2.ZERO
+				right=target.x>0
+		rset("pright",right)
 		rset("pgp",global_position)
 		rset("pstatus_he",status.he)
 		rset("pstatus_m_he",status.m_he)
@@ -94,6 +99,7 @@ func _physics_process(delta: float) -> void:
 		rset("pvec",_velocity)
 		#_update_pathfinding()
 	else:
+		right=pright
 		global_position=pgp
 		_velocity=pvec
 		move_and_slide(_velocity)
@@ -128,6 +134,10 @@ remotesync func attk(target_pos,pid_):
 	$AP.play("att",0,cd["att_time"])
 func move(velocity: Vector2) -> void:
 	_velocity = move_and_slide(velocity)
+	if _velocity.x<0:
+		right=false
+	elif _velocity.x>0:
+		right=true
 	#_sprite.rotation = lerp_angle(_sprite.rotation, velocity.angle(), 10.0 * get_physics_process_delta_time())
 
 func _update_pathfinding() -> void:
@@ -141,6 +151,9 @@ func _on_hurt_box_area_entered(area):
 			rpc("delete",area.pid)
 
 remotesync func delete(id:int):
+	$ready.start(4)
+	hide()
+	$c.disabled=true
 	global_position=start_pos
 	target=start_pos
 	_velocity=Vector2(0,0)
@@ -157,3 +170,8 @@ remotesync func delete(id:int):
 	#queue_free()
 func set_player_name(new_name):
 	get_node("Label").set_text(new_name)
+
+
+func _on_ready_timeout():
+	show()
+	$c.disabled=false

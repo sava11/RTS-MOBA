@@ -84,7 +84,7 @@ var objs={
 					"img":"res://main/img/bow.png",
 					"unit_path":"res://main/sys_parts/units/unit1/unit.tscn",
 					"ucrt":20,
-					"att_time":2,#scale
+					"att_time":1,#scale
 					"hp":20,
 					"dmg":10,
 					"dmgspd":100,
@@ -100,16 +100,16 @@ var objs={
 		"warior":{
 			"img":"res://main/img/sword.png",
 			"hp":100,
-			"def":100,
-			"dmg":100,
+			"def":25,
+			"dmg":25,
 			"dmgspd":0,
 			"att_time":2,#scale
 			"money_to_enemy":30
 			},
 		"builder":{
 			"img":"res://main/img/molot.png",
-			"hp":200,
-			"def":10,
+			"hp":100,
+			"def":50,
 			"dmg":10,
 			"dmgspd":0,
 			"att_time":2,#scale

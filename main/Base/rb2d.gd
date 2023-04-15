@@ -103,7 +103,6 @@ func _ready():
 		hub.collision_mask=0
 		$vcont/pb.self_modulate=Color(0,1.0,0,1)
 	else:
-		$Light2D.queue_free()
 		hub.collision_layer=4
 		hub.collision_mask=0
 		$vcont/pb.self_modulate=Color(1.0,0,0,1)
@@ -173,6 +172,8 @@ remotesync func add_unit(id,n):
 		#unit.target=path[len(path)-1]
 		#unit._temp_target=path[len(path)-1]
 		unit.cd=cd.unit
+		if unit.cd.has("dmgspd") and unit.cd.get("dmgspd",0)>0:
+			unit.ranger=true
 		unit.get_node("s2").texture=load(unit.cd.img)
 		unit.buffs["aatt"]+=buffs["uatt"]
 		unit.buffs["adef"]+=buffs["udef"]

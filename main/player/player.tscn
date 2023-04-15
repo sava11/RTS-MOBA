@@ -1,11 +1,10 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://main/player/player.gd" type="Script" id=1]
 [ext_resource path="res://main/sys_parts/boxes/hurt_box.gd" type="Script" id=2]
 [ext_resource path="res://main/sys_parts/boxes/choice_area.tscn" type="PackedScene" id=3]
 [ext_resource path="res://main/sys_parts/stats/stats.tscn" type="PackedScene" id=4]
 [ext_resource path="res://main/sys_parts/units/unit1/sprts.png" type="Texture" id=5]
-[ext_resource path="res://main/sys_parts/antifog-512.png" type="Texture" id=6]
 
 [sub_resource type="AtlasTexture" id=3]
 flags = 4
@@ -35,6 +34,13 @@ radius = 8.0
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 8.0
+
+[sub_resource type="DynamicFontData" id=13]
+override_oversampling = 5.0
+font_path = "res://main/font/COMIC.TTF"
+
+[sub_resource type="DynamicFont" id=14]
+font_data = SubResource( 13 )
 
 [sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0.607843, 0.607843, 0.607843, 1 )
@@ -94,20 +100,13 @@ tracks/0/keys = {
 script = ExtResource( 1 )
 see_range = 500.0
 
-[node name="l" type="Light2D" parent="."]
-light_mask = 0
-texture = ExtResource( 6 )
-mode = 2
-shadow_enabled = true
-shadow_color = Color( 0, 0, 0, 1 )
-
 [node name="stats" parent="." instance=ExtResource( 4 )]
 m_he = 20.0
 
 [node name="spr" type="AnimatedSprite" parent="."]
+use_parent_material = true
 position = Vector2( 0, -18 )
 scale = Vector2( 0.2, 0.2 )
-z_index = 999
 frames = SubResource( 5 )
 animation = "left"
 playing = true
@@ -136,10 +135,12 @@ shape = SubResource( 1 )
 [node name="Label" type="Label" parent="."]
 anchor_right = 1.0
 margin_left = -56.0
-margin_top = -104.0
+margin_top = -77.0
 margin_right = 56.0
-margin_bottom = -90.0
+margin_bottom = -54.0
+custom_fonts/font = SubResource( 14 )
 align = 1
+valign = 1
 autowrap = true
 
 [node name="Timer" type="Timer" parent="."]
@@ -147,6 +148,7 @@ wait_time = 0.1
 autostart = true
 
 [node name="s2" type="TextureRect" parent="."]
+use_parent_material = true
 margin_left = -10.0
 margin_top = 5.0
 margin_right = 10.0
@@ -178,7 +180,12 @@ collide_with_bodies = false
 [node name="AP" type="AnimationPlayer" parent="."]
 anims/att = SubResource( 12 )
 
+[node name="ready" type="Timer" parent="."]
+process_mode = 0
+one_shot = true
+
 [connection signal="area_entered" from="hurt_box" to="." method="_on_hurt_box_area_entered"]
 [connection signal="invi_ended" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_ended"]
 [connection signal="invi_started" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_started"]
 [connection signal="timeout" from="hurt_box/Timer" to="hurt_box" method="_on_Timer_timeout"]
+[connection signal="timeout" from="ready" to="." method="_on_ready_timeout"]

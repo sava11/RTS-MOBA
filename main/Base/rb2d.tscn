@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://main/Base/rb2d.gd" type="Script" id=1]
 [ext_resource path="res://main/img/buildings/main/1.png" type="Texture" id=2]
@@ -6,7 +6,6 @@
 [ext_resource path="res://main/sys_parts/stats/stats.tscn" type="PackedScene" id=4]
 [ext_resource path="res://main/Base/pb.tscn" type="PackedScene" id=5]
 [ext_resource path="res://main/sys_parts/boxes/choice_area.tscn" type="PackedScene" id=6]
-[ext_resource path="res://main/sys_parts/antifog-512.png" type="Texture" id=7]
 
 [sub_resource type="CapsuleShape2D" id=1]
 resource_local_to_scene = true
@@ -17,13 +16,6 @@ height = 0.0
 position = Vector2( 64, 40 )
 input_pickable = true
 script = ExtResource( 1 )
-
-[node name="Light2D" type="Light2D" parent="."]
-texture = ExtResource( 7 )
-mode = 2
-shadow_enabled = true
-shadow_color = Color( 0.00784314, 0.00784314, 0.00784314, 0 )
-shadow_item_cull_mask = 0
 
 [node name="stats" parent="." instance=ExtResource( 4 )]
 m_he = 200.0

@@ -70,7 +70,7 @@ func scl(p:PoolVector2Array,v:Vector2):
 func add_path(path_nod:NavigationPolygonInstance):
 	var bs=[]
 	for e in get_tree().get_nodes_in_group("ground_build"):
-		bs.append(fnc.to_glb_PV_and_rot(scl(e.polygon,e.global_scale),e.global_position*e.global_scale,e.global_rotation_degrees,1,15))
+		bs.append(fnc.to_glb_PV_and_rot(scl(e.polygon,e.global_scale),e.global_position*e.global_scale,e.global_rotation_degrees,1,0))
 	if len(bs)>1:
 		bs=_merge_polygons(bs)
 	for e in range(0,len(bs)):
