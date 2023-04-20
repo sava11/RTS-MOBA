@@ -2,12 +2,11 @@ extends KinematicBody2D
 #export var path_to_player := NodePath()
 var cd={}
 export(float,1,9999) var see_range=250
+export(float,1,9999) var speed=120
 var command=0
 var _velocity := Vector2.ZERO
 puppet var pvec:=Vector2.ZERO
 puppet var pgp=Vector2.ZERO
-onready var _agent: NavigationAgent2D = $na
-onready var _timer := $Timer
 onready var status=$stats
 puppet var pstatus_he=0
 puppet var pstatus_m_he=0
@@ -25,7 +24,6 @@ var objet_target=null
 var not_in_target=true
 var _temp_target=Vector2.ZERO
 var start_pos=Vector2(0,0)
-var can_moveing=true
 var points=0
 var llvl=1
 var lvl=1
@@ -37,12 +35,23 @@ func _upd_lvl():
 		status.he=cd.lvls[lvl].hp
 		to_next_lvl+=cd.lvls[lvl].to_next_lvl
 
-
+var ico=null
 func _ready() -> void:
+	ico=preload("res://main/sys_parts/minimap_icon.tscn").instance()
+	ico.name=name
+	gm.gms.get_node("cv/c/vc/v/players").add_child(ico)
 	_upd_lvl()
-	if gm.command_id!=command:
-		$l.queue_free()
-	
+	if is_network_master():
+		$rt.remote_path=gm.gms.get_node("cam").get_path()
+		gm.gms.get_node("cam").set("smoothing_enabled",true)
+		var pl=PoolVector2Array([
+			Vector2(gm.gms.rect.rect_position.x,gm.gms.rect.rect_position.y),
+			Vector2(gm.gms.rect.rect_position.x+gm.gms.gr_size.x,gm.gms.rect.rect_position.y+gm.gms.gr_size.y)
+		])
+		gm.gms.get_node("cam").set("limit_left",pl[0].x)
+		gm.gms.get_node("cam").set("limit_top",pl[0].y)
+		gm.gms.get_node("cam").set("limit_right",pl[1].x)
+		gm.gms.get_node("cam").set("limit_bottom",pl[1].y)
 	#fnc.change_parent(get_parent().get_parent(),$lo)
 	$s2.texture=load(cd.img)
 	#$Light2D.scale=fnc.get_prkt_win()/$Light2D.texture.get_size()
@@ -56,62 +65,74 @@ func _ready() -> void:
 		hub.collision_mask=0
 		$vcont/pb.self_modulate=Color(0,1.0,0,1)
 		$attray.collision_mask=4
+		if not is_network_master():
+			ico.modulate=Color(0.0,1.0,0.0,1.0)
 	else:
 		hib["collision_layer"]=0
 		hib["collision_mask"]=2
 		hub.collision_layer=4
 		hub.collision_mask=0
+		ico.hide()
+		ico.modulate=Color(1.0,0.0,0.0,1.0)
 		$s2.visible=false
 		$vcont/pb.self_modulate=Color(1.0,0,0,1)
 		$attray.collision_mask=2
-	_timer.connect("timeout", self, "_update_pathfinding")
-	_agent.connect("velocity_computed", self, "move")
-	_agent.set_navigation(gm._get_nav_path(0))
 	#set_network_master(pid)
+	
 
 var right=false
 puppet var pright=false
+var targeted=false
+onready var max_lvl=cd.lvls.keys().max()
+
 func _physics_process(delta: float) -> void:
-	if llvl!=lvl:
-		_upd_lvl()
-		llvl=lvl
 	$vcont/pb.value=status.he
 	$vcont/pb.max_value=status.m_he
+	if right==false:
+		$spr.play("left")
+	else:
+		$spr.play("right")
 	if is_network_master():
-		if points>to_next_lvl:
+		var vec=Vector2(Input.get_action_strength("r")-Input.get_action_strength("l"),Input.get_action_strength("d")-Input.get_action_strength("u"))
+		if vec.x>0:
+			right=true
+		elif vec.x<0:
+			right=false
+		_velocity=speed*vec.normalized()
+		if llvl!=lvl:
+			_upd_lvl()
+			llvl=lvl
+		if to_next_lvl!=0 and points>to_next_lvl:
 			lvl=((points-points%to_next_lvl)/to_next_lvl)+1
-		if right==false:
-			$spr.play("left")
-		else:
-			$spr.play("right")
+			if lvl>max_lvl:
+				lvl=max_lvl
+				to_next_lvl=0
 		if Input.is_action_just_pressed("rbm"):
 			if not_in_target==false:objet_target=null
 			target=get_global_mouse_position()
+			targeted=true
 		if is_instance_valid(objet_target) and fnc._sqrt(objet_target.global_position-global_position)>see_range:
 			objet_target=null
-		if objet_target!=null and is_instance_valid(objet_target):
+		if is_instance_valid(objet_target):
 			target=objet_target.global_position
 			$attray.cast_to=target-global_position
-			if fnc._sqrt(global_position-$attray.get_collision_point())<15 and $attray.get_collider()!=null and $attray.get_collider().get_parent()==objet_target.get_parent(): 
+			if fnc._sqrt(global_position-$attray.get_collision_point())<35 and $attray.get_collider()!=null and $attray.get_collider().get_parent()==objet_target.get_parent(): 
 				rpc("attk",target,get_network_master())
-				_velocity=Vector2.ZERO
-				right=target.x>0
+				#_velocity=Vector2.ZERO
+				if targeted==true:
+					right=target.x>0
+		else:
+			$attray.cast_to=Vector2(0,0)
+		position.x=clamp(position.x,-gm.gms.gr_size.x/2,gm.gms.gr_size.x/2)
+		position.y=clamp(position.y,-gm.gms.gr_size.y/2,gm.gms.gr_size.y/2)
+		rset("pvec",_velocity)
 		rset("pright",right)
 		rset("pgp",global_position)
 		rset("pstatus_he",status.he)
 		rset("pstatus_m_he",status.m_he)
 		rset("pterg",target)
 		rset("plvl",lvl)
-		if _agent.is_navigation_finished():
-			_velocity=Vector2.ZERO
-			return
-		var target_global_position := _agent.get_next_location()
-		var direction := global_position.direction_to(target_global_position)
-		var desired_velocity := direction * _agent.max_speed
-		var steering := (desired_velocity - _velocity) * delta * 4.0
-		_velocity += steering
-		_agent.set_velocity(_velocity)
-		rset("pvec",_velocity)
+		move(_velocity)
 		#_update_pathfinding()
 	else:
 		right=pright
@@ -122,6 +143,8 @@ func _physics_process(delta: float) -> void:
 		status.m_he=pstatus_m_he
 		target=pterg
 		lvl=plvl
+	$lvl.text=str(lvl)
+	ico.position=global_position+gm.gms.gr_size/2
 
 
 
@@ -150,14 +173,7 @@ remotesync func attk(target_pos,pid_):
 	$AP.play("att",0,cd.lvls[lvl]["att_time"])
 func move(velocity: Vector2) -> void:
 	_velocity = move_and_slide(velocity)
-	if _velocity.x<0:
-		right=false
-	elif _velocity.x>0:
-		right=true
 	#_sprite.rotation = lerp_angle(_sprite.rotation, velocity.angle(), 10.0 * get_physics_process_delta_time())
-
-func _update_pathfinding() -> void:
-	_agent.set_target_location(target)
 
 func _on_hurt_box_area_entered(area):
 	status.he-=area.damage*area.scale_damage*(float(area.damage*area.scale_damage)/(cd.lvls[lvl]["def"]+buffs["adef"]))
@@ -174,6 +190,7 @@ remotesync func delete(id:int):
 	$ready.start(4)
 	hide()
 	$c.disabled=true
+	ico.hide()
 	global_position=start_pos
 	target=start_pos
 	_velocity=Vector2(0,0)
@@ -182,12 +199,9 @@ remotesync func delete(id:int):
 	objet_target=null
 	not_in_target=true
 	$choice_area.free()
-	
 	var cha=preload("res://main/sys_parts/boxes/choice_area.tscn").instance()
 	cha.call_deferred("set_name","choice_area")
 	call_deferred("add_child",cha)
-	if get_tree().get_network_unique_id()==get_network_master():
-		gm.gms.get_node("cam").global_position=global_position
 	#queue_free()
 func set_player_name(new_name):
 	get_node("Label").set_text(new_name)
@@ -195,4 +209,6 @@ func set_player_name(new_name):
 
 func _on_ready_timeout():
 	show()
+	if gm.command_id==command:
+		ico.show()
 	$c.disabled=false

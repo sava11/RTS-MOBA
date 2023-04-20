@@ -8,12 +8,13 @@
 [ext_resource path="res://main/Base/base_update.gd" type="Script" id=6]
 
 [node name="map_name" type="Node2D"]
+pause_mode = 2
 
 [node name="ground" type="TextureRect" parent="."]
 margin_left = -1344.0
-margin_top = -1280.0
+margin_top = -1344.0
 margin_right = 25536.0
-margin_bottom = 24320.0
+margin_bottom = 25536.0
 rect_scale = Vector2( 0.1, 0.1 )
 mouse_filter = 2
 texture = ExtResource( 2 )
@@ -25,7 +26,7 @@ __meta__ = {
 
 [node name="stones" type="Polygon2D" parent="ground"]
 use_parent_material = true
-position = Vector2( 13440, 12800 )
+position = Vector2( 13440, 13460 )
 scale = Vector2( 10, 10 )
 antialiased = true
 texture = ExtResource( 3 )
@@ -34,7 +35,7 @@ polygon = PoolVector2Array( 96, -96, 0, -192, -128, -208, -512, -592, -512, -768
 
 [node name="stones3" type="Polygon2D" parent="ground"]
 use_parent_material = true
-position = Vector2( 13440, 12800 )
+position = Vector2( 13440, 13460 )
 rotation = 3.14159
 scale = Vector2( 10, 10 )
 antialiased = true
@@ -44,16 +45,22 @@ polygon = PoolVector2Array( 96, -96, 0, -192, -128, -208, -512, -592, -512, -768
 
 [node name="stones2" type="Polygon2D" parent="ground"]
 use_parent_material = true
-position = Vector2( 13440, 12800 )
+position = Vector2( 13440, 13460 )
 scale = Vector2( 10, 10 )
 antialiased = true
 texture = ExtResource( 3 )
 texture_scale = Vector2( 30, 30 )
 polygon = PoolVector2Array( 640, -768, -384, 256, -640, -512, -768, -512, -480, 352, -768, 640, -640, 768, 384, -256, 640, 512, 768, 512, 480, -352, 768, -640 )
 
+[node name="nav" type="Navigation2D" parent="ground"]
+position = Vector2( 13440, 13440 )
+scale = Vector2( 10, 10 )
+
+[node name="n" type="NavigationPolygonInstance" parent="ground/nav"]
+
 [node name="s" type="StaticBody2D" parent="ground"]
 light_mask = 2
-position = Vector2( 13440, 12800 )
+position = Vector2( 13440, 13460 )
 scale = Vector2( 10, 10 )
 __meta__ = {
 "_edit_group_": true
@@ -80,16 +87,13 @@ polygon = PoolVector2Array( 600, 496, 616, 496, 376, -224, 184, -32, 208, -8, 22
 rotation = 3.14159
 polygon = PoolVector2Array( 600, 496, 616, 496, 376, -224, 184, -32, 208, -8, 224, 128 )
 
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="ground/s"]
+polygon = PoolVector2Array( -1216, 1214, 1216, 1214, 1216, -1218, -1216, -1218, -1344, -1346, 1344, -1346, 1344, 1342, -1344, 1342, -1344, -1346, -1216, -1218 )
+
 [node name="PlayGround" type="YSort" parent="."]
 light_mask = 2
 
-[node name="ground" type="Node2D" parent="PlayGround"]
-
-[node name="nav" type="Navigation2D" parent="PlayGround/ground"]
-
-[node name="n" type="NavigationPolygonInstance" parent="PlayGround/ground/nav"]
-
-[node name="mains" type="Node2D" parent="PlayGround"]
+[node name="mains" type="YSort" parent="PlayGround"]
 
 [node name="rb2d" parent="PlayGround/mains" instance=ExtResource( 4 )]
 position = Vector2( -992, -992 )
@@ -131,6 +135,7 @@ add_node_path = NodePath("../../../..")
 command = 1
 
 [node name="l" type="Line2D" parent="PlayGround/mains/rb2d/ba1"]
+visible = false
 points = PoolVector2Array( 0, -96, 0, -995.606, 0, -2400 )
 
 [node name="ba2" type="Node2D" parent="PlayGround/mains/rb2d"]
@@ -165,8 +170,9 @@ add_node_path = NodePath("../../../..")
 command = 1
 
 [node name="l" type="Line2D" parent="PlayGround/mains/rb2d/ba2"]
+visible = false
 rotation = -1.5708
-points = PoolVector2Array( 96, 0, 1248, 0, 1600, 352, 1600, 1984 )
+points = PoolVector2Array( 96, 0, 1248, 0, 1472, 128, 1600, 352, 1600, 1984 )
 
 [node name="ba3" type="Node2D" parent="PlayGround/mains/rb2d"]
 position = Vector2( 0, 384 )
@@ -200,8 +206,9 @@ add_node_path = NodePath("../../../..")
 command = 1
 
 [node name="l" type="Line2D" parent="PlayGround/mains/rb2d/ba3"]
+visible = false
 rotation = 3.14159
-points = PoolVector2Array( 0, 96, 0, 1248, 352, 1600, 1984, 1600 )
+points = PoolVector2Array( 0, 96, 0, 1248, 127.992, 1472, 352, 1600, 1984, 1600 )
 
 [node name="allarm" parent="PlayGround/mains/rb2d" instance=ExtResource( 5 )]
 visible = false
@@ -263,6 +270,7 @@ position = Vector2( -64, 64 )
 add_node_path = NodePath("../../../..")
 
 [node name="l" type="Line2D" parent="PlayGround/mains/rb2d2/ba1"]
+visible = false
 points = PoolVector2Array( 0, -96, 0, -995.606, 0, -2400 )
 
 [node name="ba2" type="Node2D" parent="PlayGround/mains/rb2d2"]
@@ -293,8 +301,9 @@ position = Vector2( -64, 64 )
 add_node_path = NodePath("../../../..")
 
 [node name="l" type="Line2D" parent="PlayGround/mains/rb2d2/ba2"]
+visible = false
 rotation = -1.5708
-points = PoolVector2Array( 96, 0, 1248, 0, 1600, 352, 1600, 1984 )
+points = PoolVector2Array( 96, 0, 1248, 0, 1472, 128.011, 1600, 352, 1600, 1984 )
 
 [node name="ba3" type="Node2D" parent="PlayGround/mains/rb2d2"]
 position = Vector2( 0, -384 )
@@ -323,8 +332,9 @@ position = Vector2( -64, 64 )
 add_node_path = NodePath("../../../..")
 
 [node name="l" type="Line2D" parent="PlayGround/mains/rb2d2/ba3"]
+visible = false
 rotation = 3.14159
-points = PoolVector2Array( 0, 96, 0, 1248, 352, 1600, 1984, 1600 )
+points = PoolVector2Array( 0, 96, 0, 1248, 127.996, 1472, 352, 1600, 1984, 1600 )
 
 [node name="allarm" parent="PlayGround/mains/rb2d2" instance=ExtResource( 5 )]
 visible = false

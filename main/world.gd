@@ -1,19 +1,18 @@
 extends Node2D
-
 var polygon=[]
 var scs=[1,1]
-var pause=true
 onready var cv=$cv
 onready var cam=$cam
 onready var rect=$map.get_child(0).get_node("ground")
 onready var gr_size=rect.rect_size*rect.rect_scale
+
 func _ready():
-	#get_tree().paused=true
 	#cam.limit_left=rect.rect_position.x
 	#cam.limit_right=rect.rect_position.x+rect_size.x
 	#cam.limit_top=rect.rect_position.y
 	#cam.limit_bottom=rect.rect_position.y+rect_size.y
 	_reload()
+	get_tree().set_deferred("paused",true)
 
 func _reload():
 	var pl=PoolVector2Array([
@@ -26,7 +25,7 @@ func _reload():
 	reload_map(pl)
 func reload_map(pl):
 	var p=pl
-	var e=$map.get_child(0).get_node("PlayGround/ground").get_child(0)
+	var e=$map.get_child(0).get_node("ground/nav")
 	e.get_child(0).navpoly=NavigationPolygon.new()
 	#for e1 in get_tree().get_nodes_in_group("outOfBounds_del"):
 	#	var t=Geometry.clip_polygons_2d(pl,fnc.to_glb_PV(e1.polygon,e1.global_position,1,0))
@@ -70,7 +69,7 @@ func scl(p:PoolVector2Array,v:Vector2):
 func add_path(path_nod:NavigationPolygonInstance):
 	var bs=[]
 	for e in get_tree().get_nodes_in_group("ground_build"):
-		bs.append(fnc.to_glb_PV_and_rot(scl(e.polygon,e.global_scale),e.global_position*e.global_scale,e.global_rotation_degrees,1,0))
+		bs.append(fnc.to_glb_PV_and_rot(scl(e.polygon,e.global_scale),e.global_position*e.global_scale,e.global_rotation_degrees,1,5))
 	if len(bs)>1:
 		bs=_merge_polygons(bs)
 	for e in range(0,len(bs)):
@@ -89,14 +88,15 @@ func add_player(p_id,t,command,cd,start_pos):
 	get_parent().call_deferred("add_child",player)
 	if get_tree().get_network_unique_id()==get_network_master():
 		get_node("cam").global_position=start_pos
-#func _physics_process(delta):
-#	for e in gm.commands.keys():
-#		if gm.commands.get(e)==null:print(gm.commands," ",e)
-#		if gm.commands.get(e)!=null and gm.commands.get(e).battled_by!=-1:
-#			gamestate.end_game()
-			#get_tree().paused=true
-
-
+remotesync func del_pause():
+	get_tree().set_deferred("paused",false)
+	msg("game has been started")
+func msg(msg:String,pos:Vector2=fnc.get_prkt_win()/2):
+	var m=preload("res://main/font/msg.tscn").instance()
+	m.text=msg
+	$cv/msg.add_child(m)
+	m.rect_position=pos-m.get_font("normal_font").get_string_size(m.text)/2
+	
 #func get_nearst_enemy_base(gpos,command):
 #	var nds=get_tree().get_nodes_in_group("MBASE")
 #	for e in nds:
@@ -139,3 +139,8 @@ func add_player(p_id,t,command,cd,start_pos):
 #		return p
 
 
+
+
+func _on_game_ready_timeout():
+	if get_network_master()==1:
+		rpc("del_pause")

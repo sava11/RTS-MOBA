@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://main/maps/map_name.tscn" type="PackedScene" id=1]
 [ext_resource path="res://main/world.gd" type="Script" id=2]
 [ext_resource path="res://main/pl_cam.gd" type="Script" id=3]
 [ext_resource path="res://main/cv.gd" type="Script" id=4]
+[ext_resource path="res://Sf.png" type="Texture" id=5]
 
 [sub_resource type="DynamicFontData" id=3]
 override_oversampling = 5.0
@@ -20,14 +21,15 @@ pause_mode = 2
 script = ExtResource( 2 )
 
 [node name="map" type="Node2D" parent="."]
-pause_mode = 1
+pause_mode = 2
 
 [node name="map_name" parent="map" instance=ExtResource( 1 )]
 
 [node name="cam" type="Camera2D" parent="."]
-position = Vector2( -832, -848 )
 current = true
 zoom = Vector2( 0.5, 0.5 )
+process_mode = 0
+smoothing_speed = 7.0
 script = ExtResource( 3 )
 
 [node name="cv" type="CanvasLayer" parent="."]
@@ -57,7 +59,38 @@ margin_left = -72.0
 margin_bottom = 24.0
 mouse_filter = 2
 
+[node name="vc" type="ViewportContainer" parent="cv/c"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -200.0
+margin_right = 200.0
+stretch = true
+
+[node name="v" type="Viewport" parent="cv/c/vc"]
+size = Vector2( 2685, 2685 )
+handle_input_locally = false
+hdr = false
+usage = 1
+render_target_update_mode = 3
+
+[node name="sf" type="TextureRect" parent="cv/c/vc/v"]
+margin_right = 2685.0
+margin_bottom = 2685.0
+texture = ExtResource( 5 )
+expand = true
+
+[node name="players" type="Node2D" parent="cv/c/vc/v"]
+
 [node name="msg" type="Control" parent="cv"]
 margin_right = 72.0
 margin_bottom = 24.0
 mouse_filter = 2
+
+[node name="game_ready" type="Timer" parent="."]
+pause_mode = 2
+process_mode = 0
+wait_time = 15.0
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="game_ready" to="." method="_on_game_ready_timeout"]

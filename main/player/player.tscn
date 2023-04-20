@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://main/player/player.gd" type="Script" id=1]
 [ext_resource path="res://main/sys_parts/boxes/hurt_box.gd" type="Script" id=2]
@@ -41,6 +41,18 @@ font_path = "res://main/font/COMIC.TTF"
 
 [sub_resource type="DynamicFont" id=14]
 font_data = SubResource( 13 )
+
+[sub_resource type="DynamicFontData" id=15]
+override_oversampling = 5.0
+font_path = "res://main/font/COMIC.TTF"
+
+[sub_resource type="DynamicFont" id=16]
+size = 8
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+font_data = SubResource( 15 )
 
 [sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0.607843, 0.607843, 0.607843, 1 )
@@ -97,6 +109,7 @@ tracks/0/keys = {
 }
 
 [node name="kb" type="KinematicBody2D"]
+pause_mode = 2
 script = ExtResource( 1 )
 see_range = 500.0
 
@@ -110,14 +123,6 @@ scale = Vector2( 0.2, 0.2 )
 frames = SubResource( 5 )
 animation = "left"
 playing = true
-
-[node name="na" type="NavigationAgent2D" parent="."]
-path_desired_distance = 10.0
-target_desired_distance = 10.0
-path_max_distance = 60.0
-avoidance_enabled = true
-neighbor_dist = 200.0
-max_speed = 120.0
 
 [node name="hurt_box" type="Area2D" parent="."]
 collision_layer = 8
@@ -139,13 +144,10 @@ margin_top = -77.0
 margin_right = 56.0
 margin_bottom = -54.0
 custom_fonts/font = SubResource( 14 )
+text = "dfg"
 align = 1
 valign = 1
 autowrap = true
-
-[node name="Timer" type="Timer" parent="."]
-wait_time = 0.1
-autostart = true
 
 [node name="s2" type="TextureRect" parent="."]
 use_parent_material = true
@@ -154,6 +156,14 @@ margin_top = 5.0
 margin_right = 10.0
 margin_bottom = 25.0
 expand = true
+
+[node name="lvl" type="Label" parent="."]
+margin_right = 16.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 0.117, 0.096 )
+custom_fonts/font = SubResource( 16 )
+text = "1"
+align = 1
 
 [node name="vcont" type="Node2D" parent="."]
 position = Vector2( 0, -52 )
@@ -183,6 +193,8 @@ anims/att = SubResource( 12 )
 [node name="ready" type="Timer" parent="."]
 process_mode = 0
 one_shot = true
+
+[node name="rt" type="RemoteTransform2D" parent="."]
 
 [connection signal="area_entered" from="hurt_box" to="." method="_on_hurt_box_area_entered"]
 [connection signal="invi_ended" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_ended"]

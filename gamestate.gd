@@ -97,7 +97,6 @@ remote func pre_start_game(spawn_points):
 	var i=0
 	gm.gms=world
 	for p_id in spawn_points:
-	
 		var player = preload("res://main/player/player.tscn").instance()
 		player.set_name(str(p_id)) # Use unique ID as node name.
 		player.set_network_master(p_id) #set unique id as master.
@@ -172,7 +171,9 @@ func host_game(new_player_name,hero="visitor"):
 	player_name = {
 		"name":new_player_name,
 		"hero":hero,
-		"hero_path":""
+		"hero_path":"",
+		"command":1,
+		"ready":false
 		}
 	peer = NetworkedMultiplayerENet.new()
 	peer.create_server(DEFAULT_PORT, MAX_PEERS)
@@ -183,7 +184,9 @@ func join_game(ip, new_player_name,hero="visitor"):
 	player_name = {
 		"name":new_player_name,
 		"hero":hero,
-		"hero_path":""
+		"hero_path":"",
+		"command":1,
+		"ready":false
 		}
 	peer = NetworkedMultiplayerENet.new()
 	peer.create_client(ip, DEFAULT_PORT)

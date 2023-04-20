@@ -1,6 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://lobby.gd" type="Script" id=1]
+[ext_resource path="res://main/img/molot.png" type="Texture" id=2]
+[ext_resource path="res://main/img/sword.png" type="Texture" id=3]
 
 [sub_resource type="DynamicFontData" id=1]
 override_oversampling = 5.0
@@ -79,11 +81,131 @@ margin_bottom = 407.5
 text = "Find your public IP address"
 
 [node name="show_charters" type="Button" parent="Players"]
-margin_left = 318.0
-margin_top = 70.0
-margin_right = 446.0
-margin_bottom = 95.0
+margin_left = 54.0
+margin_top = -34.5
+margin_right = 182.0
+margin_bottom = -5.9
 text = "choice charter"
+
+[node name="c1" type="Panel" parent="Players"]
+margin_left = -194.0
+margin_right = -26.0
+margin_bottom = 262.0
+
+[node name="l" type="ItemList" parent="Players/c1"]
+margin_left = 8.0
+margin_top = 54.0
+margin_right = 160.0
+margin_bottom = 216.0
+fixed_icon_size = Vector2( 25, 25 )
+
+[node name="t" type="RichTextLabel" parent="Players/c1"]
+margin_left = 40.0
+margin_top = -0.5
+margin_right = 124.0
+margin_bottom = 23.5
+text = "command 1"
+scroll_active = false
+
+[node name="m" type="TextureRect" parent="Players/c1"]
+margin_left = 8.0
+margin_top = 23.5
+margin_right = 33.0
+margin_bottom = 48.5
+texture = ExtResource( 2 )
+expand = true
+
+[node name="t" type="RichTextLabel" parent="Players/c1/m"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 32.0
+margin_right = 39.0
+text = "0|1"
+scroll_active = false
+
+[node name="w" type="TextureRect" parent="Players/c1"]
+margin_left = 80.0
+margin_top = 23.5
+margin_right = 105.0
+margin_bottom = 48.5
+texture = ExtResource( 3 )
+expand = true
+
+[node name="t" type="RichTextLabel" parent="Players/c1/w"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 32.0
+margin_right = 39.0
+text = "0|4"
+scroll_active = false
+
+[node name="c1b" type="Button" parent="Players/c1"]
+margin_left = 32.0
+margin_top = 222.0
+margin_right = 136.0
+margin_bottom = 254.0
+text = "be there"
+
+[node name="c2" type="Panel" parent="Players"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = 26.0
+margin_right = 194.0
+margin_bottom = 262.0
+
+[node name="l" type="ItemList" parent="Players/c2"]
+margin_left = 8.0
+margin_top = 54.0
+margin_right = 160.0
+margin_bottom = 216.0
+fixed_icon_size = Vector2( 25, 25 )
+
+[node name="t" type="RichTextLabel" parent="Players/c2"]
+margin_left = 40.0
+margin_top = -0.5
+margin_right = 124.0
+margin_bottom = 23.5
+text = "command 2"
+scroll_active = false
+
+[node name="m" type="TextureRect" parent="Players/c2"]
+margin_left = 8.0
+margin_top = 23.5
+margin_right = 33.0
+margin_bottom = 48.5
+texture = ExtResource( 2 )
+expand = true
+
+[node name="t" type="RichTextLabel" parent="Players/c2/m"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 32.0
+margin_right = 39.0
+text = "0|1"
+scroll_active = false
+
+[node name="w" type="TextureRect" parent="Players/c2"]
+margin_left = 80.0
+margin_top = 23.5
+margin_right = 105.0
+margin_bottom = 48.5
+texture = ExtResource( 3 )
+expand = true
+
+[node name="t" type="RichTextLabel" parent="Players/c2/w"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 32.0
+margin_right = 39.0
+text = "0|4"
+scroll_active = false
+
+[node name="c2b" type="Button" parent="Players/c2"]
+margin_left = 32.0
+margin_top = 222.0
+margin_right = 136.0
+margin_bottom = 254.0
+text = "be there"
 
 [node name="Connect" type="Panel" parent="."]
 anchor_left = 0.5
@@ -193,6 +315,8 @@ margin_bottom = 40.0
 [connection signal="pressed" from="Players/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="Players/FindPublicIP" to="." method="_on_find_public_ip_pressed"]
 [connection signal="button_down" from="Players/show_charters" to="." method="_on_show_charters_button_down"]
+[connection signal="button_down" from="Players/c1/c1b" to="." method="_on_c1b_button_down"]
+[connection signal="button_down" from="Players/c2/c2b" to="." method="_on_c2b_button_down"]
 [connection signal="pressed" from="Connect/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="Connect/Join" to="." method="_on_join_pressed"]
 [connection signal="button_down" from="charters/show_players" to="." method="_on_show_players_button_down"]

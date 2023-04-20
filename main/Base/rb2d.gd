@@ -88,8 +88,8 @@ func settle_tree():
 	status.set_he(cd.hp)
 	status.s_m_h(cd.hp)
 	
-
-func _ready():
+var ico=null
+func _ready() -> void:
 	settle_tree()
 	if pid!=0:
 		set_network_master(pid)
@@ -98,19 +98,25 @@ func _ready():
 	if type==t.MAIN:
 		gm.commands.merge({command:cd})
 	yield(get_tree(),"idle_frame")
+	ico=preload("res://main/sys_parts/minimap_b_icon.tscn").instance()
+	ico.name=name
+	gm.gms.get_node("cv/c/vc/v/players").add_child(ico)
 	if gm.command_id==command:
 		hub.collision_layer=2
 		hub.collision_mask=0
 		$vcont/pb.self_modulate=Color(0,1.0,0,1)
+		ico.modulate=Color(0.0,1.0,0.0,1.0)
 	else:
 		hub.collision_layer=4
 		hub.collision_mask=0
 		$vcont/pb.self_modulate=Color(1.0,0,0,1)
+		ico.modulate=Color(1.0,0.0,0.0,1.0)
 	$hurt_box/col.polygon=$c.polygon
 	$vcont.global_rotation_degrees=0
 	for e in tree.keys():
 		if tree[e].has("fnc_path"):
 			tree[e]["fnc_path"]=str(get_path())
+	ico.position=global_position+gm.gms.gr_size/2
 	
 	#cd.command=command
 	#cd.p_id=cd.p_id
@@ -188,15 +194,19 @@ func set_player_name(new_name):
 	get_node("label").set_text(new_name)
 func _on_hurt_box_area_entered(area):
 	status.he-=area.damage*area.scale_damage
+	if is_instance_valid(area.owner_):
+		area.owner_.points+=cd["help_points"]
 	if status.he<=0:
+		if is_instance_valid(area.owner_):
+			area.owner_.points+=cd["kill_points"]
 		gm.commands[area.command]["money"]+=cd["money_to_enemy"]
 		if is_network_master():
 			if build_area!=null:
 				build_area.rpc("rebuild")
 			else:
-				print("deleteing")
 				rpc("delete",area.command)
 sync func delete(c:int):
+	ico.queue_free()
 	gm.gms._reload()
 	gm.commands[c].battled_by=c
 	gamestate.end_game()

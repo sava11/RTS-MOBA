@@ -4,6 +4,7 @@ extends KinematicBody2D
 var cd={}
 var command=0
 var ranger=false
+var ico=null
 var _velocity := Vector2.ZERO
 puppet var pvec:=Vector2.ZERO
 puppet var pgp=Vector2.ZERO
@@ -25,10 +26,14 @@ puppet var ptarget=Vector2.ZERO
 var _temp_target=Vector2.ZERO
 var battle_path=PoolVector2Array([])
 func _ready() -> void:
+	ico=preload("res://main/sys_parts/minimap_u_icon.tscn").instance()
+	ico.name=name
+	gm.gms.get_node("cv/c/vc/v/players").add_child(ico)
 	$na.target_desired_distance=100*int(ranger)
 	var color=gm.commands[command].color
 	modulate=Color(color.r,color.g,color.b,color.a)
 	if gm.command_id==command:
+		ico.modulate=Color(0.0,1.0,0.0,1.0)
 		hib["collision_layer"]=0
 		hib["collision_mask"]=4
 		hub.collision_layer=2
@@ -39,6 +44,7 @@ func _ready() -> void:
 		#collision_mask=collision_layer
 		#$rc.collision_mask=16
 	else:
+		ico.modulate=Color(1.0,0.0,0.0,1.0)
 		hib["collision_layer"]=0
 		hib["collision_mask"]=2
 		hub.collision_layer=4
@@ -49,7 +55,7 @@ func _ready() -> void:
 		#collision_mask=collision_layer
 	_timer.connect("timeout", self, "_update_pathfinding")
 	_agent.connect("velocity_computed", self, "move")
-	_agent.set_navigation(gm._get_nav_path(0))
+	_agent.set_navigation(gm._get_nav_path())
 	#set_network_master(pid)
 	#$no.set_navigation(gm._get_nav_path(0))
 var right=false
@@ -86,6 +92,7 @@ func _physics_process(delta: float) -> void:
 		global_position=pgp
 		move_and_slide(_velocity)
 		target=ptarget
+	ico.position=global_position+gm.gms.gr_size/2
 
 func lll():
 	var v=[]
@@ -144,6 +151,7 @@ func _on_hurt_box_area_entered(area):
 		if is_network_master():
 			rpc("delete")
 sync func delete():
+	ico.queue_free()
 	queue_free()
 
 var bs=[]

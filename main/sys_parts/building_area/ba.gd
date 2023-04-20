@@ -13,7 +13,7 @@ var choiced=false
 puppet var pchoiced=false
 
 func _draw():
-	if command==gm.command_id:
+	if command==gm.command_id and gamestate.player_name.hero!="visitor":
 		if choiced==true:
 			var area=$c.shape.extents
 			var r=Rect2(-area*1.25,area*2.5)
