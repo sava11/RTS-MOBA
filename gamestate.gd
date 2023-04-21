@@ -101,15 +101,17 @@ remote func pre_start_game(spawn_points):
 		player.set_name(str(p_id)) # Use unique ID as node name.
 		player.set_network_master(p_id) #set unique id as master.
 		#player.pid=p_id
-		player.command=get_command(i,len(get_player_list())+1,world.get_node("map").get_child(0).get_node("PlayGround/mains").get_child_count())
-		var pos=Vector2.ZERO
-		for e in world.get_node("map").get_child(0).get_node("PlayGround/mains").get_children():
-			if e.command==player.command:
-				pos=e.get_node("spawnpoints").get_child(i&(e.get_node("spawnpoints").get_child_count()-1)).global_position
-				break
+		#get_command(i,len(get_player_list())+1,world.get_node("map").get_child(0).get_node("PlayGround/mains").get_child_count())
+		
 		if p_id == get_tree().get_network_unique_id():
 			# If node for this peer id, set name.
 			player.set_player_name(player_name.name)
+			player.command=player_name.command
+			var pos=Vector2.ZERO
+			for e in world.get_node("map").get_child(0).get_node("PlayGround/mains").get_children():
+				if e.command==player.command:
+					pos=e.get_node("spawnpoints").get_child(i&(e.get_node("spawnpoints").get_child_count()-1)).global_position
+					break
 			gm.command_id=player.command
 			if player_name.hero!="visitor":
 				player.cd=gm.objs.heroes[player_name.hero]
@@ -128,6 +130,12 @@ remote func pre_start_game(spawn_points):
 				player.queue_free()
 		else:
 			# Otherwise set name from peer.
+			player.command=players[p_id].command
+			var pos=Vector2.ZERO
+			for e in world.get_node("map").get_child(0).get_node("PlayGround/mains").get_children():
+				if e.command==player.command:
+					pos=e.get_node("spawnpoints").get_child(i&(e.get_node("spawnpoints").get_child_count()-1)).global_position
+					break
 			player.set_player_name(players[p_id].name)
 			if players[p_id].hero!="visitor":
 				player.cd=gm.objs.heroes[players[p_id].hero]
@@ -172,7 +180,7 @@ func host_game(new_player_name,hero="visitor"):
 		"name":new_player_name,
 		"hero":hero,
 		"hero_path":"",
-		"command":1,
+		"command":0,
 		"ready":false
 		}
 	peer = NetworkedMultiplayerENet.new()
@@ -181,15 +189,17 @@ func host_game(new_player_name,hero="visitor"):
 
 
 func join_game(ip, new_player_name,hero="visitor"):
+	
 	player_name = {
 		"name":new_player_name,
 		"hero":hero,
 		"hero_path":"",
-		"command":1,
+		"command":0,
 		"ready":false
 		}
 	peer = NetworkedMultiplayerENet.new()
 	peer.create_client(ip, DEFAULT_PORT)
+	
 	get_tree().set_network_peer(peer)
 
 

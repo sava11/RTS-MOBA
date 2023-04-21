@@ -139,7 +139,7 @@ var objs={
 		"visitor":{
 			"img":"res://main/img/eye.png",
 			},
-		"warior":{
+		"warrior":{
 			"img":"res://main/img/sword.png",
 			"lvls":{
 				1:{

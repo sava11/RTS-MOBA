@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://lobby.gd" type="Script" id=1]
 [ext_resource path="res://main/img/molot.png" type="Texture" id=2]
 [ext_resource path="res://main/img/sword.png" type="Texture" id=3]
+[ext_resource path="res://main/img/eye.png" type="Texture" id=4]
 
 [sub_resource type="DynamicFontData" id=1]
 override_oversampling = 5.0
@@ -53,6 +54,15 @@ size_flags_horizontal = 2
 size_flags_vertical = 2
 text = "START!"
 
+[node name="watch" type="Button" parent="Players"]
+margin_left = 142.0
+margin_top = -34.0
+margin_right = 252.0
+margin_bottom = -5.0
+text = "watch"
+icon = ExtResource( 4 )
+expand_icon = true
+
 [node name="List" type="ItemList" parent="Players"]
 margin_left = 25.0
 margin_top = 37.0
@@ -63,6 +73,7 @@ size_flags_vertical = 2
 fixed_icon_size = Vector2( 25, 25 )
 
 [node name="PortForward" type="Label" parent="Players"]
+visible = false
 margin_left = -124.0
 margin_top = 375.0
 margin_right = 128.0
@@ -74,6 +85,7 @@ is forwarded on your router."
 align = 1
 
 [node name="FindPublicIP" type="LinkButton" parent="Players"]
+visible = false
 margin_left = 168.0
 margin_top = 393.5
 margin_right = 341.0
@@ -81,22 +93,21 @@ margin_bottom = 407.5
 text = "Find your public IP address"
 
 [node name="show_charters" type="Button" parent="Players"]
-margin_left = 54.0
 margin_top = -34.5
-margin_right = 182.0
+margin_right = 128.0
 margin_bottom = -5.9
 text = "choice charter"
 
 [node name="c1" type="Panel" parent="Players"]
 margin_left = -194.0
 margin_right = -26.0
-margin_bottom = 262.0
+margin_bottom = 356.0
 
 [node name="l" type="ItemList" parent="Players/c1"]
 margin_left = 8.0
 margin_top = 54.0
 margin_right = 160.0
-margin_bottom = 216.0
+margin_bottom = 297.0
 fixed_icon_size = Vector2( 25, 25 )
 
 [node name="t" type="RichTextLabel" parent="Players/c1"]
@@ -141,9 +152,9 @@ scroll_active = false
 
 [node name="c1b" type="Button" parent="Players/c1"]
 margin_left = 32.0
-margin_top = 222.0
+margin_top = 307.5
 margin_right = 136.0
-margin_bottom = 254.0
+margin_bottom = 339.5
 text = "be there"
 
 [node name="c2" type="Panel" parent="Players"]
@@ -151,13 +162,13 @@ anchor_left = 1.0
 anchor_right = 1.0
 margin_left = 26.0
 margin_right = 194.0
-margin_bottom = 262.0
+margin_bottom = 356.0
 
 [node name="l" type="ItemList" parent="Players/c2"]
 margin_left = 8.0
 margin_top = 54.0
 margin_right = 160.0
-margin_bottom = 216.0
+margin_bottom = 297.0
 fixed_icon_size = Vector2( 25, 25 )
 
 [node name="t" type="RichTextLabel" parent="Players/c2"]
@@ -202,9 +213,9 @@ scroll_active = false
 
 [node name="c2b" type="Button" parent="Players/c2"]
 margin_left = 32.0
-margin_top = 222.0
+margin_top = 307.5
 margin_right = 136.0
-margin_bottom = 254.0
+margin_bottom = 339.5
 text = "be there"
 
 [node name="Connect" type="Panel" parent="."]
@@ -313,6 +324,7 @@ margin_right = 40.0
 margin_bottom = 40.0
 
 [connection signal="pressed" from="Players/Start" to="." method="_on_start_pressed"]
+[connection signal="button_down" from="Players/watch" to="." method="_on_watch_button_down"]
 [connection signal="pressed" from="Players/FindPublicIP" to="." method="_on_find_public_ip_pressed"]
 [connection signal="button_down" from="Players/show_charters" to="." method="_on_show_charters_button_down"]
 [connection signal="button_down" from="Players/c1/c1b" to="." method="_on_c1b_button_down"]

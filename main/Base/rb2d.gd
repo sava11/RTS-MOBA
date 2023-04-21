@@ -133,7 +133,7 @@ func _ready() -> void:
 puppet var pstatus_he=0
 puppet var pstatus_m_he=0
 var remonted=true
-func _process(delta):
+func _physics_process(delta):
 	#gm.commands[gm.command_id]["money"]-=25*delta
 	update()
 	#gm.command[gm.command_id]["money"]

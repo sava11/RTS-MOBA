@@ -7,11 +7,8 @@ onready var rect=$map.get_child(0).get_node("ground")
 onready var gr_size=rect.rect_size*rect.rect_scale
 
 func _ready():
-	#cam.limit_left=rect.rect_position.x
-	#cam.limit_right=rect.rect_position.x+rect_size.x
-	#cam.limit_top=rect.rect_position.y
-	#cam.limit_bottom=rect.rect_position.y+rect_size.y
 	_reload()
+	yield(get_tree(),"idle_frame")
 	get_tree().set_deferred("paused",true)
 
 func _reload():
@@ -88,7 +85,7 @@ func add_player(p_id,t,command,cd,start_pos):
 	get_parent().call_deferred("add_child",player)
 	if get_tree().get_network_unique_id()==get_network_master():
 		get_node("cam").global_position=start_pos
-remotesync func del_pause():
+remote func del_pause():
 	get_tree().set_deferred("paused",false)
 	msg("game has been started")
 func msg(msg:String,pos:Vector2=fnc.get_prkt_win()/2):

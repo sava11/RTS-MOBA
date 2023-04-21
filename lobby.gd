@@ -20,6 +20,7 @@ func _ready():
 		$Connect/Name.text = desktop_path[desktop_path.size() - 2]
 	var win=fnc.get_prkt_win()
 	var list=gm.objs.heroes.keys()
+	list.remove(list.find("visitor"))
 	var sizex=min(win.x,win.y)*0.09
 	var otstup=10
 	for e in list:
@@ -39,13 +40,12 @@ func _set_hero(e:String):
 	for e1 in gamestate.players.keys():
 		rpc_id(e1,"sent_to_server_hero",e)
 	sent_to_server_hero(e)
-remote func upd_ch_l(d:Dictionary):
-	#gamestate.players=d
+remote func upd_ch_l():
 	refresh_lobby()
 remote func sent_to_server_hero(e:String):
 	if get_tree().get_rpc_sender_id()!=get_tree().get_network_unique_id() and get_tree().get_rpc_sender_id()!=0 :
 		gamestate.players[get_tree().get_rpc_sender_id()].hero=e
-		rpc_id(get_tree().get_rpc_sender_id(),"upd_ch_l",gamestate.players)
+		rpc_id(get_tree().get_rpc_sender_id(),"upd_ch_l")
 	else:
 		gamestate.player_name.hero=e
 	refresh_lobby()
@@ -112,28 +112,33 @@ func _on_game_error(errtxt):
 
 
 var can_start_game=false
-func search_in_list(list:ItemList,name_):
-	for e in range(0,list.get_item_count()):
-		
-func _chh(id,ch,postname=""):
+func search_in_list(id):
+	var list=gamestate.players.keys()
+	list.insert(0,gamestate.peer.get_unique_id())
+	for e in range(0,list.size()):
+		if list[e]==id:
+			return e
+	return -1
+func _chh(peer_id:int,ch:Dictionary,postname=""):
 	$Players/List.add_item(ch.name+postname)
-	$Players/List.set_item_icon(id,load(gm.objs.heroes[ch.hero].img))
+	$Players/List.set_item_icon(search_in_list(peer_id),load(gm.objs.heroes[ch.hero].img))
 	if ch.hero!="visitor":
-		if ch.hero!="builder":
-			if ch.command==1:other_heroes.x+=1
-			else:other_heroes.y+=1
-		else:
+		if ch.hero=="builder":
 			if ch.command==1:builders.x+=1
 			else:builders.y+=1
+		elif ch.hero=="warrior":
+			if ch.command==1:other_heroes.x+=1
+			else:other_heroes.y+=1
 		if ch.command==1:
 			$Players/c1/l.add_item(ch.name+postname)
-			var idd=$Players/c1/l.get_i
-			$Players/c1/l.set_item_icon(id,load(gm.objs.heroes[ch.hero].img))
+			var id=search_in_list(peer_id)
+			$Players/c1/l.set_item_icon($Players/c1/l.get_item_count()-1,load(gm.objs.heroes[ch.hero].img))
 			$Players/c1/m/t.text=str(builders.x)+"|"+str(c_builders)
 			$Players/c1/w/t.text=str(other_heroes.x)+"|"+str(c_other_heroes)
-		else:
+		elif ch.command==2:
 			$Players/c2/l.add_item(ch.name+postname)
-			$Players/c2/l.set_item_icon(id,load(gm.objs.heroes[ch.hero].img))
+			var id=search_in_list(peer_id)
+			$Players/c2/l.set_item_icon($Players/c2/l.get_item_count()-1,load(gm.objs.heroes[ch.hero].img))
 			$Players/c2/m/t.text=str(builders.y)+"|"+str(c_builders)
 			$Players/c2/w/t.text=str(other_heroes.y)+"|"+str(c_other_heroes)
 
@@ -143,14 +148,16 @@ func refresh_lobby():
 	builders=Vector2.ZERO
 	other_heroes=Vector2.ZERO
 	$Players/List.clear()
+	$Players/c1/m/t.text="0|"+str(c_builders)
+	$Players/c1/w/t.text="0|"+str(c_other_heroes)
+	$Players/c2/m/t.text="0|"+str(c_builders)
+	$Players/c2/w/t.text="0|"+str(c_other_heroes)
 	$Players/c2/l.clear()
 	$Players/c1/l.clear()
-	_chh(0,gamestate.player_name," (You)")
-	var i=1
+	_chh(gamestate.peer.get_unique_id(),gamestate.player_name," (You)")
 	for p in players.keys():
-		_chh(i,players[p])
-		i+=1
-	if (builders.x==builders.y and builders.y==c_builders) and (other_heroes.x==other_heroes.y and other_heroes.y<=other_heroes):
+		_chh(p,players[p])
+	if (builders.x==builders.y and builders.y==c_builders) and (other_heroes.x==other_heroes.y and other_heroes.y<=c_other_heroes):
 		can_start_game=true
 	else:
 		can_start_game=false
@@ -177,14 +184,27 @@ func _on_show_players_button_down():
 	$Players.show()
 	$charters.hide()
 
-
+remotesync func sent_to_server_hero_command(e:int):
+	if get_tree().get_rpc_sender_id()!=get_tree().get_network_unique_id() and get_tree().get_rpc_sender_id()!=0:
+		gamestate.players[get_tree().get_rpc_sender_id()].command=e
+		rpc_id(get_tree().get_rpc_sender_id(),"upd_ch_l")
+	else:
+		gamestate.player_name.command=e
+	refresh_lobby()
 func _on_c1b_button_down():
+	rpc("sent_to_server_hero_command",1)
 	if (builders.x<c_builders and gamestate.player_name.hero=="builder") or (other_heroes.x<c_other_heroes 
-	and gamestate.player_name.hero!="visitor" and gamestate.player_name.hero!="builder"):
+	and gamestate.player_name.hero!="builder"):
 		gamestate.player_name.command=1
 
 
 func _on_c2b_button_down():
+	rpc("sent_to_server_hero_command",2)
 	if (builders.y<c_builders and gamestate.player_name.hero=="builder") or (other_heroes.y<c_other_heroes 
-	and gamestate.player_name.hero!="visitor" and gamestate.player_name.hero!="builder"):
+	and gamestate.player_name.hero!="builder"):
 		gamestate.player_name.command=2
+
+
+func _on_watch_button_down():
+	_set_hero("visitor")
+	pass
