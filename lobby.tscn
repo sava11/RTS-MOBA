@@ -22,6 +22,9 @@ size_flags_horizontal = 2
 size_flags_vertical = 2
 theme = SubResource( 2 )
 script = ExtResource( 1 )
+__meta__ = {
+"_editor_description_": "пикесль график, расположение камеры на 2д, миндастри класик\\факторио"
+}
 
 [node name="Players" type="Panel" parent="."]
 visible = false

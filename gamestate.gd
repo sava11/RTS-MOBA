@@ -110,7 +110,8 @@ remote func pre_start_game(spawn_points):
 			var pos=Vector2.ZERO
 			for e in world.get_node("map").get_child(0).get_node("PlayGround/mains").get_children():
 				if e.command==player.command:
-					pos=e.get_node("spawnpoints").get_child(i&(e.get_node("spawnpoints").get_child_count()-1)).global_position
+					pos=e.get_node("spawnpoints").get_child(i%(e.get_node("spawnpoints").get_child_count()-1)).global_position
+					i+=1
 					break
 			gm.command_id=player.command
 			if player_name.hero!="visitor":
@@ -125,7 +126,7 @@ remote func pre_start_game(spawn_points):
 				player.target=pos
 				player.start_pos=pos
 				player_name.hero_path=str(world.get_node("map").get_child(0).get_node("PlayGround").get_path())+"/"+player.name
-				i+=1
+				
 			else:
 				player.queue_free()
 		else:
@@ -134,7 +135,8 @@ remote func pre_start_game(spawn_points):
 			var pos=Vector2.ZERO
 			for e in world.get_node("map").get_child(0).get_node("PlayGround/mains").get_children():
 				if e.command==player.command:
-					pos=e.get_node("spawnpoints").get_child(i&(e.get_node("spawnpoints").get_child_count()-1)).global_position
+					pos=e.get_node("spawnpoints").get_child(i%(e.get_node("spawnpoints").get_child_count()-1)).global_position
+					i+=1
 					break
 			player.set_player_name(players[p_id].name)
 			if players[p_id].hero!="visitor":
@@ -149,7 +151,6 @@ remote func pre_start_game(spawn_points):
 				player.target=pos
 				player.start_pos=pos
 				players[p_id].hero_path=str(world.get_node("map").get_child(0).get_node("PlayGround").get_path())+"/"+player.name
-				i+=1
 			else:
 				player.queue_free()
 	

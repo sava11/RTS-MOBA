@@ -147,11 +147,14 @@ margin_right = 7.5
 margin_bottom = 20.0
 expand = true
 
+[node name="blink_timer" type="Timer" parent="."]
+
 [connection signal="area_entered" from="hurt_box" to="." method="_on_hurt_box_area_entered"]
 [connection signal="invi_ended" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_ended"]
 [connection signal="invi_started" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_started"]
 [connection signal="timeout" from="hurt_box/Timer" to="hurt_box" method="_on_Timer_timeout"]
 [connection signal="body_entered" from="a" to="." method="_on_a_body_entered"]
 [connection signal="body_exited" from="a" to="." method="_on_a_body_exited"]
+[connection signal="timeout" from="blink_timer" to="." method="_on_blink_timer_timeout"]
 
 [editable path="choice_area"]

@@ -194,6 +194,8 @@ func set_player_name(new_name):
 	get_node("label").set_text(new_name)
 func _on_hurt_box_area_entered(area):
 	status.he-=area.damage*area.scale_damage
+	$spr.material.set("shader_param/active",true)
+	$blink_timer.start(0.05)
 	if is_instance_valid(area.owner_):
 		area.owner_.points+=cd["help_points"]
 	if status.he<=0:
@@ -212,3 +214,7 @@ sync func delete(c:int):
 	gamestate.end_game()
 	queue_free()
 
+
+
+func _on_blink_timer_timeout():
+	$spr.material.set("shader_param/active",false)

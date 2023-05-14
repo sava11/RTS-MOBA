@@ -177,6 +177,8 @@ func move(velocity: Vector2) -> void:
 
 func _on_hurt_box_area_entered(area):
 	status.he-=area.damage*area.scale_damage*(float(area.damage*area.scale_damage)/(cd.lvls[lvl]["def"]+buffs["adef"]))
+	$spr.material.set("shader_param/active",true)
+	$blink_timer.start(0.05)
 	if is_instance_valid(area.owner_):
 		area.owner_.points+=cd.lvls[lvl]["help_points"]
 	if status.he<=0:
@@ -187,7 +189,7 @@ func _on_hurt_box_area_entered(area):
 			rpc("delete",area.pid)
 
 remotesync func delete(id:int):
-	$ready.start(4)
+	$ready.start(5)
 	hide()
 	$c.disabled=true
 	ico.hide()
@@ -212,3 +214,7 @@ func _on_ready_timeout():
 	if gm.command_id==command:
 		ico.show()
 	$c.disabled=false
+
+
+func _on_blink_timer_timeout():
+	$spr.material.set("shader_param/active",false)

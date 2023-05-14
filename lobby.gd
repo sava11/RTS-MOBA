@@ -1,4 +1,5 @@
 extends Control
+var allplayers=0
 const c_builders=1
 const c_other_heroes=4
 var builders=Vector2.ZERO
@@ -124,27 +125,53 @@ func _chh(peer_id:int,ch:Dictionary,postname=""):
 	$Players/List.set_item_icon(search_in_list(peer_id),load(gm.objs.heroes[ch.hero].img))
 	if ch.hero!="visitor":
 		if ch.hero=="builder":
-			if ch.command==1:builders.x+=1
-			else:builders.y+=1
+			if ch.command==1:
+				builders.x+=1
+				allplayers+=1
+			else:
+				allplayers+=1
+				builders.y+=1
 		elif ch.hero=="warrior":
-			if ch.command==1:other_heroes.x+=1
-			else:other_heroes.y+=1
+			if ch.command==1:
+				allplayers+=1
+				other_heroes.x+=1
+			else:
+				allplayers+=1
+				other_heroes.y+=1
+		
 		if ch.command==1:
 			$Players/c1/l.add_item(ch.name+postname)
 			var id=search_in_list(peer_id)
 			$Players/c1/l.set_item_icon($Players/c1/l.get_item_count()-1,load(gm.objs.heroes[ch.hero].img))
 			$Players/c1/m/t.text=str(builders.x)+"|"+str(c_builders)
+			if builders.x>c_builders:
+				$Players/c1/m/t.self_modulate=Color(1.0,0.0,0.0,1.0)
+			else:
+				$Players/c1/m/t.self_modulate=Color(1.0,1.0,1.0,1.0)
 			$Players/c1/w/t.text=str(other_heroes.x)+"|"+str(c_other_heroes)
+			if other_heroes.x>c_other_heroes:
+				$Players/c1/w/t.self_modulate=Color(1.0,0.0,0.0,1.0)
+			else:
+				$Players/c1/w/t.self_modulate=Color(1.0,1.0,1.0,1.0)
 		elif ch.command==2:
 			$Players/c2/l.add_item(ch.name+postname)
 			var id=search_in_list(peer_id)
 			$Players/c2/l.set_item_icon($Players/c2/l.get_item_count()-1,load(gm.objs.heroes[ch.hero].img))
 			$Players/c2/m/t.text=str(builders.y)+"|"+str(c_builders)
+			if builders.y>c_builders:
+				$Players/c2/m/t.self_modulate=Color(1.0,0.0,0.0,1.0)
+			else:
+				$Players/c2/m/t.self_modulate=Color(1.0,1.0,1.0,1.0)
 			$Players/c2/w/t.text=str(other_heroes.y)+"|"+str(c_other_heroes)
-
+			if other_heroes.y>c_other_heroes:
+				$Players/c2/w/t.self_modulate=Color(1.0,0.0,0.0,1.0)
+			else:
+				$Players/c2/w/t.self_modulate=Color(1.0,1.0,1.0,1.0)
+	else:
+		ch.command=0
 func refresh_lobby():
 	var players = gamestate.players
-	#players.sort()
+	allplayers=0
 	builders=Vector2.ZERO
 	other_heroes=Vector2.ZERO
 	$Players/List.clear()
@@ -161,9 +188,15 @@ func refresh_lobby():
 		can_start_game=true
 	else:
 		can_start_game=false
-	$Players/Start.disabled = not (get_tree().is_network_server() and can_start_game==true)
-	
-
+	$Players/Start.disabled = not (get_tree().is_network_server() and can_start_game==true and players<c_builders*2+c_other_heroes*2)
+func clear_commandles_players():
+	var players=gamestate.players
+	if gamestate.player_name.command==0:
+		gamestate.player_name.hero="visitor"
+	for p in players.keys():
+		_chh(p,players[p])
+		if players[p].command==0:
+			players[p].hero="visitor"
 
 func _on_start_pressed():
 	$charters.hide()

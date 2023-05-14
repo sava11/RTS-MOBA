@@ -1,10 +1,35 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://main/player/player.gd" type="Script" id=1]
 [ext_resource path="res://main/sys_parts/boxes/hurt_box.gd" type="Script" id=2]
 [ext_resource path="res://main/sys_parts/boxes/choice_area.tscn" type="PackedScene" id=3]
 [ext_resource path="res://main/sys_parts/stats/stats.tscn" type="PackedScene" id=4]
 [ext_resource path="res://main/sys_parts/units/unit1/sprts.png" type="Texture" id=5]
+
+[sub_resource type="Shader" id=19]
+code = "shader_type canvas_item;
+
+uniform bool active = false;
+uniform vec4 tint : hint_color = vec4(1.0, 1.0, 0.0, 1.0);
+
+void fragment() {
+	vec4 tint_copy = tint;
+	vec4 previous_color = texture(TEXTURE, UV);
+	
+	if (active == true)
+	{
+		//tint_copy.a = previous_color.a;
+		vec4 color=texture(TEXTURE, UV);
+		color.rgb=mix(texture(TEXTURE, UV).rgb,tint_copy.rgb,tint_copy.a);
+		COLOR = color;
+	}else{COLOR=texture(TEXTURE, UV)}
+}"
+
+[sub_resource type="ShaderMaterial" id=18]
+resource_local_to_scene = true
+shader = SubResource( 19 )
+shader_param/active = false
+shader_param/tint = Color( 1, 1, 1, 0.34902 )
 
 [sub_resource type="AtlasTexture" id=3]
 flags = 4
@@ -117,7 +142,7 @@ see_range = 500.0
 m_he = 20.0
 
 [node name="spr" type="AnimatedSprite" parent="."]
-use_parent_material = true
+material = SubResource( 18 )
 position = Vector2( 0, -18 )
 scale = Vector2( 0.2, 0.2 )
 frames = SubResource( 5 )
@@ -196,8 +221,13 @@ one_shot = true
 
 [node name="rt" type="RemoteTransform2D" parent="."]
 
+[node name="blink_timer" type="Timer" parent="."]
+process_mode = 0
+wait_time = 0.1
+
 [connection signal="area_entered" from="hurt_box" to="." method="_on_hurt_box_area_entered"]
 [connection signal="invi_ended" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_ended"]
 [connection signal="invi_started" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_started"]
 [connection signal="timeout" from="hurt_box/Timer" to="hurt_box" method="_on_Timer_timeout"]
 [connection signal="timeout" from="ready" to="." method="_on_ready_timeout"]
+[connection signal="timeout" from="blink_timer" to="." method="_on_blink_timer_timeout"]

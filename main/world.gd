@@ -1,6 +1,5 @@
 extends Node2D
 var polygon=[]
-var scs=[1,1]
 onready var cv=$cv
 onready var cam=$cam
 onready var rect=$map.get_child(0).get_node("ground")
@@ -85,7 +84,7 @@ func add_player(p_id,t,command,cd,start_pos):
 	get_parent().call_deferred("add_child",player)
 	if get_tree().get_network_unique_id()==get_network_master():
 		get_node("cam").global_position=start_pos
-remote func del_pause():
+remotesync func del_pause():
 	get_tree().set_deferred("paused",false)
 	msg("game has been started")
 func msg(msg:String,pos:Vector2=fnc.get_prkt_win()/2):

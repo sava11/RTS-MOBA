@@ -142,6 +142,8 @@ func _update_pathfinding() -> void:
 
 func _on_hurt_box_area_entered(area):
 	status.he-=area.damage*area.scale_damage*(float(area.damage*area.scale_damage)/(cd["def"]+buffs["adef"]))
+	$spr.material.set("shader_param/active",true)
+	$blink_timer.start(0.05)
 	if is_instance_valid(area.owner_):
 		area.owner_.points+=cd["help_points"]
 	if status.he<=0:
@@ -164,3 +166,7 @@ func _on_a_body_exited(b):
 
 
 
+
+
+func _on_blink_timer_timeout():
+	$spr.material.set("shader_param/active",false)

@@ -88,7 +88,7 @@ mouse_filter = 2
 [node name="game_ready" type="Timer" parent="."]
 pause_mode = 2
 process_mode = 0
-wait_time = 15.0
+wait_time = 5.0
 one_shot = true
 autostart = true
 
