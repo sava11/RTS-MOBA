@@ -1,0 +1,87 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://main/Base/rb2d.gd" type="Script" id=1]
+[ext_resource path="res://main/img/buildings/main/1.png" type="Texture" id=2]
+[ext_resource path="res://main/sys_parts/boxes/hurt_box.tscn" type="PackedScene" id=3]
+[ext_resource path="res://main/sys_parts/stats/stats.tscn" type="PackedScene" id=4]
+[ext_resource path="res://main/Base/pb.tscn" type="PackedScene" id=5]
+[ext_resource path="res://main/sys_parts/boxes/choice_area.tscn" type="PackedScene" id=6]
+
+[sub_resource type="Shader" id=19]
+code = "shader_type canvas_item;
+
+uniform bool active = false;
+uniform vec4 tint : hint_color = vec4(1.0, 1.0, 0.0, 1.0);
+
+void fragment() {
+	vec4 tint_copy = tint;
+	vec4 previous_color = texture(TEXTURE, UV);
+	
+	if (active == true)
+	{
+		//tint_copy.a = previous_color.a;
+		vec4 color=texture(TEXTURE, UV);
+		color.rgb=mix(texture(TEXTURE, UV).rgb,tint_copy.rgb,tint_copy.a);
+		COLOR = color;
+	}else{COLOR=texture(TEXTURE, UV)}
+}"
+
+[sub_resource type="ShaderMaterial" id=18]
+resource_local_to_scene = true
+shader = SubResource( 19 )
+shader_param/active = false
+shader_param/tint = Color( 1, 1, 1, 0.34902 )
+
+[sub_resource type="CapsuleShape2D" id=1]
+resource_local_to_scene = true
+radius = 48.0
+height = 0.0
+
+[node name="rb2d" type="StaticBody2D"]
+pause_mode = 1
+position = Vector2( 64, 40 )
+input_pickable = true
+script = ExtResource( 1 )
+
+[node name="stats" parent="." instance=ExtResource( 4 )]
+m_he = 200.0
+
+[node name="s" type="Sprite" parent="."]
+material = SubResource( 18 )
+scale = Vector2( 0.24, 0.24 )
+texture = ExtResource( 2 )
+
+[node name="c" type="CollisionPolygon2D" parent="." groups=["buildings", "ground_build"]]
+polygon = PoolVector2Array( -32, -32, -32, 32, 32, 32, 32, -32 )
+
+[node name="label" type="Label" parent="."]
+margin_right = 40.0
+margin_bottom = 14.0
+
+[node name="vcont" type="Node2D" parent="."]
+z_index = 999
+
+[node name="pb" parent="vcont" instance=ExtResource( 5 )]
+margin_left = -40.0
+margin_top = -40.0
+margin_right = 120.0
+margin_bottom = -22.0
+rect_scale = Vector2( 0.5, 0.3 )
+
+[node name="pos" type="Position2D" parent="."]
+position = Vector2( 0, -48 )
+
+[node name="hurt_box" parent="." instance=ExtResource( 3 )]
+
+[node name="choice_area" parent="." instance=ExtResource( 6 )]
+
+[node name="c" parent="choice_area" index="0"]
+position = Vector2( 0, 0 )
+shape = SubResource( 1 )
+
+[node name="blink_timer" type="Timer" parent="."]
+
+[connection signal="area_entered" from="hurt_box" to="." method="_on_hurt_box_area_entered"]
+[connection signal="timeout" from="blink_timer" to="." method="_on_blink_timer_timeout"]
+
+[editable path="choice_area"]

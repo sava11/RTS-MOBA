@@ -1,0 +1,6 @@
+[gd_scene format=2]
+
+[node name="allarm" type="Area2D"]
+
+[node name="c" type="CollisionPolygon2D" parent="."]
+polygon = PoolVector2Array( -128, -128, -128, 128, 128, 128, 128, -128 )

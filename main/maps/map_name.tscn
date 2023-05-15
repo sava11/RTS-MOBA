@@ -1,0 +1,363 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://main/sys_parts/building_area/ba.tscn" type="PackedScene" id=1]
+[ext_resource path="res://main/img/1625918657_13-kartinkin-com-p-tekstura-travi-dlya-genplana-krasivo-14.png" type="Texture" id=2]
+[ext_resource path="res://main/img/1626890776_3-kartinkin-com-p-shchebenka-tekstura-besshovnaya-krasivo-3.jpg" type="Texture" id=3]
+[ext_resource path="res://main/Base/rb2d.tscn" type="PackedScene" id=4]
+[ext_resource path="res://main/sys_parts/alarm/allarm.tscn" type="PackedScene" id=5]
+[ext_resource path="res://main/Base/base_update.gd" type="Script" id=6]
+
+[node name="map_name" type="Node2D"]
+pause_mode = 2
+
+[node name="ground" type="TextureRect" parent="."]
+margin_left = -1550.0
+margin_top = -1150.0
+margin_right = 29450.0
+margin_bottom = 21850.0
+rect_scale = Vector2( 0.1, 0.1 )
+mouse_filter = 2
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 2
+
+[node name="stones" type="Polygon2D" parent="ground"]
+use_parent_material = true
+position = Vector2( 6200, 11500 )
+antialiased = true
+texture = ExtResource( 3 )
+polygon = PoolVector2Array( -2100, -2800, -2700, -1600, -4300, -999.999, -4700, 0.0012207, -4300, 1000, -2700, 1600, -2100, 2800, -1900, 4000, 500.001, 4800, 1300, 4400, 6950, 6450, 9300, 6850, 11650, 6450, 17300, 4400, 16900, 3200, 11400, 5600, 9300, 6000, 7200, 5600, 1700, 3200, 1300, 2400, 100.001, 2000, 100.001, 1750, 900.001, 1600, 1500, 1400, 1700, 800.001, 9300, 800.001, 9300, -799.999, 1700, -799.999, 1500, -1400, 900.001, -1600, 100.001, -1750, 100.001, -2000, 1300, -2400, 1700, -3200, 7200, -5600, 9300, -6000, 11400, -5600, 16900, -3200, 17300, -2400, 18500, -2000, 18500, -1750, 17700, -1600, 17100, -1400, 16900, -799.999, 9300, -799.999, 9300, 800.001, 16900, 800.001, 17100, 1400, 17700, 1600, 18500, 1750, 18500, 2000, 17300, 2400, 16900, 3200, 17300, 4400, 18100, 4800, 20500, 4000, 20700, 2800, 21300, 1600, 22900, 1000, 23300, 0.0012207, 22900, -999.999, 21300, -1600, 20700, -2800, 20500, -4000, 18100, -4800, 17300, -4400, 11650, -6450, 9300, -6850, 6950, -6450, 1300, -4400, 500.001, -4800, -1900, -4000 )
+
+[node name="st" type="Polygon2D" parent="ground"]
+position = Vector2( 15500, 11500 )
+texture = ExtResource( 3 )
+texture_offset = Vector2( 9300, 0 )
+polygon = PoolVector2Array( -5200, -4250, -3600, -4950, 5200, 4250, 3600, 4950 )
+
+[node name="nav" type="Navigation2D" parent="ground"]
+position = Vector2( 15500, 11500 )
+scale = Vector2( 10, 10 )
+
+[node name="n" type="NavigationPolygonInstance" parent="ground/nav"]
+
+[node name="s" type="StaticBody2D" parent="ground"]
+light_mask = 2
+position = Vector2( 15500, 11500 )
+scale = Vector2( 10, 10 )
+
+[node name="up" type="CollisionPolygon2D" parent="ground/s" groups=["ground_build"]]
+polygon = PoolVector2Array( -1400, -240, -1200, -560, -560, -800, 0, -880, 0, -1100, -1500, -1100, -1500, -80 )
+
+[node name="up2" type="CollisionPolygon2D" parent="ground/s" groups=["ground_build"]]
+scale = Vector2( -1, 1 )
+polygon = PoolVector2Array( -1400, -240, -1200, -560, -560, -800, 0, -880, 0, -1100, -1500, -1100, -1500, -80 )
+
+[node name="down" type="CollisionPolygon2D" parent="ground/s" groups=["ground_build"]]
+scale = Vector2( -1, -1 )
+polygon = PoolVector2Array( -1400, -240, -1200, -560, -560, -800, 0, -880, 0, -1100, -1500, -1100, -1500, -80 )
+
+[node name="down2" type="CollisionPolygon2D" parent="ground/s" groups=["ground_build"]]
+scale = Vector2( 1, -1 )
+polygon = PoolVector2Array( -1400, -240, -1200, -560, -560, -800, 0, -880, 0, -1100, -1500, -1100, -1500, -80 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="ground/s"]
+polygon = PoolVector2Array( -1500, 1100, 1500, 1100, 1500, -1100, -1500, -1100, -1550, -1150, 1550, -1150, 1550, 1150, -1550, 1150, -1550, -1150, -1500, -1100 )
+
+[node name="PlayGround" type="YSort" parent="."]
+light_mask = 2
+
+[node name="mains" type="YSort" parent="PlayGround"]
+
+[node name="rb2d" parent="PlayGround/mains" instance=ExtResource( 4 )]
+position = Vector2( -1250, 0 )
+script = ExtResource( 6 )
+type = 0
+command = 1
+c_name = "left"
+
+[node name="ba1" type="Node2D" parent="PlayGround/mains/rb2d"]
+position = Vector2( 322, 0 )
+rotation = 1.5708
+
+[node name="ba" parent="PlayGround/mains/rb2d/ba1" instance=ExtResource( 1 )]
+position = Vector2( -64, -64 )
+add_node_path = NodePath("../../../..")
+start_build = 1
+command = 1
+
+[node name="ba2" parent="PlayGround/mains/rb2d/ba1" instance=ExtResource( 1 )]
+position = Vector2( 64, -64 )
+add_node_path = NodePath("../../../..")
+start_build = 2
+command = 1
+
+[node name="ps" parent="PlayGround/mains/rb2d/ba1/ba2" index="2"]
+position = Vector2( -50, 0 )
+
+[node name="ba3" parent="PlayGround/mains/rb2d/ba1" instance=ExtResource( 1 )]
+position = Vector2( 64, 64 )
+add_node_path = NodePath("../../../..")
+command = 1
+
+[node name="ps" parent="PlayGround/mains/rb2d/ba1/ba3" index="2"]
+position = Vector2( -50, 0 )
+
+[node name="ba4" parent="PlayGround/mains/rb2d/ba1" instance=ExtResource( 1 )]
+position = Vector2( -64, 64 )
+add_node_path = NodePath("../../../..")
+command = 1
+
+[node name="l" type="Line2D" parent="PlayGround/mains/rb2d/ba1"]
+visible = false
+points = PoolVector2Array( 0, -96, -4.05642e-05, -928, -9.52034e-05, -2178 )
+
+[node name="ba2" type="Node2D" parent="PlayGround/mains/rb2d"]
+position = Vector2( 290, -320 )
+rotation = 1.309
+
+[node name="ba" parent="PlayGround/mains/rb2d/ba2" instance=ExtResource( 1 )]
+position = Vector2( -64, -64 )
+add_node_path = NodePath("../../../..")
+command = 1
+
+[node name="ba2" parent="PlayGround/mains/rb2d/ba2" instance=ExtResource( 1 )]
+position = Vector2( 64, -64 )
+add_node_path = NodePath("../../../..")
+start_build = 1
+command = 1
+
+[node name="ps" parent="PlayGround/mains/rb2d/ba2/ba2" index="2"]
+position = Vector2( -50, 0 )
+
+[node name="ba3" parent="PlayGround/mains/rb2d/ba2" instance=ExtResource( 1 )]
+position = Vector2( 64, 64 )
+add_node_path = NodePath("../../../..")
+command = 1
+
+[node name="ps" parent="PlayGround/mains/rb2d/ba2/ba3" index="2"]
+position = Vector2( -50, 0 )
+
+[node name="ba4" parent="PlayGround/mains/rb2d/ba2" instance=ExtResource( 1 )]
+position = Vector2( -64, 64 )
+add_node_path = NodePath("../../../..")
+command = 1
+
+[node name="l" type="Line2D" parent="PlayGround/mains/rb2d/ba2"]
+rotation = -1.5708
+points = PoolVector2Array( 96, 0.000366211, 785.013, -89.8837, 1010, -60, 1219.68, 26.5865, 1770.25, 448.462, 1939.35, 547.607, 2051.87, 881.094 )
+
+[node name="ba3" type="Node2D" parent="PlayGround/mains/rb2d"]
+position = Vector2( 290, 320 )
+rotation = 1.8326
+
+[node name="ba" parent="PlayGround/mains/rb2d/ba3" instance=ExtResource( 1 )]
+position = Vector2( -64, -64 )
+add_node_path = NodePath("../../../..")
+start_build = 1
+command = 1
+
+[node name="ba2" parent="PlayGround/mains/rb2d/ba3" instance=ExtResource( 1 )]
+position = Vector2( 64, -64 )
+add_node_path = NodePath("../../../..")
+command = 1
+
+[node name="ps" parent="PlayGround/mains/rb2d/ba3/ba2" index="2"]
+position = Vector2( -50, 0 )
+
+[node name="ba3" parent="PlayGround/mains/rb2d/ba3" instance=ExtResource( 1 )]
+position = Vector2( 64, 64 )
+add_node_path = NodePath("../../../..")
+command = 1
+
+[node name="ps" parent="PlayGround/mains/rb2d/ba3/ba3" index="2"]
+position = Vector2( -50, 0 )
+
+[node name="ba4" parent="PlayGround/mains/rb2d/ba3" instance=ExtResource( 1 )]
+position = Vector2( -64, 64 )
+add_node_path = NodePath("../../../..")
+command = 1
+
+[node name="l" type="Line2D" parent="PlayGround/mains/rb2d/ba3"]
+rotation = -1.5708
+scale = Vector2( 1, -1 )
+points = PoolVector2Array( 96, 0.000366211, 785.013, -89.8837, 1010, -60, 1219.68, 26.5865, 1770.77, 448.462, 1939.35, 547.607, 2051.87, 881.094 )
+
+[node name="allarm" parent="PlayGround/mains/rb2d" instance=ExtResource( 5 )]
+visible = false
+
+[node name="c" parent="PlayGround/mains/rb2d/allarm" index="0"]
+polygon = PoolVector2Array( -128, -128, -128, 208, -192, 288, -192, 504, -128, 576, 128, 576, 208, 512, 384, 512, 512, 400, 512, 192, 576, 128, 576, -128, 504, -192, 288, -192, 208, -128 )
+
+[node name="spawnpoints" type="Node2D" parent="PlayGround/mains/rb2d"]
+
+[node name="pos1" type="Position2D" parent="PlayGround/mains/rb2d/spawnpoints"]
+position = Vector2( -94, 40 )
+
+[node name="pos2" type="Position2D" parent="PlayGround/mains/rb2d/spawnpoints"]
+position = Vector2( -94, -48 )
+
+[node name="pos3" type="Position2D" parent="PlayGround/mains/rb2d/spawnpoints"]
+position = Vector2( 18, -80 )
+
+[node name="pos4" type="Position2D" parent="PlayGround/mains/rb2d/spawnpoints"]
+position = Vector2( 98, 0 )
+
+[node name="pos5" type="Position2D" parent="PlayGround/mains/rb2d/spawnpoints"]
+position = Vector2( 18, 80 )
+
+[node name="rb2d2" parent="PlayGround/mains" instance=ExtResource( 4 )]
+position = Vector2( 1250, 0 )
+script = ExtResource( 6 )
+type = 0
+command = 2
+c_name = "left"
+
+[node name="ba1" type="Node2D" parent="PlayGround/mains/rb2d2"]
+position = Vector2( -322, 0 )
+rotation = -1.5708
+
+[node name="ba" parent="PlayGround/mains/rb2d2/ba1" instance=ExtResource( 1 )]
+position = Vector2( -64, -64 )
+add_node_path = NodePath("../../../..")
+start_build = 1
+
+[node name="ba2" parent="PlayGround/mains/rb2d2/ba1" instance=ExtResource( 1 )]
+position = Vector2( 64, -64 )
+add_node_path = NodePath("../../../..")
+start_build = 2
+
+[node name="ps" parent="PlayGround/mains/rb2d2/ba1/ba2" index="2"]
+position = Vector2( -50, 0 )
+
+[node name="ba3" parent="PlayGround/mains/rb2d2/ba1" instance=ExtResource( 1 )]
+position = Vector2( 64, 64 )
+add_node_path = NodePath("../../../..")
+
+[node name="ps" parent="PlayGround/mains/rb2d2/ba1/ba3" index="2"]
+position = Vector2( -50, 0 )
+
+[node name="ba4" parent="PlayGround/mains/rb2d2/ba1" instance=ExtResource( 1 )]
+position = Vector2( -64, 64 )
+add_node_path = NodePath("../../../..")
+
+[node name="l" type="Line2D" parent="PlayGround/mains/rb2d2/ba1"]
+visible = false
+points = PoolVector2Array( 0, -96, -4.05642e-05, -928, -9.52034e-05, -2178 )
+
+[node name="ba2" type="Node2D" parent="PlayGround/mains/rb2d2"]
+position = Vector2( -290, 320 )
+rotation = 4.45059
+
+[node name="ba" parent="PlayGround/mains/rb2d2/ba2" instance=ExtResource( 1 )]
+position = Vector2( -64, -64 )
+add_node_path = NodePath("../../../..")
+
+[node name="ba2" parent="PlayGround/mains/rb2d2/ba2" instance=ExtResource( 1 )]
+position = Vector2( 64, -64 )
+add_node_path = NodePath("../../../..")
+start_build = 1
+
+[node name="ps" parent="PlayGround/mains/rb2d2/ba2/ba2" index="2"]
+position = Vector2( -50, 0 )
+
+[node name="ba3" parent="PlayGround/mains/rb2d2/ba2" instance=ExtResource( 1 )]
+position = Vector2( 64, 64 )
+add_node_path = NodePath("../../../..")
+
+[node name="ps" parent="PlayGround/mains/rb2d2/ba2/ba3" index="2"]
+position = Vector2( -50, 0 )
+
+[node name="ba4" parent="PlayGround/mains/rb2d2/ba2" instance=ExtResource( 1 )]
+position = Vector2( -64, 64 )
+add_node_path = NodePath("../../../..")
+
+[node name="l" type="Line2D" parent="PlayGround/mains/rb2d2/ba2"]
+rotation = -1.5708
+points = PoolVector2Array( 96, 0.000366211, 785.013, -89.8837, 1010, -60, 1219.68, 26.5865, 1770.25, 448.462, 1939.35, 547.607, 2051.87, 881.094 )
+
+[node name="ba3" type="Node2D" parent="PlayGround/mains/rb2d2"]
+position = Vector2( -290, -320 )
+rotation = 4.97419
+
+[node name="ba" parent="PlayGround/mains/rb2d2/ba3" instance=ExtResource( 1 )]
+position = Vector2( -64, -64 )
+add_node_path = NodePath("../../../..")
+start_build = 1
+
+[node name="ba2" parent="PlayGround/mains/rb2d2/ba3" instance=ExtResource( 1 )]
+position = Vector2( 64, -64 )
+add_node_path = NodePath("../../../..")
+
+[node name="ps" parent="PlayGround/mains/rb2d2/ba3/ba2" index="2"]
+position = Vector2( -50, 0 )
+
+[node name="ba3" parent="PlayGround/mains/rb2d2/ba3" instance=ExtResource( 1 )]
+position = Vector2( 64, 64 )
+add_node_path = NodePath("../../../..")
+
+[node name="ps" parent="PlayGround/mains/rb2d2/ba3/ba3" index="2"]
+position = Vector2( -50, 0 )
+
+[node name="ba4" parent="PlayGround/mains/rb2d2/ba3" instance=ExtResource( 1 )]
+position = Vector2( -64, 64 )
+add_node_path = NodePath("../../../..")
+
+[node name="l" type="Line2D" parent="PlayGround/mains/rb2d2/ba3"]
+rotation = -1.5708
+scale = Vector2( 1, -1 )
+points = PoolVector2Array( 96, 0.000366211, 785.013, -89.8837, 1010, -60, 1219.68, 26.5865, 1770.77, 448.462, 1939.35, 547.607, 2051.87, 881.094 )
+
+[node name="allarm" parent="PlayGround/mains/rb2d2" instance=ExtResource( 5 )]
+visible = false
+
+[node name="c" parent="PlayGround/mains/rb2d2/allarm" index="0"]
+polygon = PoolVector2Array( -128, -128, -128, 208, -192, 288, -192, 504, -128, 576, 128, 576, 208, 512, 384, 512, 512, 400, 512, 192, 576, 128, 576, -128, 504, -192, 288, -192, 208, -128 )
+
+[node name="spawnpoints" type="Node2D" parent="PlayGround/mains/rb2d2"]
+
+[node name="pos1" type="Position2D" parent="PlayGround/mains/rb2d2/spawnpoints"]
+position = Vector2( 94, -40 )
+
+[node name="pos2" type="Position2D" parent="PlayGround/mains/rb2d2/spawnpoints"]
+position = Vector2( 94, 48 )
+
+[node name="pos3" type="Position2D" parent="PlayGround/mains/rb2d2/spawnpoints"]
+position = Vector2( -18, 80 )
+
+[node name="pos4" type="Position2D" parent="PlayGround/mains/rb2d2/spawnpoints"]
+position = Vector2( -98, 0 )
+
+[node name="pos5" type="Position2D" parent="PlayGround/mains/rb2d2/spawnpoints"]
+position = Vector2( -18, -80 )
+
+[connection signal="body_entered" from="PlayGround/mains/rb2d/allarm" to="PlayGround/mains/rb2d" method="_on_allarm_body_entered"]
+[connection signal="body_exited" from="PlayGround/mains/rb2d/allarm" to="PlayGround/mains/rb2d" method="_on_allarm_body_exited"]
+[connection signal="body_entered" from="PlayGround/mains/rb2d2/allarm" to="PlayGround/mains/rb2d2" method="_on_allarm_body_entered"]
+[connection signal="body_exited" from="PlayGround/mains/rb2d2/allarm" to="PlayGround/mains/rb2d2" method="_on_allarm_body_exited"]
+
+[editable path="PlayGround/mains/rb2d/ba1/ba"]
+[editable path="PlayGround/mains/rb2d/ba1/ba2"]
+[editable path="PlayGround/mains/rb2d/ba1/ba3"]
+[editable path="PlayGround/mains/rb2d/ba1/ba4"]
+[editable path="PlayGround/mains/rb2d/ba2/ba"]
+[editable path="PlayGround/mains/rb2d/ba2/ba2"]
+[editable path="PlayGround/mains/rb2d/ba2/ba3"]
+[editable path="PlayGround/mains/rb2d/ba2/ba4"]
+[editable path="PlayGround/mains/rb2d/ba3/ba"]
+[editable path="PlayGround/mains/rb2d/ba3/ba2"]
+[editable path="PlayGround/mains/rb2d/ba3/ba3"]
+[editable path="PlayGround/mains/rb2d/ba3/ba4"]
+[editable path="PlayGround/mains/rb2d/allarm"]
+[editable path="PlayGround/mains/rb2d2/ba1/ba"]
+[editable path="PlayGround/mains/rb2d2/ba1/ba2"]
+[editable path="PlayGround/mains/rb2d2/ba1/ba3"]
+[editable path="PlayGround/mains/rb2d2/ba1/ba4"]
+[editable path="PlayGround/mains/rb2d2/ba2/ba"]
+[editable path="PlayGround/mains/rb2d2/ba2/ba2"]
+[editable path="PlayGround/mains/rb2d2/ba2/ba3"]
+[editable path="PlayGround/mains/rb2d2/ba2/ba4"]
+[editable path="PlayGround/mains/rb2d2/ba3/ba"]
+[editable path="PlayGround/mains/rb2d2/ba3/ba2"]
+[editable path="PlayGround/mains/rb2d2/ba3/ba3"]
+[editable path="PlayGround/mains/rb2d2/ba3/ba4"]
+[editable path="PlayGround/mains/rb2d2/allarm"]
