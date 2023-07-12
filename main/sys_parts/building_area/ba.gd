@@ -44,7 +44,7 @@ func _updeate_ready():
 			"value":50,
 				}}
 	else:
-		if building.get("tree")!={}:
+		if building.get("tree").empty()==false:
 			if building.type>0:
 				tree={
 					"rebuild":{
@@ -76,11 +76,10 @@ func _updeate_ready():
 var battle_path=PoolVector2Array([])
 func _ready():
 	pid=get_network_master()
-	for e in get_parent().get_children():
-		if e is Line2D:
-			battle_path=fnc.to_glb_PV_and_rot(e.points,e.global_position,e.global_rotation_degrees)
-			e.hide()
-			break
+	var e=get_parent().get_node_or_null("l")
+	battle_path=fnc.to_glb_PV_and_rot(e.points,e.global_position,e.global_rotation_degrees)
+	if e.visible==true:
+		e.hide()
 	_updeate_ready()
 	yield(get_tree(),"idle_frame")
 	if start_build!=t.nill:
@@ -100,10 +99,8 @@ func _on_butt_mouse_exited():
 
 func _physics_process(delta):
 	update()
-	for e in get_parent().get_children():
-		if e is Line2D:
-			battle_path=fnc.to_glb_PV_and_rot(e.points,e.global_position,e.global_rotation_degrees)
-			break
+	var e=get_parent().get_node_or_null("l")
+	battle_path=fnc.to_glb_PV_and_rot(e.points,e.global_position,e.global_rotation_degrees)
 	if is_network_master() and gamestate.player_name.hero=="builder":
 		var win=fnc.get_prkt_win()
 		var sizex=min(win.x,win.y)*0.05
@@ -143,12 +140,13 @@ remotesync func cr_obj(objn:String,id):
 	#obj.set_pos=$p.global_position
 	if get_node_or_null(add_node_path)!=null:get_node(add_node_path).call_deferred("add_child",building)
 	else:get_parent().call_deferred("add_child",building)
-	yield(get_tree(),"idle_frame")
+	#yield(get_tree(),"idle_frame")
 	_updeate_ready()
 	building.get_node("pos").global_position=$ps.global_position
-	gm.gms._reload()
+	gm.gms.call_deferred("_reload")
 remotesync func rebuild():
 	if building!=null:
+		building.ico.queue_free()
 		building.queue_free()
 		building=null
 		_updeate_ready()

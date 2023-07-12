@@ -1,0 +1,147 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://main/Base/rb2d.tscn" type="PackedScene" id=1]
+[ext_resource path="res://main/Base/base_update.gd" type="Script" id=2]
+[ext_resource path="res://main/sys_parts/building_area/ba.tscn" type="PackedScene" id=3]
+
+[node name="map_name2" type="Node2D"]
+
+[node name="ground" type="ColorRect" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -1024.0
+margin_top = -512.0
+margin_right = 1024.0
+margin_bottom = 512.0
+mouse_filter = 2
+color = Color( 0.0156863, 0.4, 0.0117647, 1 )
+
+[node name="roadFIX" type="Polygon2D" parent="ground"]
+position = Vector2( 1024, 512 )
+color = Color( 0.372549, 0.372549, 0.372549, 1 )
+polygon = PoolVector2Array( 704, -192, 704, 192, 832, 256, 832, -256 )
+
+[node name="road" type="Polygon2D" parent="ground"]
+position = Vector2( 1024, 512 )
+color = Color( 0.372549, 0.372549, 0.372549, 1 )
+polygon = PoolVector2Array( -920, -88, -832, -128, -832, -256, -704, -384, 704, -384, 832, -256, 704, -192, 640, -256, -640, -256, -704, -192, -704, -128, 832, -128, 920, -88, 960, 0, 920, 88, 832, 128, -704, 128, -704, 192, -640, 256, 640, 256, 704, 192, 832, 256, 704, 384, -704, 384, -832, 192, -832, 128, -920, 88, -960, 0 )
+
+[node name="nav" type="Navigation2D" parent="ground"]
+position = Vector2( 1024, 512 )
+
+[node name="n" type="NavigationPolygonInstance" parent="ground/nav"]
+
+[node name="s" type="StaticBody2D" parent="ground"]
+position = Vector2( 1024, 512 )
+
+[node name="d1" type="CollisionPolygon2D" parent="ground/s" groups=["ground_build"]]
+position = Vector2( -8, 240 )
+polygon = PoolVector2Array( -952, -216, -952, 208, 968, 208, 968, -208, 936, -144, 848, -104, 848, 24, 720, 152, -704, 152, -832, -40, -832, -104, -920, -144 )
+
+[node name="d2" type="CollisionPolygon2D" parent="ground/s"]
+polygon = PoolVector2Array( -696, 136, -696, 192, -640, 248, 640, 248, 696, 192, 696, 136 )
+
+[node name="u2" type="CollisionPolygon2D" parent="ground/s" groups=["ground_build"]]
+position = Vector2( -8, -240 )
+scale = Vector2( 1, -1 )
+polygon = PoolVector2Array( -688, -104, -688, -48, -632, 8, 648, 8, 704, -48, 704, -104 )
+
+[node name="u1" type="CollisionPolygon2D" parent="ground/s"]
+polygon = PoolVector2Array( -960, -24, -960, -448, 960, -448, 960, -32, 928, -96, 840, -136, 840, -264, 712, -392, -712, -392, -840, -264, -840, -128, -928, -96 )
+
+[node name="border" type="CollisionPolygon2D" parent="ground/s"]
+polygon = PoolVector2Array( -1024, -512, 1024, -512, 1024, 512, -1024, 512, -1024, -512, -960, -448, -960, 448, 960, 448, 960, -448, -960, -448 )
+
+[node name="PlayGround" type="YSort" parent="."]
+
+[node name="mains" type="YSort" parent="PlayGround"]
+
+[node name="rb2d" parent="PlayGround/mains" instance=ExtResource( 1 )]
+position = Vector2( -800, 0 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
+add_node_path = NodePath("../..")
+type = 0
+command = 1
+c_name = "hap"
+
+[node name="spawnpoints" type="Node2D" parent="PlayGround/mains/rb2d"]
+
+[node name="pos1" type="Position2D" parent="PlayGround/mains/rb2d/spawnpoints"]
+position = Vector2( 96, -64 )
+
+[node name="pos2" type="Position2D" parent="PlayGround/mains/rb2d/spawnpoints"]
+position = Vector2( 96, 64 )
+
+[node name="pos3" type="Position2D" parent="PlayGround/mains/rb2d/spawnpoints"]
+position = Vector2( -16, -96 )
+
+[node name="pos4" type="Position2D" parent="PlayGround/mains/rb2d/spawnpoints"]
+position = Vector2( -16, 96 )
+
+[node name="pos5" type="Position2D" parent="PlayGround/mains/rb2d/spawnpoints"]
+position = Vector2( -104, 0 )
+
+[node name="ba1" type="Node2D" parent="PlayGround/mains/rb2d"]
+position = Vector2( 224, 0 )
+
+[node name="ba" parent="PlayGround/mains/rb2d/ba1" instance=ExtResource( 3 )]
+position = Vector2( 0, -88 )
+add_node_path = NodePath("../../../..")
+start_build = 1
+command = 1
+
+[node name="ba2" parent="PlayGround/mains/rb2d/ba1" instance=ExtResource( 3 )]
+position = Vector2( 0, 88 )
+add_node_path = NodePath("../../../..")
+command = 1
+
+[node name="l" type="Line2D" parent="PlayGround/mains/rb2d/ba1"]
+points = PoolVector2Array( 64, 0, 1376, 0 )
+
+[node name="rb2d2" parent="PlayGround/mains" instance=ExtResource( 1 )]
+position = Vector2( 800, 0 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
+add_node_path = NodePath("../..")
+type = 0
+command = 2
+c_name = "sad"
+
+[node name="spawnpoints" type="Node2D" parent="PlayGround/mains/rb2d2"]
+
+[node name="pos1" type="Position2D" parent="PlayGround/mains/rb2d2/spawnpoints"]
+position = Vector2( -96, -64 )
+
+[node name="pos2" type="Position2D" parent="PlayGround/mains/rb2d2/spawnpoints"]
+position = Vector2( -96, 64 )
+
+[node name="pos3" type="Position2D" parent="PlayGround/mains/rb2d2/spawnpoints"]
+position = Vector2( 16, -96 )
+
+[node name="pos4" type="Position2D" parent="PlayGround/mains/rb2d2/spawnpoints"]
+position = Vector2( 16, 96 )
+
+[node name="pos5" type="Position2D" parent="PlayGround/mains/rb2d2/spawnpoints"]
+position = Vector2( 104, 0 )
+
+[node name="ba1" type="Node2D" parent="PlayGround/mains/rb2d2"]
+position = Vector2( -224, 0 )
+rotation = 3.14159
+
+[node name="ba" parent="PlayGround/mains/rb2d2/ba1" instance=ExtResource( 3 )]
+position = Vector2( 0, 88 )
+add_node_path = NodePath("../../../..")
+
+[node name="ba2" parent="PlayGround/mains/rb2d2/ba1" instance=ExtResource( 3 )]
+position = Vector2( 0, -88 )
+add_node_path = NodePath("../../../..")
+
+[node name="l" type="Line2D" parent="PlayGround/mains/rb2d2/ba1"]
+points = PoolVector2Array( 64, -5.59506e-06, 1376, -0.000120294 )

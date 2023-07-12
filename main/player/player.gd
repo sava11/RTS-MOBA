@@ -11,6 +11,7 @@ onready var status=$stats
 puppet var pstatus_he=0
 puppet var pstatus_m_he=0
 onready var hub= $hurt_box
+onready var pb = $pb
 var hib={"collision_layer":0,"collision_mask":0}
 
 var buffs={
@@ -57,15 +58,16 @@ func _ready() -> void:
 	#$Light2D.scale=fnc.get_prkt_win()/$Light2D.texture.get_size()
 	#$rt.remote_path=gm.gms.get_node("cam").get_path()
 	#connect("die",gamestate,"clear_target")
-	
-	if gm.command_id==command:
+	if command==gm.command_id:
 		hib["collision_layer"]=0
 		hib["collision_mask"]=4
 		hub.collision_layer=2
 		hub.collision_mask=0
-		$vcont/pb.self_modulate=Color(0,1.0,0,1)
+		pb.self_modulate=Color(0,1.0,0,1)
 		$attray.collision_mask=4
 		if not is_network_master():
+			$choice_area.monitorable=false
+			$choice_area.monitoring=false
 			ico.modulate=Color(0.0,1.0,0.0,1.0)
 	else:
 		hib["collision_layer"]=0
@@ -75,29 +77,18 @@ func _ready() -> void:
 		ico.hide()
 		ico.modulate=Color(1.0,0.0,0.0,1.0)
 		$s2.visible=false
-		$vcont/pb.self_modulate=Color(1.0,0,0,1)
+		pb.self_modulate=Color(1.0,0,0,1)
 		$attray.collision_mask=2
 	#set_network_master(pid)
 	
-
-var right=false
-puppet var pright=false
 var targeted=false
 onready var max_lvl=cd.lvls.keys().max()
 
 func _physics_process(delta: float) -> void:
-	$vcont/pb.value=status.he
-	$vcont/pb.max_value=status.m_he
-	if right==false:
-		$spr.play("left")
-	else:
-		$spr.play("right")
+	pb.value=status.he
+	pb.max_value=status.m_he
 	if is_network_master():
-		var vec=Vector2(Input.get_action_strength("r")-Input.get_action_strength("l"),Input.get_action_strength("d")-Input.get_action_strength("u"))
-		if vec.x>0:
-			right=true
-		elif vec.x<0:
-			right=false
+		var vec=Vector2(Input.get_action_strength("r")-Input.get_action_strength("l"),Input.get_action_strength("d")-Input.get_action_strength("u"))*int(not $c.disabled)
 		_velocity=speed*vec.normalized()
 		if llvl!=lvl:
 			_upd_lvl()
@@ -116,17 +107,14 @@ func _physics_process(delta: float) -> void:
 		if is_instance_valid(objet_target):
 			target=objet_target.global_position
 			$attray.cast_to=target-global_position
-			if fnc._sqrt(global_position-$attray.get_collision_point())<35 and $attray.get_collider()!=null and $attray.get_collider().get_parent()==objet_target.get_parent(): 
+			if fnc._sqrt(global_position-$attray.get_collision_point())<45 and $attray.get_collider()!=null and $attray.get_collider().get_parent()==objet_target.get_parent(): 
 				rpc("attk",target,get_network_master())
 				#_velocity=Vector2.ZERO
-				if targeted==true:
-					right=target.x>0
 		else:
 			$attray.cast_to=Vector2(0,0)
 		position.x=clamp(position.x,-gm.gms.gr_size.x/2,gm.gms.gr_size.x/2)
 		position.y=clamp(position.y,-gm.gms.gr_size.y/2,gm.gms.gr_size.y/2)
 		rset("pvec",_velocity)
-		rset("pright",right)
 		rset("pgp",global_position)
 		rset("pstatus_he",status.he)
 		rset("pstatus_m_he",status.m_he)
@@ -135,7 +123,6 @@ func _physics_process(delta: float) -> void:
 		move(_velocity)
 		#_update_pathfinding()
 	else:
-		right=pright
 		global_position=pgp
 		_velocity=pvec
 		move_and_slide(_velocity)
@@ -143,7 +130,8 @@ func _physics_process(delta: float) -> void:
 		status.m_he=pstatus_m_he
 		target=pterg
 		lvl=plvl
-	$lvl.text=str(lvl)
+	$nlvl/lvl.text=str(lvl)
+	$pb/hp.text=str(status.he)
 	ico.position=global_position+gm.gms.gr_size/2
 
 
@@ -167,8 +155,8 @@ func add_att_zone():
 	att.collision_mask=hib["collision_mask"]
 	att.damage=cd.lvls[lvl]["dmg"]+buffs["aatt"]
 	get_parent().call_deferred("add_child",att)
-	att.global_position=global_position
 	att.global_rotation_degrees=fnc.angle(target-global_position)
+	att.global_position=global_position+fnc.move(att.global_rotation_degrees)*10
 remotesync func attk(target_pos,pid_):
 	$AP.play("att",0,cd.lvls[lvl]["att_time"])
 func move(velocity: Vector2) -> void:
@@ -177,8 +165,6 @@ func move(velocity: Vector2) -> void:
 
 func _on_hurt_box_area_entered(area):
 	status.he-=area.damage*area.scale_damage*(float(area.damage*area.scale_damage)/(cd.lvls[lvl]["def"]+buffs["adef"]))
-	$spr.material.set("shader_param/active",true)
-	$blink_timer.start(0.05)
 	if is_instance_valid(area.owner_):
 		area.owner_.points+=cd.lvls[lvl]["help_points"]
 	if status.he<=0:
@@ -206,7 +192,9 @@ remotesync func delete(id:int):
 	call_deferred("add_child",cha)
 	#queue_free()
 func set_player_name(new_name):
-	get_node("Label").set_text(new_name)
+	var t=get_node("nlvl/Label")
+	t.set_text(new_name)
+	t.rect_min_size.x=t.get_font("normal_font").get_string_size(t.text).x
 
 
 func _on_ready_timeout():
@@ -214,7 +202,3 @@ func _on_ready_timeout():
 	if gm.command_id==command:
 		ico.show()
 	$c.disabled=false
-
-
-func _on_blink_timer_timeout():
-	$spr.material.set("shader_param/active",false)

@@ -11,7 +11,7 @@ config_version=4
 [application]
 
 config/name="net_test"
-run/main_scene="res://lobby.tscn"
+run/main_scene="res://main/lobby.tscn"
 config/icon="res://icon.png"
 
 [autoload]
@@ -20,10 +20,13 @@ gamestate="*res://gamestate.gd"
 gm="*res://game.gd"
 fnc="*res://functions.gd"
 
+[debug]
+
+settings/fps/force_fps=60
+
 [display]
 
 window/size/always_on_top=true
-window/dpi/allow_hidpi=true
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
 

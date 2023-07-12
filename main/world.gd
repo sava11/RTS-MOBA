@@ -10,13 +10,22 @@ func _ready():
 	yield(get_tree(),"idle_frame")
 	get_tree().set_deferred("paused",true)
 
+func _ss():
+	var img = get_viewport().get_texture().get_data()
+	yield(get_tree(), "idle_frame")
+	yield(get_tree(), "idle_frame")
+	var tex = ImageTexture.new()
+	tex.create_from_image(img)
+	img.save_png("res://screenshot.png")
+
 func _reload():
 	var pl=PoolVector2Array([
-		Vector2(rect.rect_position.x,rect.rect_position.y),
-		Vector2(rect.rect_position.x+gr_size.x,rect.rect_position.y),
-		Vector2(rect.rect_position.x+gr_size.x,rect.rect_position.y+gr_size.y),
-		Vector2(rect.rect_position.x,rect.rect_position.y+gr_size.y)
+		Vector2(0,0)+rect.rect_position,
+		Vector2(gr_size.x,0)+rect.rect_position,
+		Vector2(gr_size.x,gr_size.y)+rect.rect_position,
+		Vector2(0,gr_size.y)+rect.rect_position
 	])
+	yield(get_tree(),"idle_frame")
 	yield(get_tree(),"idle_frame")
 	reload_map(pl)
 func reload_map(pl):
@@ -65,7 +74,7 @@ func scl(p:PoolVector2Array,v:Vector2):
 func add_path(path_nod:NavigationPolygonInstance):
 	var bs=[]
 	for e in get_tree().get_nodes_in_group("ground_build"):
-		bs.append(fnc.to_glb_PV_and_rot(scl(e.polygon,e.global_scale),e.global_position*e.global_scale,e.global_rotation_degrees,1,5))
+		bs.append(fnc.to_glb_PV_and_rot(scl(e.polygon,e.global_scale),e.global_position,e.global_rotation_degrees,1,5))
 	if len(bs)>1:
 		bs=_merge_polygons(bs)
 	for e in range(0,len(bs)):
@@ -92,7 +101,7 @@ func msg(msg:String,pos:Vector2=fnc.get_prkt_win()/2):
 	m.text=msg
 	$cv/msg.add_child(m)
 	m.rect_position=pos-m.get_font("normal_font").get_string_size(m.text)/2
-	
+	print(m.text)
 #func get_nearst_enemy_base(gpos,command):
 #	var nds=get_tree().get_nodes_in_group("MBASE")
 #	for e in nds:
@@ -138,5 +147,5 @@ func msg(msg:String,pos:Vector2=fnc.get_prkt_win()/2):
 
 
 func _on_game_ready_timeout():
-	if get_network_master()==1:
+	if get_tree().is_network_server():
 		rpc("del_pause")

@@ -1,5 +1,5 @@
 extends Node
-
+var dir=Directory.new()
 var objs={
 	"buildings":{
 		"MBASE":{
@@ -39,7 +39,7 @@ var objs={
 			"unit":{
 				"add_value":25,
 				"img":"res://main/img/sword.png",
-				"unit_path":"res://main/sys_parts/units/unit1/unit.tscn",
+				"unit_path":"res://main/unit/unit.tscn",
 				"ucrt":10,
 				"att_time":2,#scale
 				"hp":50,
@@ -67,7 +67,7 @@ var objs={
 			"unit":{
 					"add_value":25,
 					"img":"res://main/img/sword.png",
-					"unit_path":"res://main/sys_parts/units/unit1/unit.tscn",
+					"unit_path":"res://main/unit/unit.tscn",
 					"ucrt":15,
 					"att_time":2,#scale
 					"hp":70,
@@ -95,7 +95,7 @@ var objs={
 			"unit":{
 					"add_value":20,
 					"img":"res://main/img/bow.png",
-					"unit_path":"res://main/sys_parts/units/unit1/unit.tscn",
+					"unit_path":"res://main/unit/unit.tscn",
 					"ucrt":20,
 					"att_time":1,#scale
 					"hp":20,
@@ -122,7 +122,7 @@ var objs={
 			"unit":{
 					"add_value":20,
 					"img":"res://main/img/bow.png",
-					"unit_path":"res://main/sys_parts/units/unit1/unit.tscn",
+					"unit_path":"res://main/unit/unit.tscn",
 					"ucrt":20,
 					"att_time":1,#scale
 					"hp":25,
@@ -143,7 +143,7 @@ var objs={
 			"img":"res://main/img/sword.png",
 			"lvls":{
 				1:{
-					"hp":100,
+					"hp":1000,
 					"def":25,
 					"dmg":25,
 					"dmgspd":0,
@@ -195,7 +195,7 @@ var objs={
 			},
 	},
 }
-
+var persons={}
 enum players_types{spectator,builder,hero}
 var commands={}
 puppet var pcommands={} 
@@ -221,3 +221,23 @@ func _physics_process(delta):
 		else:
 			commands=pcommands
 	pass
+func get_net_image(person_name:String,img:String,type:String):
+	var http_request = HTTPRequest.new()
+	http_request.name=str(randi())
+	add_child(http_request)
+	http_request.connect("request_completed", self, "_http_request_completed",[person_name,type,http_request.get_path()])
+	var http_error = http_request.request(img)
+	if http_error != OK:print("An error occurred in the HTTP request.")
+func _http_request_completed(result, response_code, headers, body,person_name:String,type:String,a:NodePath):
+	get_node(a).queue_free()
+	var image = Image.new()
+	var image_error=image.call("load_"+type+"_from_buffer",body)
+	if image_error != OK:
+		print("An error occurred while trying to display the image.")
+		return
+	var texture = ImageTexture.new()
+	texture.create_from_image(image)
+	if !dir.dir_exists("persons"):
+		dir.make_dir("persons")
+	image.save_png("res://persons/"+person_name+"."+type)
+	persons.merge({person_name:texture})

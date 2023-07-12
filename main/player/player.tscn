@@ -1,120 +1,406 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=47 format=2]
 
 [ext_resource path="res://main/player/player.gd" type="Script" id=1]
 [ext_resource path="res://main/sys_parts/boxes/hurt_box.gd" type="Script" id=2]
 [ext_resource path="res://main/sys_parts/boxes/choice_area.tscn" type="PackedScene" id=3]
 [ext_resource path="res://main/sys_parts/stats/stats.tscn" type="PackedScene" id=4]
-[ext_resource path="res://main/sys_parts/units/unit1/sprts.png" type="Texture" id=5]
+[ext_resource path="res://icon.png" type="Texture" id=5]
+[ext_resource path="res://main/img/sword.png" type="Texture" id=6]
 
-[sub_resource type="Shader" id=19]
+[sub_resource type="StyleBoxFlat" id=37]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.380392, 0.380392, 0.380392, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.619608, 0.619608, 0.619608, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=17]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+border_width_left = 2
+border_color = Color( 0.8, 0.8, 0.8, 0 )
+
+[sub_resource type="StyleBoxFlat" id=18]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.160784, 0.160784, 0.160784, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.415686, 0.415686, 0.415686, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=19]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.207843, 0.207843, 0.207843, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.415686, 0.415686, 0.415686, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=20]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.301961, 0.301961, 0.301961, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.564706, 0.564706, 0.564706, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=21]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=22]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.207843, 0.207843, 0.207843, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.415686, 0.415686, 0.415686, 1 )
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 5
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=40]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.388235, 0.388235, 0.388235, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.588235, 0.580392, 0.580392, 1 )
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 5
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=107]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.380392, 0.380392, 0.380392, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.619608, 0.619608, 0.619608, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=108]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+border_width_left = 2
+border_color = Color( 0.8, 0.8, 0.8, 0 )
+
+[sub_resource type="StyleBoxFlat" id=109]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.160784, 0.160784, 0.160784, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.415686, 0.415686, 0.415686, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=110]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.207843, 0.207843, 0.207843, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.415686, 0.415686, 0.415686, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=111]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.301961, 0.301961, 0.301961, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.564706, 0.564706, 0.564706, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=115]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.32549, 0.32549, 0.32549, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.517647, 0.517647, 0.517647, 1 )
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+anti_aliasing_size = 0.225
+
+[sub_resource type="StyleBoxFlat" id=105]
+content_margin_left = 5.0
+content_margin_right = 5.0
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id=106]
+content_margin_left = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color( 0.32549, 0.32549, 0.32549, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.517647, 0.517647, 0.517647, 1 )
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id=112]
+content_margin_left = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color( 0.380392, 0.380392, 0.380392, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.619608, 0.619608, 0.619608, 1 )
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id=80]
+bg_color = Color( 0.32549, 0.32549, 0.32549, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.517647, 0.517647, 0.517647, 1 )
+
+[sub_resource type="StyleBoxFlat" id=81]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.32549, 0.32549, 0.32549, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_color = Color( 0.517647, 0.517647, 0.517647, 1 )
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=97]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.380392, 0.380392, 0.380392, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_color = Color( 0.619608, 0.619608, 0.619608, 1 )
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=98]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.207843, 0.207843, 0.207843, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.415686, 0.415686, 0.415686, 1 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="DynamicFontData" id=113]
+override_oversampling = 5.0
+font_path = "res://main/font/COMIC.TTF"
+
+[sub_resource type="DynamicFont" id=114]
+font_data = SubResource( 113 )
+
+[sub_resource type="Theme" id=116]
+default_font = SubResource( 114 )
+Button/styles/disabled = SubResource( 37 )
+Button/styles/focus = SubResource( 17 )
+Button/styles/hover = SubResource( 18 )
+Button/styles/normal = SubResource( 19 )
+Button/styles/pressed = SubResource( 20 )
+LineEdit/styles/focus = SubResource( 21 )
+LineEdit/styles/normal = SubResource( 22 )
+LineEdit/styles/read_only = SubResource( 40 )
+OptionButton/styles/disabled = SubResource( 107 )
+OptionButton/styles/focus = SubResource( 108 )
+OptionButton/styles/hover = SubResource( 109 )
+OptionButton/styles/normal = SubResource( 110 )
+OptionButton/styles/pressed = SubResource( 111 )
+Panel/styles/panel = SubResource( 115 )
+PopupMenu/styles/hover = SubResource( 105 )
+PopupMenu/styles/labeled_separator_left = null
+PopupMenu/styles/labeled_separator_right = null
+PopupMenu/styles/panel = SubResource( 106 )
+PopupMenu/styles/panel_disabled = SubResource( 112 )
+PopupMenu/styles/separator = null
+TabContainer/styles/panel = SubResource( 80 )
+TabContainer/styles/tab_bg = SubResource( 81 )
+TabContainer/styles/tab_disabled = SubResource( 97 )
+TabContainer/styles/tab_fg = SubResource( 81 )
+TextEdit/styles/normal = SubResource( 98 )
+
+[sub_resource type="Shader" id=127]
 code = "shader_type canvas_item;
 
-uniform bool active = false;
+uniform float active = 0.0;
 uniform vec4 tint : hint_color = vec4(1.0, 1.0, 0.0, 1.0);
 
 void fragment() {
 	vec4 tint_copy = tint;
 	vec4 previous_color = texture(TEXTURE, UV);
 	
-	if (active == true)
+	if (active != 0.0)
 	{
 		//tint_copy.a = previous_color.a;
 		vec4 color=texture(TEXTURE, UV);
-		color.rgb=mix(texture(TEXTURE, UV).rgb,tint_copy.rgb,tint_copy.a);
+		color.rgb=mix(texture(TEXTURE, UV).rgb,tint_copy.rgb*clamp(active,0.0,1.0),tint_copy.a);
 		COLOR = color;
 	}else{COLOR=texture(TEXTURE, UV)}
 }"
 
-[sub_resource type="ShaderMaterial" id=18]
+[sub_resource type="ShaderMaterial" id=128]
 resource_local_to_scene = true
-shader = SubResource( 19 )
-shader_param/active = false
-shader_param/tint = Color( 1, 1, 1, 0.34902 )
+shader = SubResource( 127 )
+shader_param/active = 0.0
+shader_param/tint = Color( 1, 1, 1, 0.345098 )
 
-[sub_resource type="AtlasTexture" id=3]
-flags = 4
-atlas = ExtResource( 5 )
-region = Rect2( 0, 0, 100, 256 )
-
-[sub_resource type="AtlasTexture" id=4]
-flags = 4
-atlas = ExtResource( 5 )
-region = Rect2( 100, 0, 100, 256 )
-
-[sub_resource type="SpriteFrames" id=5]
-animations = [ {
-"frames": [ SubResource( 3 ) ],
-"loop": true,
-"name": "left",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 4 ) ],
-"loop": true,
-"name": "right",
-"speed": 5.0
-} ]
-
-[sub_resource type="CircleShape2D" id=11]
-radius = 8.0
+[sub_resource type="RectangleShape2D" id=118]
+extents = Vector2( 16, 16 )
 
 [sub_resource type="CircleShape2D" id=1]
-radius = 8.0
+radius = 15.0
 
-[sub_resource type="DynamicFontData" id=13]
-override_oversampling = 5.0
-font_path = "res://main/font/COMIC.TTF"
+[sub_resource type="RectangleShape2D" id=117]
+extents = Vector2( 20, 20 )
 
-[sub_resource type="DynamicFont" id=14]
-font_data = SubResource( 13 )
-
-[sub_resource type="DynamicFontData" id=15]
-override_oversampling = 5.0
-font_path = "res://main/font/COMIC.TTF"
-
-[sub_resource type="DynamicFont" id=16]
-size = 8
-outline_size = 1
-outline_color = Color( 0, 0, 0, 1 )
-use_mipmaps = true
-use_filter = true
-font_data = SubResource( 15 )
-
-[sub_resource type="StyleBoxFlat" id=7]
-bg_color = Color( 0.607843, 0.607843, 0.607843, 1 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.929412, 0.929412, 0.929412, 1 )
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-expand_margin_left = 4.0
-expand_margin_right = 4.0
-expand_margin_top = 4.0
-expand_margin_bottom = 4.0
-
-[sub_resource type="StyleBoxFlat" id=8]
-bg_color = Color( 0.298039, 0.298039, 0.298039, 1 )
+[sub_resource type="StyleBoxFlat" id=119]
+bg_color = Color( 0.564706, 0.564706, 0.564706, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
 border_color = Color( 0, 0, 0, 1 )
-border_blend = true
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
+anti_aliasing_size = 0.216
 
-[sub_resource type="DynamicFontData" id=6]
+[sub_resource type="StyleBoxFlat" id=120]
+bg_color = Color( 1, 1, 1, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0, 0, 0, 0 )
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+anti_aliasing_size = 0.216
+
+[sub_resource type="Theme" id=121]
+ProgressBar/styles/bg = SubResource( 119 )
+ProgressBar/styles/fg = SubResource( 120 )
+
+[sub_resource type="DynamicFontData" id=124]
 override_oversampling = 5.0
 font_path = "res://main/font/COMIC.TTF"
 
-[sub_resource type="DynamicFont" id=9]
-font_data = SubResource( 6 )
+[sub_resource type="DynamicFont" id=125]
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+font_data = SubResource( 124 )
 
-[sub_resource type="Theme" id=10]
-default_font = SubResource( 9 )
-ProgressBar/styles/bg = SubResource( 7 )
-ProgressBar/styles/fg = SubResource( 8 )
+[sub_resource type="Theme" id=126]
+default_font = SubResource( 125 )
 
 [sub_resource type="Animation" id=12]
 resource_name = "att"
@@ -133,21 +419,58 @@ tracks/0/keys = {
 } ]
 }
 
+[sub_resource type="DynamicFontData" id=13]
+override_oversampling = 5.0
+font_path = "res://main/font/COMIC.TTF"
+
+[sub_resource type="DynamicFont" id=14]
+size = 10
+font_data = SubResource( 13 )
+
+[sub_resource type="DynamicFontData" id=122]
+override_oversampling = 5.0
+font_path = "res://main/font/COMIC.TTF"
+
+[sub_resource type="DynamicFont" id=123]
+size = 10
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+font_data = SubResource( 122 )
+
 [node name="kb" type="KinematicBody2D"]
 pause_mode = 2
 script = ExtResource( 1 )
 see_range = 500.0
+speed = 150.0
+
+[node name="Panel" type="Panel" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -16.0
+margin_top = -16.0
+margin_right = 16.0
+margin_bottom = 16.0
+mouse_filter = 2
+theme = SubResource( 116 )
+
+[node name="spr" type="TextureRect" parent="Panel"]
+material = SubResource( 128 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 3.0
+margin_top = 3.0
+margin_right = -3.0
+margin_bottom = -3.0
+mouse_filter = 2
+texture = ExtResource( 5 )
+expand = true
 
 [node name="stats" parent="." instance=ExtResource( 4 )]
 m_he = 20.0
-
-[node name="spr" type="AnimatedSprite" parent="."]
-material = SubResource( 18 )
-position = Vector2( 0, -18 )
-scale = Vector2( 0.2, 0.2 )
-frames = SubResource( 5 )
-animation = "left"
-playing = true
 
 [node name="hurt_box" type="Area2D" parent="."]
 collision_layer = 8
@@ -155,62 +478,62 @@ collision_mask = 0
 script = ExtResource( 2 )
 
 [node name="col" type="CollisionShape2D" parent="hurt_box"]
-shape = SubResource( 11 )
+visible = false
+shape = SubResource( 118 )
 
 [node name="Timer" type="Timer" parent="hurt_box"]
 
 [node name="c" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
-[node name="Label" type="Label" parent="."]
-anchor_right = 1.0
-margin_left = -56.0
-margin_top = -77.0
-margin_right = 56.0
-margin_bottom = -54.0
-custom_fonts/font = SubResource( 14 )
-text = "dfg"
-align = 1
-valign = 1
-autowrap = true
+[node name="choice_area" parent="." instance=ExtResource( 3 )]
+
+[node name="c" parent="choice_area" index="0"]
+visible = false
+shape = SubResource( 117 )
 
 [node name="s2" type="TextureRect" parent="."]
 use_parent_material = true
 margin_left = -10.0
-margin_top = 5.0
+margin_top = 16.0
 margin_right = 10.0
-margin_bottom = 25.0
+margin_bottom = 36.0
+mouse_filter = 2
+texture = ExtResource( 6 )
 expand = true
 
-[node name="lvl" type="Label" parent="."]
-margin_right = 16.0
-margin_bottom = 16.0
-rect_min_size = Vector2( 0.117, 0.096 )
-custom_fonts/font = SubResource( 16 )
-text = "1"
-align = 1
-
-[node name="vcont" type="Node2D" parent="."]
-position = Vector2( 0, -52 )
-z_index = 999
-
-[node name="pb" type="ProgressBar" parent="vcont"]
-self_modulate = Color( 0, 1, 0, 1 )
-margin_left = -16.0
-margin_right = 144.0
-margin_bottom = 27.0
-rect_scale = Vector2( 0.2, 0.2 )
+[node name="pb" type="ProgressBar" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -30.0
+margin_top = -31.0
+margin_right = 90.0
+margin_bottom = -11.0
+rect_scale = Vector2( 0.5, 0.5 )
 mouse_filter = 2
-theme = SubResource( 10 )
-value = 20.0
+theme = SubResource( 121 )
 percent_visible = false
+
+[node name="hp" type="RichTextLabel" parent="pb"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -50.0
+margin_top = -11.0
+margin_right = 50.0
+margin_bottom = 11.0
+mouse_filter = 2
+theme = SubResource( 126 )
+text = "123213"
+scroll_active = false
 
 [node name="attray" type="RayCast2D" parent="."]
 enabled = true
 collide_with_areas = true
 collide_with_bodies = false
-
-[node name="choice_area" parent="." instance=ExtResource( 3 )]
 
 [node name="AP" type="AnimationPlayer" parent="."]
 anims/att = SubResource( 12 )
@@ -221,13 +544,43 @@ one_shot = true
 
 [node name="rt" type="RemoteTransform2D" parent="."]
 
-[node name="blink_timer" type="Timer" parent="."]
-process_mode = 0
-wait_time = 0.1
+[node name="nlvl" type="HBoxContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -59.5
+margin_top = -45.0
+margin_right = 59.5
+margin_bottom = -31.0
+mouse_filter = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="nlvl"]
+margin_top = -1.0
+margin_right = 110.0
+margin_bottom = 13.2
+rect_min_size = Vector2( 110, 0 )
+custom_fonts/font = SubResource( 14 )
+text = "voider the fastest rect"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="lvl" type="Label" parent="nlvl"]
+margin_left = 114.0
+margin_top = -1.0
+margin_right = 119.0
+margin_bottom = 13.2
+rect_min_size = Vector2( 0.117, 0.096 )
+custom_fonts/font = SubResource( 123 )
+text = "1"
+align = 1
 
 [connection signal="area_entered" from="hurt_box" to="." method="_on_hurt_box_area_entered"]
 [connection signal="invi_ended" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_ended"]
 [connection signal="invi_started" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_started"]
 [connection signal="timeout" from="hurt_box/Timer" to="hurt_box" method="_on_Timer_timeout"]
 [connection signal="timeout" from="ready" to="." method="_on_ready_timeout"]
-[connection signal="timeout" from="blink_timer" to="." method="_on_blink_timer_timeout"]
+
+[editable path="choice_area"]

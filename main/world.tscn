@@ -1,10 +1,9 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://main/maps/map_name.tscn" type="PackedScene" id=1]
+[ext_resource path="res://main/maps/map_name2.tscn" type="PackedScene" id=1]
 [ext_resource path="res://main/world.gd" type="Script" id=2]
 [ext_resource path="res://main/pl_cam.gd" type="Script" id=3]
 [ext_resource path="res://main/cv.gd" type="Script" id=4]
-[ext_resource path="res://Sf.png" type="Texture" id=5]
 
 [sub_resource type="DynamicFontData" id=3]
 override_oversampling = 5.0
@@ -22,11 +21,11 @@ script = ExtResource( 2 )
 
 [node name="map" type="Node2D" parent="."]
 
-[node name="map_name" parent="map" instance=ExtResource( 1 )]
+[node name="map_name2" parent="map" instance=ExtResource( 1 )]
 
 [node name="cam" type="Camera2D" parent="."]
 current = true
-zoom = Vector2( 0.5, 0.5 )
+zoom = Vector2( 0.7, 0.7 )
 process_mode = 0
 smoothing_speed = 7.0
 script = ExtResource( 3 )
@@ -63,6 +62,7 @@ anchor_top = 1.0
 anchor_bottom = 1.0
 margin_top = -200.0
 margin_right = 200.0
+mouse_filter = 2
 stretch = true
 
 [node name="v" type="Viewport" parent="cv/c/vc"]
@@ -71,12 +71,6 @@ handle_input_locally = false
 hdr = false
 usage = 1
 render_target_update_mode = 3
-
-[node name="sf" type="TextureRect" parent="cv/c/vc/v"]
-margin_right = 2685.0
-margin_bottom = 2685.0
-texture = ExtResource( 5 )
-expand = true
 
 [node name="players" type="Node2D" parent="cv/c/vc/v"]
 

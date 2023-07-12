@@ -110,7 +110,12 @@ remote func pre_start_game(spawn_points):
 			var pos=Vector2.ZERO
 			for e in world.get_node("map").get_child(0).get_node("PlayGround/mains").get_children():
 				if e.command==player.command:
-					pos=e.get_node("spawnpoints").get_child(i%(e.get_node("spawnpoints").get_child_count()-1)).global_position
+					var sp_id=0
+					if e.get_node("spawnpoints").get_child_count()-1==0:
+						sp_id=0
+					else:
+						sp_id=e.get_node("spawnpoints").get_child_count()-1
+					pos=e.get_node("spawnpoints").get_child(sp_id).global_position
 					i+=1
 					break
 			gm.command_id=player.command
@@ -126,7 +131,7 @@ remote func pre_start_game(spawn_points):
 				player.target=pos
 				player.start_pos=pos
 				player_name.hero_path=str(world.get_node("map").get_child(0).get_node("PlayGround").get_path())+"/"+player.name
-				
+				player.get_node("Panel/spr").texture=get_tree().current_scene.get_node("charters/op").icon
 			else:
 				player.queue_free()
 		else:
@@ -135,7 +140,12 @@ remote func pre_start_game(spawn_points):
 			var pos=Vector2.ZERO
 			for e in world.get_node("map").get_child(0).get_node("PlayGround/mains").get_children():
 				if e.command==player.command:
-					pos=e.get_node("spawnpoints").get_child(i%(e.get_node("spawnpoints").get_child_count()-1)).global_position
+					var sp_id=0
+					if e.get_node("spawnpoints").get_child_count()-1==0:
+						sp_id=0
+					else:
+						sp_id=e.get_node("spawnpoints").get_child_count()-1
+					pos=e.get_node("spawnpoints").get_child(sp_id).global_position
 					i+=1
 					break
 			player.set_player_name(players[p_id].name)
@@ -151,6 +161,7 @@ remote func pre_start_game(spawn_points):
 				player.target=pos
 				player.start_pos=pos
 				players[p_id].hero_path=str(world.get_node("map").get_child(0).get_node("PlayGround").get_path())+"/"+player.name
+				#player.get_node("Panel/spr").texture=get_tree().current_scene.get_node("charters/op").icon
 			else:
 				player.queue_free()
 	
@@ -181,7 +192,7 @@ func host_game(new_player_name,hero="visitor"):
 		"name":new_player_name,
 		"hero":hero,
 		"hero_path":"",
-		"command":0,
+		"command":1,
 		"ready":false
 		}
 	peer = NetworkedMultiplayerENet.new()
@@ -195,7 +206,7 @@ func join_game(ip, new_player_name,hero="visitor"):
 		"name":new_player_name,
 		"hero":hero,
 		"hero_path":"",
-		"command":0,
+		"command":2,
 		"ready":false
 		}
 	peer = NetworkedMultiplayerENet.new()

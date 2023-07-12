@@ -1,0 +1,489 @@
+[gd_scene load_steps=37 format=2]
+
+[ext_resource path="res://main/unit/unit.gd" type="Script" id=1]
+[ext_resource path="res://main/sys_parts/boxes/hurt_box.gd" type="Script" id=3]
+[ext_resource path="res://main/sys_parts/stats/stats.tscn" type="PackedScene" id=4]
+[ext_resource path="res://main/sys_parts/boxes/choice_area.tscn" type="PackedScene" id=5]
+
+[sub_resource type="StyleBoxFlat" id=37]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.380392, 0.380392, 0.380392, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.619608, 0.619608, 0.619608, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=17]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+border_width_left = 2
+border_color = Color( 0.8, 0.8, 0.8, 0 )
+
+[sub_resource type="StyleBoxFlat" id=18]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.160784, 0.160784, 0.160784, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.415686, 0.415686, 0.415686, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=19]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.207843, 0.207843, 0.207843, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.415686, 0.415686, 0.415686, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=20]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.301961, 0.301961, 0.301961, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.564706, 0.564706, 0.564706, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=21]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=22]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.207843, 0.207843, 0.207843, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.415686, 0.415686, 0.415686, 1 )
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 5
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=40]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.388235, 0.388235, 0.388235, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.588235, 0.580392, 0.580392, 1 )
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 5
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=107]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.380392, 0.380392, 0.380392, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.619608, 0.619608, 0.619608, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=108]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+border_width_left = 2
+border_color = Color( 0.8, 0.8, 0.8, 0 )
+
+[sub_resource type="StyleBoxFlat" id=109]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.160784, 0.160784, 0.160784, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.415686, 0.415686, 0.415686, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=110]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.207843, 0.207843, 0.207843, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.415686, 0.415686, 0.415686, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=111]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.301961, 0.301961, 0.301961, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.564706, 0.564706, 0.564706, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=115]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.32549, 0.32549, 0.32549, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.517647, 0.517647, 0.517647, 1 )
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+anti_aliasing_size = 0.225
+
+[sub_resource type="StyleBoxFlat" id=105]
+content_margin_left = 5.0
+content_margin_right = 5.0
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id=106]
+content_margin_left = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color( 0.32549, 0.32549, 0.32549, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.517647, 0.517647, 0.517647, 1 )
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id=112]
+content_margin_left = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color( 0.380392, 0.380392, 0.380392, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.619608, 0.619608, 0.619608, 1 )
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id=80]
+bg_color = Color( 0.32549, 0.32549, 0.32549, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.517647, 0.517647, 0.517647, 1 )
+
+[sub_resource type="StyleBoxFlat" id=81]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.32549, 0.32549, 0.32549, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_color = Color( 0.517647, 0.517647, 0.517647, 1 )
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=97]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.380392, 0.380392, 0.380392, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_color = Color( 0.619608, 0.619608, 0.619608, 1 )
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=98]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.207843, 0.207843, 0.207843, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.415686, 0.415686, 0.415686, 1 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="DynamicFontData" id=113]
+override_oversampling = 5.0
+font_path = "res://main/font/COMIC.TTF"
+
+[sub_resource type="DynamicFont" id=114]
+font_data = SubResource( 113 )
+
+[sub_resource type="Theme" id=116]
+default_font = SubResource( 114 )
+Button/styles/disabled = SubResource( 37 )
+Button/styles/focus = SubResource( 17 )
+Button/styles/hover = SubResource( 18 )
+Button/styles/normal = SubResource( 19 )
+Button/styles/pressed = SubResource( 20 )
+LineEdit/styles/focus = SubResource( 21 )
+LineEdit/styles/normal = SubResource( 22 )
+LineEdit/styles/read_only = SubResource( 40 )
+OptionButton/styles/disabled = SubResource( 107 )
+OptionButton/styles/focus = SubResource( 108 )
+OptionButton/styles/hover = SubResource( 109 )
+OptionButton/styles/normal = SubResource( 110 )
+OptionButton/styles/pressed = SubResource( 111 )
+Panel/styles/panel = SubResource( 115 )
+PopupMenu/styles/hover = SubResource( 105 )
+PopupMenu/styles/labeled_separator_left = null
+PopupMenu/styles/labeled_separator_right = null
+PopupMenu/styles/panel = SubResource( 106 )
+PopupMenu/styles/panel_disabled = SubResource( 112 )
+PopupMenu/styles/separator = null
+TabContainer/styles/panel = SubResource( 80 )
+TabContainer/styles/tab_bg = SubResource( 81 )
+TabContainer/styles/tab_disabled = SubResource( 97 )
+TabContainer/styles/tab_fg = SubResource( 81 )
+TextEdit/styles/normal = SubResource( 98 )
+
+[sub_resource type="RectangleShape2D" id=117]
+extents = Vector2( 20, 20 )
+
+[sub_resource type="RectangleShape2D" id=16]
+extents = Vector2( 12, 12 )
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 200.0
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 12.0416
+
+[sub_resource type="Animation" id=3]
+resource_name = "att"
+step = 0.05
+tracks/0/type = "method"
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [  ],
+"method": "add_att_zone"
+}, {
+"args": [  ],
+"method": "end_att"
+} ]
+}
+
+[sub_resource type="StyleBoxFlat" id=119]
+bg_color = Color( 0.564706, 0.564706, 0.564706, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0, 0, 0, 1 )
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+anti_aliasing_size = 0.216
+
+[sub_resource type="StyleBoxFlat" id=120]
+bg_color = Color( 1, 1, 1, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0, 0, 0, 0 )
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+anti_aliasing_size = 0.216
+
+[sub_resource type="Theme" id=121]
+ProgressBar/styles/bg = SubResource( 119 )
+ProgressBar/styles/fg = SubResource( 120 )
+
+[node name="kb" type="KinematicBody2D"]
+script = ExtResource( 1 )
+
+[node name="Panel" type="Panel" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -12.0
+margin_top = -12.0
+margin_right = 12.0
+margin_bottom = 12.0
+mouse_filter = 2
+theme = SubResource( 116 )
+
+[node name="TextureRect" type="TextureRect" parent="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 2.0
+margin_top = 2.0
+margin_right = -2.0
+margin_bottom = -2.0
+mouse_filter = 2
+
+[node name="na" type="NavigationAgent2D" parent="."]
+path_desired_distance = 10.0
+target_desired_distance = 10.0
+path_max_distance = 60.0
+avoidance_enabled = true
+neighbor_dist = 10.0
+max_speed = 100.0
+
+[node name="stats" parent="." instance=ExtResource( 4 )]
+m_he = 20.0
+
+[node name="choice_area" parent="." instance=ExtResource( 5 )]
+
+[node name="c" parent="choice_area" index="0"]
+pause_mode = 2
+shape = SubResource( 117 )
+
+[node name="hurt_box" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource( 3 )
+
+[node name="col" type="CollisionShape2D" parent="hurt_box"]
+shape = SubResource( 16 )
+
+[node name="Timer" type="Timer" parent="hurt_box"]
+
+[node name="a" type="Area2D" parent="."]
+
+[node name="c" type="CollisionShape2D" parent="a"]
+visible = false
+shape = SubResource( 2 )
+
+[node name="c" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+
+[node name="AP" type="AnimationPlayer" parent="."]
+anims/att = SubResource( 3 )
+
+[node name="attray" type="RayCast2D" parent="."]
+enabled = true
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="s2" type="TextureRect" parent="."]
+margin_left = -7.5
+margin_top = 5.0
+margin_right = 7.5
+margin_bottom = 20.0
+mouse_filter = 2
+expand = true
+
+[node name="pb" type="ProgressBar" parent="."]
+margin_left = -23.0
+margin_top = -26.0
+margin_right = 69.0
+margin_bottom = -9.0
+rect_scale = Vector2( 0.5, 0.5 )
+mouse_filter = 2
+theme = SubResource( 121 )
+value = 50.0
+percent_visible = false
+
+[node name="l2d" type="Line2D" parent="."]
+default_color = Color( 0.164706, 0.937255, 0.0313726, 1 )
+
+[connection signal="area_entered" from="hurt_box" to="." method="_on_hurt_box_area_entered"]
+[connection signal="invi_ended" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_ended"]
+[connection signal="invi_started" from="hurt_box" to="hurt_box" method="_on_hurt_box_invi_started"]
+[connection signal="timeout" from="hurt_box/Timer" to="hurt_box" method="_on_Timer_timeout"]
+[connection signal="body_entered" from="a" to="." method="_on_a_body_entered"]
+[connection signal="body_exited" from="a" to="." method="_on_a_body_exited"]
+
+[editable path="choice_area"]

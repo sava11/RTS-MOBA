@@ -5,4 +5,3 @@ func _physics_process(delta):
 
 func _on_t_timeout():
 	queue_free()
-	pass # Replace with function body.

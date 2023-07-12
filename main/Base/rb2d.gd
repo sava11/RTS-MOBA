@@ -101,7 +101,7 @@ func _ready() -> void:
 	ico=preload("res://main/sys_parts/minimap_b_icon.tscn").instance()
 	ico.name=name
 	gm.gms.get_node("cv/c/vc/v/players").add_child(ico)
-	if gm.command_id==command:
+	if command==gm.command_id:
 		hub.collision_layer=2
 		hub.collision_mask=0
 		$vcont/pb.self_modulate=Color(0,1.0,0,1)
@@ -145,7 +145,7 @@ func _physics_process(delta):
 				timers.append(cd.unit.ucrt)
 			timers[0]-=delta
 			if timers[0]<0:
-				rpc("add_unit",pid,"kb_"+str(int(rand_range(10000+command*100000,99999+command*100000))))
+				rpc("add_unit",pid,"kb_"+str(randi()) )
 				timers.remove(0)
 		rset("pstatus_he",status.he)
 		rset("pstatus_m_he",status.m_he)
@@ -163,8 +163,7 @@ func _physics_process(delta):
 	
 		
 var timers=[]
-remotesync func _area_add_unit(un,id,n):
-	rpc("add_unit",un,id,n)
+
 remotesync func add_unit(id,n):
 	if cd.unit.unit_path!="" and cd.unit.unit_path!="null":
 		var unit=load(cd.unit.unit_path).instance()
@@ -178,7 +177,7 @@ remotesync func add_unit(id,n):
 		#unit.target=path[len(path)-1]
 		#unit._temp_target=path[len(path)-1]
 		unit.cd=cd.unit
-		if unit.cd.has("dmgspd") and unit.cd.get("dmgspd",0)>0:
+		if unit.cd.get("dmgspd",0)>0:
 			unit.ranger=true
 		unit.get_node("s2").texture=load(unit.cd.img)
 		unit.buffs["aatt"]+=buffs["uatt"]
@@ -194,7 +193,7 @@ func set_player_name(new_name):
 	get_node("label").set_text(new_name)
 func _on_hurt_box_area_entered(area):
 	status.he-=area.damage*area.scale_damage
-	$spr.material.set("shader_param/active",true)
+	$s.material.set("shader_param/active",true)
 	$blink_timer.start(0.05)
 	if is_instance_valid(area.owner_):
 		area.owner_.points+=cd["help_points"]
@@ -217,4 +216,4 @@ sync func delete(c:int):
 
 
 func _on_blink_timer_timeout():
-	$spr.material.set("shader_param/active",false)
+	$s.material.set("shader_param/active",false)

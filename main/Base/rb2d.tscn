@@ -29,8 +29,8 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id=18]
 resource_local_to_scene = true
 shader = SubResource( 19 )
-shader_param/active = false
-shader_param/tint = Color( 1, 1, 1, 0.34902 )
+shader_param/active = true
+shader_param/tint = Color( 0.486275, 0.396078, 0.396078, 0.00784314 )
 
 [sub_resource type="CapsuleShape2D" id=1]
 resource_local_to_scene = true
@@ -63,10 +63,9 @@ z_index = 999
 
 [node name="pb" parent="vcont" instance=ExtResource( 5 )]
 margin_left = -40.0
-margin_top = -40.0
+margin_top = -50.0
 margin_right = 120.0
-margin_bottom = -22.0
-rect_scale = Vector2( 0.5, 0.3 )
+margin_bottom = -32.0
 
 [node name="pos" type="Position2D" parent="."]
 position = Vector2( 0, -48 )
@@ -76,7 +75,6 @@ position = Vector2( 0, -48 )
 [node name="choice_area" parent="." instance=ExtResource( 6 )]
 
 [node name="c" parent="choice_area" index="0"]
-position = Vector2( 0, 0 )
 shape = SubResource( 1 )
 
 [node name="blink_timer" type="Timer" parent="."]

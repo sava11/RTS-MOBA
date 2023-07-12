@@ -1,0 +1,702 @@
+[gd_scene load_steps=31 format=2]
+
+[ext_resource path="res://main/lobby.gd" type="Script" id=1]
+[ext_resource path="res://main/img/molot.png" type="Texture" id=2]
+[ext_resource path="res://main/img/persons.svg" type="Texture" id=3]
+[ext_resource path="res://main/img/eye.svg" type="Texture" id=4]
+[ext_resource path="res://main/img/sword.png" type="Texture" id=5]
+[ext_resource path="res://main/insert_persons_from_net.gd" type="Script" id=6]
+
+[sub_resource type="StyleBoxFlat" id=37]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.380392, 0.380392, 0.380392, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.619608, 0.619608, 0.619608, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=17]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+border_width_left = 2
+border_color = Color( 0.8, 0.8, 0.8, 0 )
+
+[sub_resource type="StyleBoxFlat" id=18]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.160784, 0.160784, 0.160784, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.415686, 0.415686, 0.415686, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=19]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.207843, 0.207843, 0.207843, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.415686, 0.415686, 0.415686, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=20]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.301961, 0.301961, 0.301961, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.564706, 0.564706, 0.564706, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=21]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=22]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.207843, 0.207843, 0.207843, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.415686, 0.415686, 0.415686, 1 )
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 5
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=40]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.388235, 0.388235, 0.388235, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.588235, 0.580392, 0.580392, 1 )
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 5
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=107]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.380392, 0.380392, 0.380392, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.619608, 0.619608, 0.619608, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=108]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+border_width_left = 2
+border_color = Color( 0.8, 0.8, 0.8, 0 )
+
+[sub_resource type="StyleBoxFlat" id=109]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.160784, 0.160784, 0.160784, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.415686, 0.415686, 0.415686, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=110]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.207843, 0.207843, 0.207843, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.415686, 0.415686, 0.415686, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=111]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.301961, 0.301961, 0.301961, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.564706, 0.564706, 0.564706, 1 )
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=38]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.32549, 0.32549, 0.32549, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.517647, 0.517647, 0.517647, 1 )
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id=105]
+content_margin_left = 5.0
+content_margin_right = 5.0
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id=106]
+content_margin_left = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color( 0.32549, 0.32549, 0.32549, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.517647, 0.517647, 0.517647, 1 )
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id=112]
+content_margin_left = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color( 0.380392, 0.380392, 0.380392, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.619608, 0.619608, 0.619608, 1 )
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id=80]
+bg_color = Color( 0.32549, 0.32549, 0.32549, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.517647, 0.517647, 0.517647, 1 )
+
+[sub_resource type="StyleBoxFlat" id=81]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.32549, 0.32549, 0.32549, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_color = Color( 0.517647, 0.517647, 0.517647, 1 )
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=97]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.380392, 0.380392, 0.380392, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_color = Color( 0.619608, 0.619608, 0.619608, 1 )
+shadow_color = Color( 0, 0, 0, 0.156863 )
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id=98]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.207843, 0.207843, 0.207843, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.415686, 0.415686, 0.415686, 1 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="DynamicFontData" id=113]
+override_oversampling = 5.0
+font_path = "res://main/font/COMIC.TTF"
+
+[sub_resource type="DynamicFont" id=114]
+font_data = SubResource( 113 )
+
+[sub_resource type="Theme" id=115]
+default_font = SubResource( 114 )
+Button/styles/disabled = SubResource( 37 )
+Button/styles/focus = SubResource( 17 )
+Button/styles/hover = SubResource( 18 )
+Button/styles/normal = SubResource( 19 )
+Button/styles/pressed = SubResource( 20 )
+LineEdit/styles/focus = SubResource( 21 )
+LineEdit/styles/normal = SubResource( 22 )
+LineEdit/styles/read_only = SubResource( 40 )
+OptionButton/styles/disabled = SubResource( 107 )
+OptionButton/styles/focus = SubResource( 108 )
+OptionButton/styles/hover = SubResource( 109 )
+OptionButton/styles/normal = SubResource( 110 )
+OptionButton/styles/pressed = SubResource( 111 )
+Panel/styles/panel = SubResource( 38 )
+PopupMenu/styles/hover = SubResource( 105 )
+PopupMenu/styles/labeled_separator_left = null
+PopupMenu/styles/labeled_separator_right = null
+PopupMenu/styles/panel = SubResource( 106 )
+PopupMenu/styles/panel_disabled = SubResource( 112 )
+PopupMenu/styles/separator = null
+TabContainer/styles/panel = SubResource( 80 )
+TabContainer/styles/tab_bg = SubResource( 81 )
+TabContainer/styles/tab_disabled = SubResource( 97 )
+TabContainer/styles/tab_fg = SubResource( 81 )
+TextEdit/styles/normal = SubResource( 98 )
+
+[node name="Lobby" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_clip_content = true
+theme = SubResource( 115 )
+script = ExtResource( 1 )
+__meta__ = {
+"_editor_description_": "пикесль график, расположение камеры на 2д, миндастри класик\\факторио"
+}
+
+[node name="Players" type="Panel" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -126.0
+margin_top = -177.5
+margin_right = 126.0
+margin_bottom = 177.5
+size_flags_horizontal = 2
+size_flags_vertical = 2
+
+[node name="Label" type="Label" parent="Players"]
+margin_left = 26.0
+margin_top = 14.0
+margin_right = 161.0
+margin_bottom = 36.6
+size_flags_horizontal = 2
+size_flags_vertical = 0
+text = "Awaiting Players..."
+
+[node name="Start" type="Button" parent="Players"]
+margin_left = 68.0
+margin_top = 307.0
+margin_right = 193.0
+margin_bottom = 336.0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+text = "START!"
+
+[node name="watch" type="Button" parent="Players"]
+margin_left = 142.0
+margin_top = -34.0
+margin_right = 252.0
+margin_bottom = -5.0
+text = "watch"
+icon = ExtResource( 4 )
+expand_icon = true
+
+[node name="List" type="ItemList" parent="Players"]
+margin_left = 25.0
+margin_top = 37.0
+margin_right = 229.0
+margin_bottom = 296.0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+fixed_icon_size = Vector2( 25, 25 )
+
+[node name="PortForward" type="Label" parent="Players"]
+visible = false
+margin_left = -124.0
+margin_top = 375.0
+margin_right = 128.0
+margin_bottom = 429.0
+custom_constants/line_spacing = 6
+text = "If you want non-LAN clients to connect,
+make sure the port 10567 in UDP
+is forwarded on your router."
+align = 1
+
+[node name="FindPublicIP" type="LinkButton" parent="Players"]
+visible = false
+margin_left = 168.0
+margin_top = 393.5
+margin_right = 341.0
+margin_bottom = 407.5
+text = "Find your public IP address"
+
+[node name="show_charters" type="Button" parent="Players"]
+margin_top = -34.5
+margin_right = 128.0
+margin_bottom = -5.9
+text = "characters"
+icon = ExtResource( 3 )
+expand_icon = true
+
+[node name="c1" type="Panel" parent="Players"]
+margin_left = -194.0
+margin_right = -26.0
+margin_bottom = 356.0
+
+[node name="l" type="ItemList" parent="Players/c1"]
+margin_left = 8.0
+margin_top = 54.0
+margin_right = 160.0
+margin_bottom = 297.0
+fixed_icon_size = Vector2( 25, 25 )
+
+[node name="t" type="RichTextLabel" parent="Players/c1"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -44.0
+margin_top = -1.0
+margin_right = 40.0
+margin_bottom = 18.0
+text = "command 1"
+scroll_active = false
+
+[node name="m" type="TextureRect" parent="Players/c1"]
+margin_left = 8.0
+margin_top = 23.5
+margin_right = 33.0
+margin_bottom = 48.5
+texture = ExtResource( 2 )
+expand = true
+
+[node name="t" type="RichTextLabel" parent="Players/c1/m"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 32.0
+margin_right = 39.0
+text = "0|1"
+scroll_active = false
+
+[node name="w" type="TextureRect" parent="Players/c1"]
+margin_left = 80.0
+margin_top = 23.5
+margin_right = 105.0
+margin_bottom = 48.5
+texture = ExtResource( 5 )
+expand = true
+
+[node name="t" type="RichTextLabel" parent="Players/c1/w"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 32.0
+margin_right = 39.0
+text = "0|4"
+scroll_active = false
+
+[node name="c1b" type="Button" parent="Players/c1"]
+margin_left = 32.0
+margin_top = 307.5
+margin_right = 136.0
+margin_bottom = 339.5
+text = "be there"
+
+[node name="c2" type="Panel" parent="Players"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = 26.0
+margin_right = 194.0
+margin_bottom = 356.0
+
+[node name="l" type="ItemList" parent="Players/c2"]
+margin_left = 8.0
+margin_top = 54.0
+margin_right = 160.0
+margin_bottom = 297.0
+fixed_icon_size = Vector2( 25, 25 )
+
+[node name="t" type="RichTextLabel" parent="Players/c2"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -42.0
+margin_top = -1.0
+margin_right = 42.0
+margin_bottom = 18.0
+text = "command 2"
+scroll_active = false
+
+[node name="m" type="TextureRect" parent="Players/c2"]
+margin_left = 8.0
+margin_top = 23.5
+margin_right = 33.0
+margin_bottom = 48.5
+texture = ExtResource( 2 )
+expand = true
+
+[node name="t" type="RichTextLabel" parent="Players/c2/m"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 32.0
+margin_right = 39.0
+text = "0|1"
+scroll_active = false
+
+[node name="w" type="TextureRect" parent="Players/c2"]
+margin_left = 80.0
+margin_top = 23.5
+margin_right = 105.0
+margin_bottom = 48.5
+texture = ExtResource( 5 )
+expand = true
+
+[node name="t" type="RichTextLabel" parent="Players/c2/w"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 32.0
+margin_right = 39.0
+text = "0|4"
+scroll_active = false
+
+[node name="c2b" type="Button" parent="Players/c2"]
+margin_left = 32.0
+margin_top = 307.5
+margin_right = 136.0
+margin_bottom = 339.5
+text = "be there"
+
+[node name="Connect" type="Panel" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -138.5
+margin_top = -83.5
+margin_right = 138.5
+margin_bottom = 83.5
+size_flags_horizontal = 2
+size_flags_vertical = 2
+
+[node name="NameLabel" type="Label" parent="Connect"]
+margin_left = 8.0
+margin_top = 6.0
+margin_right = 55.0
+margin_bottom = 28.6
+size_flags_horizontal = 2
+size_flags_vertical = 0
+text = "Name:"
+
+[node name="Name" type="LineEdit" parent="Connect"]
+margin_left = 17.0
+margin_top = 30.0
+margin_right = 173.0
+margin_bottom = 54.0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+text = "The Warrior"
+
+[node name="IPLabel" type="Label" parent="Connect"]
+margin_left = 9.0
+margin_top = 61.0
+margin_right = 51.0
+margin_bottom = 83.6
+size_flags_horizontal = 2
+size_flags_vertical = 0
+text = "IP:"
+
+[node name="IPAddress" type="LineEdit" parent="Connect"]
+margin_left = 17.0
+margin_top = 85.0
+margin_right = 173.0
+margin_bottom = 109.0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+text = "127.0.0.1"
+
+[node name="Host" type="Button" parent="Connect"]
+margin_left = 181.0
+margin_top = 31.0
+margin_right = 246.0
+margin_bottom = 51.0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+text = "Host"
+
+[node name="Join" type="Button" parent="Connect"]
+margin_left = 181.0
+margin_top = 87.0
+margin_right = 246.0
+margin_bottom = 107.0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+text = "Join"
+
+[node name="ErrorLabel" type="Label" parent="Connect"]
+margin_left = 15.0
+margin_top = 125.0
+margin_right = 257.0
+margin_bottom = 139.0
+size_flags_horizontal = 2
+size_flags_vertical = 0
+custom_colors/font_color = Color( 0.820312, 0.291595, 0.291595, 1 )
+align = 1
+
+[node name="ErrorDialog" type="AcceptDialog" parent="."]
+margin_right = 55.0
+margin_bottom = 58.0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+window_title = "Внимание!"
+
+[node name="charters" type="Panel" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -256.0
+margin_top = -180.0
+margin_right = 256.0
+margin_bottom = 180.0
+
+[node name="Panel" type="Panel" parent="charters"]
+anchor_left = 0.6875
+anchor_top = 0.244444
+anchor_right = 0.9375
+anchor_bottom = 0.6
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="TextureRect" type="TextureRect" parent="charters/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+expand = true
+
+[node name="op" type="OptionButton" parent="charters"]
+anchor_left = 0.689453
+anchor_top = 0.255556
+anchor_right = 0.96875
+anchor_bottom = 0.588889
+margin_bottom = -0.000106812
+rect_min_size = Vector2( 143, 120 )
+rect_clip_content = true
+flat = true
+clip_text = true
+expand_icon = true
+script = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="hrs" type="GridContainer" parent="charters"]
+anchor_left = 0.016
+anchor_top = 0.022
+anchor_right = 0.625
+anchor_bottom = 0.978
+margin_left = -0.192
+margin_top = 0.0799999
+margin_bottom = -0.0800171
+
+[node name="show_players" type="Button" parent="charters"]
+margin_left = -96.0
+margin_top = 5.0
+margin_right = -16.0
+margin_bottom = 39.0
+text = "back"
+
+[node name="txt" type="RichTextLabel" parent="charters"]
+anchor_left = 0.687
+anchor_top = 0.244
+anchor_right = 0.9375
+anchor_bottom = 0.244
+margin_left = 0.255981
+margin_top = -47.84
+margin_bottom = -15.84
+scroll_active = false
+deselect_on_focus_loss_enabled = false
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[connection signal="pressed" from="Players/Start" to="." method="_on_start_pressed"]
+[connection signal="button_down" from="Players/watch" to="." method="_on_watch_button_down"]
+[connection signal="pressed" from="Players/FindPublicIP" to="." method="_on_find_public_ip_pressed"]
+[connection signal="button_down" from="Players/show_charters" to="." method="_on_show_charters_button_down"]
+[connection signal="button_down" from="Players/c1/c1b" to="." method="_on_c1b_button_down"]
+[connection signal="button_down" from="Players/c2/c2b" to="." method="_on_c2b_button_down"]
+[connection signal="pressed" from="Connect/Host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="Connect/Join" to="." method="_on_join_pressed"]
+[connection signal="item_selected" from="charters/op" to="." method="_on_op_item_selected"]
+[connection signal="item_selected" from="charters/op" to="charters/op" method="_on_op_item_selected"]
+[connection signal="button_down" from="charters/show_players" to="." method="_on_show_players_button_down"]
