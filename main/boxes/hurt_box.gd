@@ -1,5 +1,5 @@
 extends Area2D
-export var tspeed=1
+export(float) var tspeed=1
 onready var t=$Timer
 var invi=false setget set_invi
 signal invi_started

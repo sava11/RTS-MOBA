@@ -31,12 +31,11 @@ var hib={"collision_layer":0,"collision_mask":0}
 onready var hub= $hurt_box
 var buffs={"adef":0,"aatt":0}
 puppet var pbuffs={"adef":0,"aatt":0}
-var dmg_polyg=PoolVector2Array([Vector2(-15,-15),Vector2(-15,15),Vector2(15,15),Vector2(15,-15)])
-
-
-
 func _ready():
 	gm.unit_count+=1
+	status.m_he=parametrs.HP
+	status.he=parametrs.HP
+	
 	if gm.command==parametrs["command"]:
 		hib["collision_layer"]=0
 		hib["collision_mask"]=4
@@ -46,6 +45,7 @@ func _ready():
 		collision_mask=collision_layer
 		$front.collision_layer=16
 		$front.collision_mask=$front.collision_layer
+		$r.collision_mask=16
 		#$rc.collision_mask=16
 	else:
 		hib["collision_layer"]=0
@@ -56,9 +56,11 @@ func _ready():
 		collision_mask=collision_layer
 		$front.collision_layer=8
 		$front.collision_mask=$front.collision_layer
+		$r.collision_mask=8
 		#$rc.collision_mask=8
 	$nav_ag.set_navigation(gm._get_nav_path(parametrs["type"]))
 	$no.set_navigation(gm._get_nav_path(parametrs["type"]))
+	
 var step=0
 func set_anim(ang:float,t:String):
 	var type=0
@@ -72,9 +74,10 @@ onready var save_mpath=mpath
 var save_mpath_i=0
 func _integrate_forces(st):
 	step=st.get_step()
+	if attacked==true and $front.bs==[]:
+		set_anim(rad2deg(fnc.angle(mvec)),"wait")
+		$front.rotation_degrees=rad2deg(fnc.angle(mvec))-90
 	if is_network_master():
-		$pb.max_value=status.m_he
-		$pb.value=status.he
 		mvec=st.get_linear_velocity()
 		if mpath!=[]:
 			if mpath_i==len(mpath):
@@ -83,12 +86,9 @@ func _integrate_forces(st):
 		if $nav_ag.is_navigation_finished():
 			mvec=mvec.move_toward(Vector2(0,0),parametrs["speed"]*10*step)
 			mpath=[]
-			mvec=Vector2(0,0)
 			return
 		if mpath!=[]:
-			if attacked==true and $front.bs==[]:
-				set_anim(rad2deg(fnc.angle(mvec)),"wait")
-				$front.rotation_degrees=rad2deg(fnc.angle(mvec))-90
+			
 			path = $nav_ag.get_nav_path()
 			mvec = mvec.move_toward(global_position.direction_to($nav_ag.get_next_location()) * parametrs["speed"],parametrs["speed"]*5*step)
 			if len(mpath)==1:
@@ -101,22 +101,28 @@ func _integrate_forces(st):
 		else:
 			mvec=mvec.move_toward(Vector2(0,0),parametrs["speed"]*10*step)
 		var len_l=[]
+		nearst=null
 		for ent in bs:
 			len_l.append(self.global_position.distance_to(ent.global_position))
 		for ent in bs:
-			if len_l.min()==self.global_position.distance_to(ent.global_position):
+			if len_l.min()==self.global_position.distance_to(ent.global_position) and fnc.i_search($front.bs,ent)!=-1:
 				nearst=ent
-		if fnc.i_search($front.bs,nearst)!=-1:
-			rpc("attk",nearst.global_position)
-		if nearst!=null and is_instance_valid(nearst) :
+				target_pos=nearst.global_position
+		if nearst!=null and target_pos!=Vector2.ZERO:
+			rpc("attk",target_pos)
+		if nearst!=null and is_instance_valid(nearst):
+			
+			if global_position.distance_to(nearst.global_position)<100:
+				mpath=[-global_position.direction_to(nearst.global_position)*parametrs["speed"]+global_position]
+			else:
+				mpath=[]
 			mpath_i=0
-			if global_position.distance_to(nearst.global_position)>10:
-				mpath=[nearst.global_position]
-			else:mpath=[]
+		update()
 		if bs==[]:
 			mpath=save_mpath
 			mpath_i=save_mpath_i
 			nearst=null
+			target_pos=Vector2.ZERO
 		rset("ppos",global_position)
 		rset("pmvec",mvec)
 		rset("pbuffs",buffs)
@@ -125,11 +131,11 @@ func _integrate_forces(st):
 		mvec=pmvec
 		buffs=pbuffs
 	st.set_linear_velocity(mvec)
-
+var target_pos=Vector2.ZERO
 var nearst=null
 var in_=false
-func _on_gr_mouse_entered():$pb.show()
-func _on_gr_mouse_exited():$pb.hide()
+func _on_gr_mouse_entered():in_=true
+func _on_gr_mouse_exited():in_=false
 
 var bs=[]
 func _on_watchout_body_entered(b):
@@ -141,40 +147,36 @@ func _on_watchout_body_exited(b):
 
 func end_att():
 	attacked=true
-	if $front.bs==[]:
+	if bs==[]:
 		set_anim($front.rotation_degrees,"wait")
-	
+func set_att():
+	attacked=false
 var attacked=true
-
 func add_att_zone():
-	var att=preload("res://main/boxes/hitboxdmg.tscn").instance()
+	var att=preload("res://main/boxes/hitboxdmgShaped.tscn").instance()
 	#att.wait_time=1/attack_time
-	#print(att.wait_time)
 	att.command=parametrs["command"]
-	att.get_child(0).polygon=dmg_polyg
 	att.collision_layer=hib["collision_layer"]
 	att.collision_mask=hib["collision_mask"]
 	att.damage=parametrs["dmg"]+buffs["aatt"]
 	get_parent().call_deferred("add_child",att)
-	att.global_position=global_position
-	att.rotation_degrees=$front.rotation_degrees
-remote func attk(target_pos):
-	$front.rotation_degrees=rad2deg(fnc.angle(target_pos-global_position))-90
+	#att.global_position=global_position
+	att.global_position=$r.get_collision_point()
+
+remote func attk(target_pos:Vector2):
 	var t=target_pos-global_position
+	$front.rotation_degrees=rad2deg(fnc.angle(target_pos-global_position))-90
+	$r.cast_to=target_pos-global_position
 	$AP.play("att",0,parametrs["attack_speed"])
 	set_anim(rad2deg(fnc.angle(t)),"att")
-	attacked=false
+	
 
 func _on_hurt_box_area_entered(area):
 	status.he-=area.damage*area.scale_damage*(float(area.damage*area.scale_damage)/(parametrs["def"]+buffs["adef"]))
 	if status.he<=0:
-		print(get_network_master())
 		gm.unit_count-=1
 		gm.commands[area.command]["money"]+=parametrs["money_to_enemy"]
 		yield(get_tree(),"idle_frame")
 		rpc("delete")
 remote func delete():
 	queue_free()
-
-func _on_nav_ag_velocity_computed(safe_velocity):
-	mvec=safe_velocity

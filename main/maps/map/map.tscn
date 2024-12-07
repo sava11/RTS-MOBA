@@ -1,0 +1,69 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://main/img/1625918657_13-kartinkin-com-p-tekstura-travi-dlya-genplana-krasivo-14.png" type="Texture" id=1]
+[ext_resource path="res://main/img/1626890776_3-kartinkin-com-p-shchebenka-tekstura-besshovnaya-krasivo-3.jpg" type="Texture" id=2]
+[ext_resource path="res://main/objs/building/main/base.tscn" type="PackedScene" id=4]
+[ext_resource path="res://main/maps/c_colored.tscn" type="PackedScene" id=5]
+
+[node name="map" type="Node2D"]
+
+[node name="ground" type="TextureRect" parent="."]
+margin_left = -504.0
+margin_top = -288.0
+margin_right = 9656.0
+margin_bottom = 5472.0
+rect_scale = Vector2( 0.1, 0.1 )
+mouse_filter = 2
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 2
+
+[node name="pol_ground" type="Polygon2D" parent="."]
+
+[node name="c-p" type="Polygon2D" parent="."]
+texture = ExtResource( 2 )
+texture_scale = Vector2( 20, 20 )
+polygon = PoolVector2Array( -210, -220, -280, 0, -240, 240, 0, 260, 200, 240, 290, 0, 220, -230, -10, -270 )
+
+[node name="c" parent="." instance=ExtResource( 5 )]
+
+[node name="p" parent="c" index="0"]
+color = Color( 0.101961, 0.831373, 1, 0.415686 )
+polygon = PoolVector2Array( -163, -216, -247, -7, -143, 194, -2, 235, 166, 189, 232, -6, 184, -212, -6, -244 )
+
+[node name="PlayGround" type="YSort" parent="."]
+
+[node name="ground" type="Node2D" parent="PlayGround"]
+
+[node name="nav" type="Navigation2D" parent="PlayGround/ground"]
+
+[node name="n" type="NavigationPolygonInstance" parent="PlayGround/ground/nav"]
+visible = false
+travel_cost = 0.0
+
+[node name="nav2" type="Navigation2D" parent="PlayGround/ground"]
+
+[node name="n" type="NavigationPolygonInstance" parent="PlayGround/ground/nav2"]
+visible = false
+travel_cost = 0.0
+
+[node name="main" parent="PlayGround" instance=ExtResource( 4 )]
+position = Vector2( -480, 0 )
+command = 1
+c_com = Color( 1, 0, 0, 1 )
+
+[node name="main2" parent="PlayGround" instance=ExtResource( 4 )]
+position = Vector2( 480, 0 )
+command = 2
+c_com = Color( 0, 0, 1, 1 )
+
+[node name="up" type="Line2D" parent="PlayGround"]
+points = PoolVector2Array( -330, -260, 330, -260 )
+
+[node name="down" type="Line2D" parent="PlayGround"]
+points = PoolVector2Array( -330, 260, 330, 260 )
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2( -480, 0 )
+
+[editable path="c"]

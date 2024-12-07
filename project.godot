@@ -11,13 +11,15 @@ config_version=4
 [application]
 
 config/name="RTS"
-run/main_scene="res://main/main.tscn"
+run/main_scene="res://main/net/lobby.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
-gl="*res://gl.gd"
-gm="*res://main/game.gd"
+fnc="*res://functions.gd"
+gm="*res://game.gd"
+objs="*res://main/units/unit_pref/objects.gd"
+gamestate="*res://main/net/gamestate.gd"
 
 [display]
 
@@ -88,4 +90,7 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+quality/intended_usage/framebuffer_allocation=0
+quality/intended_usage/framebuffer_allocation.mobile=1
+quality/filters/use_fxaa=true
 environment/default_environment="res://default_env.tres"
